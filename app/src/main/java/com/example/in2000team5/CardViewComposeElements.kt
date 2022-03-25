@@ -54,7 +54,7 @@ fun InfoRow(uv:Int, sykkelfore:String){
 
 
 @Composable
-fun SykkelRuteCard(rute: SykkelRute) {
+fun SykkelRuteCard(rute: BicycleRoute) {
     Surface(
         shape = MaterialTheme.shapes.medium,
         elevation = 4.dp,
@@ -84,7 +84,7 @@ fun SykkelRuteCard(rute: SykkelRute) {
             ) {
 
                 Text(
-                    text = "${rute.From} - ${rute.To}",
+                    text = "${rute.start} - ${rute.end}",
                     color = MaterialTheme.colors.secondaryVariant,
                     style = MaterialTheme.typography.h5
                 )
@@ -95,7 +95,7 @@ fun SykkelRuteCard(rute: SykkelRute) {
                     Row {
                         Column {
                             Text(
-                                text = "Lengde: ${rute.Lengde}\nHøyde-diff: ${rute.HoydeDiff}",
+                                text = "Lengde: ${rute.distance.toInt()} meter",
                                 modifier = Modifier
                                     .padding(all = 4.dp)
                                     .width(160.dp),
@@ -110,7 +110,7 @@ fun SykkelRuteCard(rute: SykkelRute) {
                             Row {
                                 Column {
                                     Image(
-                                        painter = painterResource(getWeatherIcon(rute.Weather)),
+                                        painter = painterResource(R.drawable.sun),
                                         contentDescription = "Weather",
                                         modifier = Modifier
                                             .size(40.dp)
@@ -122,7 +122,7 @@ fun SykkelRuteCard(rute: SykkelRute) {
 
                                     )
                                     Text(
-                                        text = "${String.format("%.1f", rute.Temp)}°C",
+                                        text = "${String.format("%.1f", 100.10)}°C",
                                         modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                                         style = MaterialTheme.typography.body2,
 
@@ -130,7 +130,7 @@ fun SykkelRuteCard(rute: SykkelRute) {
                                 }
                                 Column {
                                     Image(
-                                        painter = painterResource(getAirIcon(rute.Luftkvalitet)),
+                                        painter = painterResource(getAirIcon("bad")),
                                         contentDescription = "Weather",
                                         modifier = Modifier
                                             .size(40.dp)
@@ -141,7 +141,7 @@ fun SykkelRuteCard(rute: SykkelRute) {
                                             )
                                     )
                                     Text(
-                                        text = rute.Luftkvalitet,
+                                        text = "nyde",
                                         modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                                         style = MaterialTheme.typography.body2
                                     )
@@ -153,7 +153,7 @@ fun SykkelRuteCard(rute: SykkelRute) {
                 Row {
                     if (isExpanded) {
                         Text(
-                            text = rute.beskrivelse,
+                            text = "bad",
                             modifier = Modifier
                                 .padding(all = 4.dp)
                                 .fillMaxWidth(),
@@ -164,11 +164,11 @@ fun SykkelRuteCard(rute: SykkelRute) {
                 }
                 Row {
                     if (isExpanded) {
-                        val plass = LatLng(rute.Longitude, rute.Latitude)
+                        val plass = rute.coordinates?.get(0)
                         //val singapore = LatLng(1.35, 103.87)
 
                         val cameraPositionState = rememberCameraPositionState {
-                            position = CameraPosition.fromLatLngZoom(plass, 10f)
+                            position = CameraPosition.fromLatLngZoom(plass!!, 10f)
                         }
                         GoogleMap(
                             //modifier = Modifier.fillMaxSize(),
@@ -176,12 +176,10 @@ fun SykkelRuteCard(rute: SykkelRute) {
 
                             ) {
                             Marker(
-                                position = plass,
-                                title = rute.From,
+                                position = plass!!,
+                                title = rute.start,
                             )
-                            if (rute.rutedata != null) {
-                                Polyline(rute.rutedata)
-                            }
+                            Polyline(rute.coordinates)
                         }
                     }
                 }
@@ -193,7 +191,7 @@ fun SykkelRuteCard(rute: SykkelRute) {
 
 
 @Composable
-fun VisAlleRuter(ruter: List<SykkelRute>) {
+fun VisAlleRuter(ruter: List<BicycleRoute>) {
     LazyColumn {
         items(ruter) { rute ->
             SykkelRuteCard(rute)
@@ -202,13 +200,14 @@ fun VisAlleRuter(ruter: List<SykkelRute>) {
     }
 }
 
-@Preview
+/*@Preview
 @Composable
 fun PreviewVisAleRuter(){
     IN2000Team5Theme() {
         VisAlleRuter(ruter = SampleData.eksempelRuter)
     }
 }
+*/
 
 
 

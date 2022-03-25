@@ -60,12 +60,38 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
+    implementation 'com.google.code.gson:gson:2.8.9'
 
-    
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 
+    //core
+    implementation 'com.github.kittinunf.fuel:fuel:2.3.1'
+    //packages
+    implementation 'com.github.kittinunf.fuel:fuel-coroutines:2.3.1'
 
     implementation "com.google.maps.android:maps-compose:1.0.0"
     implementation "com.google.android.gms:play-services-maps:18.0.2"
+
+    def lifecycle_version = "2.5.0-alpha04"
+    def arch_version = "2.1.0"
+
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // ViewModel utilities for Compose
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
+    // Saved state module for ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+
+    // Kotlin
+    implementation "androidx.activity:activity-ktx:1.5.0-alpha03"
+
+    // Proj4J for coordinate reprojection
+    implementation 'org.locationtech.proj4j:proj4j:1.1.3'
 
 }
 
