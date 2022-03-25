@@ -62,21 +62,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
             .fillMaxWidth()
             .padding(all = 8.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .padding(all = 8.dp)
-                .fillMaxWidth()
-        ) {
-            Image(
-                painter = painterResource(R.drawable.bike),
-                contentDescription = "Weather",
-                modifier = Modifier
-                    .size(100.dp)
-                    .border(1.5.dp, MaterialTheme.colors.secondary)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
 
-            //Variabel for å huske om meldingen er expanded eller ikke
             var isExpanded by remember { mutableStateOf(false) }
 
             Column(modifier = Modifier
@@ -184,7 +170,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
                     }
                 }
             }
-        }
+
     }
     Spacer(modifier = Modifier.width(10.dp))
 }

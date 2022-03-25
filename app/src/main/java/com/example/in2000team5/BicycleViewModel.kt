@@ -83,6 +83,7 @@ class BicycleViewModel: ViewModel() {
                     return address[0].getAddressLine(0)
                 }
                 return address[0].getAddressLine(0)
+                return address[0].thoroughfare
             }
         }
         return null
