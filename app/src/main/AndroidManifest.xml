@@ -2,13 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.in2000team5">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.IN2000Team5">
+        android:theme="@style/Theme.IN2000Team5" >
+
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyAUrIgHuWwx-z1fPhoA-fXZiTpdGnP2O-o" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -22,4 +30,4 @@
         </activity>
     </application>
 
-</manifest>
+    </manifest>
