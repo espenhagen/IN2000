@@ -1,11 +1,12 @@
-package com.example.in2000team5
+package com.example.in2000team5.data_layer
 
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitString
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 
-class DataSource {
+class BicycleRouteRemoteDataSource {
 
     suspend fun fetchRoutes(): List<Features>? {
         val url = "https://geoserver.data.oslo.systems/geoserver/bym"
@@ -33,3 +34,14 @@ data class Features(val type: String?, val id: String?, val geometry: Geometry?,
 data class Geometry(val type: String?, val coordinates: List<List<Number>>?)
 
 data class Properties(val objectid: Number?, val id: Number?, val rute: Number?, val tillegg: String?, val tiltak: Any?, val tid: Any?, val gdb_geomattr_data: Any?)
+
+data class BicycleRoute(
+    val id: Number?,
+    val routeNr: Number?,
+    val coordinates: List<LatLng>?,
+    val startDistrict: String?,
+    val endDistrict: String?,
+    val start: String?,
+    val end: String?,
+    val distance: Double
+)

@@ -1,4 +1,4 @@
-package com.example.in2000team5.ui.theme
+package com.example.in2000team5.ui_layer.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
