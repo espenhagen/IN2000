@@ -1,4 +1,4 @@
-package com.example.in2000team5
+package com.example.in2000team5.domain_layer
 
 import android.content.Context
 import android.location.Geocoder
@@ -8,6 +8,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.in2000team5.data_layer.BicycleRoute
+import com.example.in2000team5.data_layer.BicycleRouteRemoteDataSource
+import com.example.in2000team5.data_layer.Features
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +19,7 @@ import org.locationtech.proj4j.CoordinateTransformFactory
 import org.locationtech.proj4j.ProjCoordinate
 
 class BicycleViewModel: ViewModel() {
-    private val datasource = DataSource()
+    private val datasource = BicycleRouteRemoteDataSource()
     val bicycleRoutes = MutableLiveData<List<BicycleRoute>>()
 
     fun makeApiRequest(context: Context) {
@@ -82,7 +85,6 @@ class BicycleViewModel: ViewModel() {
                 if (address[0].thoroughfare == null) {
                     return address[0].getAddressLine(0)
                 }
-                return address[0].getAddressLine(0)
                 return address[0].thoroughfare
             }
         }
