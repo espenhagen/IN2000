@@ -2,28 +2,37 @@ package com.example.in2000team5
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.platform.LocalContext
 import com.example.in2000team5.ui.theme.IN2000Team5Theme
 import com.google.android.gms.maps.model.LatLng
 
 
 class MainActivity : ComponentActivity() {
+    private val viewModel: BicycleViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            IN2000Team5Theme() {
-                Column(){
-                    InfoRow(uv = 24, sykkelfore = "godt" ) //hardkodet testverdi.
-                    VisAlleRuter(SampleData.eksempelRuter)
-                }
+        viewModel.makeApiRequest(this)
 
+        var bicycleRouteList = mutableListOf<BicycleRoute>()
+
+        viewModel.getRoutes().observe(this) {
+            bicycleRouteList = it as MutableList<BicycleRoute>
+            setContent {
+                IN2000Team5Theme() {
+                    Column(){
+                        InfoRow(uv = 24, sykkelfore = "godt" ) //hardkodet testverdi.
+                        VisAlleRuter(bicycleRouteList)
+                    }
+
+                }
             }
         }
     }
 }
-
-
-
+/*
 object SampleData {
     val eksempelRuter = listOf(
         SykkelRute(
@@ -281,5 +290,5 @@ object SampleData {
 
     )
 }
-
+*/
 
