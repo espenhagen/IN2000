@@ -1,4 +1,4 @@
-package com.example.in2000team5
+package com.example.in2000team5.ui_layer
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -13,7 +13,7 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.in2000team5.ui.theme.IN2000Team5Theme
+import com.example.in2000team5.ui_layer.theme.IN2000Team5Theme
 import androidx.activity.ComponentActivity
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
@@ -26,6 +26,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.in2000team5.data_layer.BicycleRoute
+import com.example.in2000team5.domain_layer.BicycleViewModel
+import com.example.in2000team5.ui_layer.BottomNavItem
+import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
@@ -112,7 +116,7 @@ fun Navigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "kart" ) {
         composable("kart") {
             MapScreen()
-            MapProperties()
+            //MapProperties()
 
         }
         composable("ruter") {

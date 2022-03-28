@@ -11,20 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.IN2000Team5">
-        <activity
-            android:name=".MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps"
-            android:theme="@style/Theme.IN2000Team5" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAUrIgHuWwx-z1fPhoA-fXZiTpdGnP2O-o" />
 
         <activity
-            android:name=".ui_layer.cardViewActivity.MainActivity"
+            android:name=".ui_layer.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.IN2000Team5">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

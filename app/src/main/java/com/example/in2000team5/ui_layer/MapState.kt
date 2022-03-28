@@ -1,4 +1,4 @@
-package com.example.in2000team5
+package com.example.in2000team5.ui_layer
 
 import com.google.maps.android.compose.MapProperties
 
