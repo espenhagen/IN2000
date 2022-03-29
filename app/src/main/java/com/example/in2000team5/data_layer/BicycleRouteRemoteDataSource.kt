@@ -43,5 +43,6 @@ data class BicycleRoute(
     val endDistrict: String?,
     val start: String?,
     val end: String?,
-    val distance: Double
+    val distance: Double,
+    var AQI: Double?
 )
