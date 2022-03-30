@@ -43,32 +43,32 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         viewModel.makeApiRequest(this)
 
-
-        viewModel.getRoutes().observe(this) {
-            bicycleRouteList = it as MutableList<BicycleRoute>
-            setContent {
-                IN2000Team5Theme {
-                    val navController = rememberNavController()
-                    Scaffold(
-                        bottomBar = {
-                            BottomNavigationBar(
-                                items = listOf(
-                                    BottomNavItem(name = "Kart", route = "kart", icon = Icons.Default.Place),
-                                    BottomNavItem(name = "Ruter", route = "ruter", icon = Icons.Default.ArrowForward),
-                                    BottomNavItem(name = "Om", route = "om", icon = Icons.Default.Info)
-                                ),
-                                navController = navController,
-                                onItemClick = {
-                                    navController.navigate(it.route)
-                                }
-                            )
-                        }
-                    ) {
-                        Navigation(navController = navController)
-
+        setContent {
+            IN2000Team5Theme {
+                val navController = rememberNavController()
+                Scaffold(
+                    bottomBar = {
+                        BottomNavigationBar(
+                            items = listOf(
+                                BottomNavItem(name = "Kart", route = "kart", icon = Icons.Default.Place),
+                                BottomNavItem(name = "Ruter", route = "ruter", icon = Icons.Default.ArrowForward),
+                                BottomNavItem(name = "Om", route = "om", icon = Icons.Default.Info)
+                            ),
+                            navController = navController,
+                            onItemClick = {
+                                navController.navigate(it.route)
+                            }
+                        )
                     }
+                ) {
+                    Navigation(navController = navController)
+
                 }
             }
+        }
+        viewModel.getRoutes().observe(this) {
+            bicycleRouteList = it as MutableList<BicycleRoute>
+
         }
     }
 }

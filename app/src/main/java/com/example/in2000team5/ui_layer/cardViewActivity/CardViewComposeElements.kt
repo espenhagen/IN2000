@@ -208,7 +208,7 @@ fun getWeatherIcon(description: String): Int {
 }
 
 fun getAirIcon(index: Double?): Int {
-    if (index == null) { R.drawable.unknown}
+    if (index == null) { return R.drawable.unknown}
     else if(index<2) {return R.drawable.goodair}
     return R.drawable.badair
 }
