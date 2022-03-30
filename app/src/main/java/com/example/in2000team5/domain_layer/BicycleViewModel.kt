@@ -1,6 +1,7 @@
 package com.example.in2000team5.domain_layer
 
 import android.content.Context
+import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
@@ -25,22 +26,21 @@ class BicycleViewModel: ViewModel() {
     private val datasource = BicycleRouteRemoteDataSource()
     val bicycleRoutes = MutableLiveData<List<BicycleRoute>>()
 
-    fun fetchAirQualForRouteOnAvg(b: BicycleRoute) {
+    private fun fetchAirQualForRouteOnAvg(b: BicycleRoute) {
         // Do an asynchronous operation to fetch users.
         viewModelScope.launch(Dispatchers.IO){
-            b.coordinates?.let {
-                repositoryRoutes.fetchAirQualAtRoute(it).also {
+            b.coordinates?.let { list ->
+                repositoryRoutes.fetchAirQualAtRoute(list).also {
                     b.AQI = it
                 }
             }
         }
     }
 
-
     fun makeApiRequest(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             val bicycleInformation = datasource.fetchRoutes()
-            constructRoutes(bicycleInformation, context)
+            constructRoutesThreads(bicycleInformation, context)
         }
     }
 
@@ -48,72 +48,76 @@ class BicycleViewModel: ViewModel() {
         return bicycleRoutes
     }
 
-    private fun constructRoutes(features: List<Features>?, context: Context) {
-        val routes = mutableListOf<BicycleRoute>()
+    private fun makeEachRoute(bicycleFeature: Features, context: Context, routes: MutableList<BicycleRoute>) {
         val geocoder = Geocoder(context)
+        viewModelScope.launch(Dispatchers.IO) {
+            val id = bicycleFeature.properties?.objectid
+            val routeNr = bicycleFeature.properties?.rute
+            val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
+
+            val firstLatLng = latLngList?.get(0)
+            val lastLatLng = latLngList?.get(latLngList.lastIndex)
+
+            val startAddress = getAddress(geocoder, firstLatLng)
+            val endAddress = getAddress(geocoder, lastLatLng)
+
+            val startDistrict = constructDistrict(startAddress)
+            val endDistrict = constructDistrict(endAddress)
+            val start = constructAddress(startAddress)
+            val end = constructAddress(endAddress)
+
+            var total = 0.0
+            if (latLngList != null) {
+                for (i in 1 until latLngList.size) {
+                    val lengthResult = FloatArray(1)
+                    Location.distanceBetween(
+                        latLngList[i - 1].latitude,
+                        latLngList[i - 1].longitude,
+                        latLngList[i].latitude,
+                        latLngList[i].longitude,
+                        lengthResult
+                    )
+                    total += lengthResult[0]
+                }
+            }
+            val bicycleRoute = BicycleRoute(id, routeNr, latLngList, startDistrict, endDistrict, start, end, total, null)
+            fetchAirQualForRouteOnAvg(bicycleRoute)
+            routes.add(bicycleRoute)
+        }
+    }
+
+    private fun constructRoutesThreads(features: List<Features>?, context: Context) {
+        val routes = mutableListOf<BicycleRoute>()
 
         if (features != null) {
             for (bicycleFeature in features) {
-
-                val id = bicycleFeature.properties?.objectid
-                val routeNr = bicycleFeature.properties?.rute
-                val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
-
-                val firstLatLng = latLngList?.get(0)
-                val lastLatLng = latLngList?.get(latLngList.lastIndex)
-
-                val startDistrict = constructDistrict(geocoder, firstLatLng)
-                val endDistrict = constructDistrict(geocoder, lastLatLng)
-                val start = constructAddress(geocoder, firstLatLng)
-                val end = constructAddress(geocoder, lastLatLng)
-
-                var total = 0.0
-                if (latLngList != null) {
-                    for (i in 1 until latLngList.size) {
-                        val lengthResult = FloatArray(1)
-                        Location.distanceBetween(
-                            latLngList[i - 1].latitude,
-                            latLngList[i - 1].longitude,
-                            latLngList[i].latitude,
-                            latLngList[i].longitude,
-                            lengthResult
-                        )
-                        total += lengthResult[0]
-                    }
-                }
-                val bicycleRoute = BicycleRoute(id, routeNr, latLngList, startDistrict, endDistrict, start, end, total, null)
-                Log.d("Testing create routes: ", bicycleRoute.start + " to " + bicycleRoute.end)
-                //Log.d("LATLNG list: ", latLngList.toString())
-                routes.add(bicycleRoute)
-                //fetchAirQualForRoute(bicycleRoute)
-                fetchAirQualForRouteOnAvg(bicycleRoute)
-                // To make the view update only one time, put the next line outside the loop
+                makeEachRoute(bicycleFeature, context, routes)
                 bicycleRoutes.postValue(routes)
             }
         }
     }
 
-    private fun constructAddress(geocoder: Geocoder, latLng: LatLng?): String? {
+    private fun getAddress(geocoder: Geocoder, latLng: LatLng?): Address? {
         if (latLng != null) {
             val address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-            //Log.d("Test creating address", address.toString())
-            // fallbacks if the requests are null
-            if (address.size > 0) {
-                if (address[0].thoroughfare == null) {
-                    return address[0].getAddressLine(0)
-                }
-                return address[0].thoroughfare
-            }
+            return address[0]
         }
         return null
     }
 
-    private fun constructDistrict(geocoder: Geocoder, latLng: LatLng?): String? {
-        if (latLng != null) {
-            val address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-            //Log.d("Address geocoding", address.toString())
-            if (address.size > 0)
-                return address[0].subLocality
+    private fun constructAddress(address: Address?): String? {
+        if (address != null) {
+            if (address.thoroughfare == null) {
+                return address.getAddressLine(0)
+            }
+            return address.thoroughfare
+        }
+        return null
+    }
+
+    private fun constructDistrict(address: Address?): String? {
+        if (address != null) {
+            return address.subLocality
         }
         return null
     }
