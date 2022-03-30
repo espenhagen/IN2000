@@ -117,7 +117,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
                             }
                             Column {
                                 Image(
-                                    painter = painterResource(getAirIcon("bad")),
+                                    painter = painterResource(getAirIcon(rute.AQI)),
                                     contentDescription = "Weather",
                                     modifier = Modifier
                                         .size(40.dp)
@@ -128,7 +128,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
                                         )
                                 )
                                 Text(
-                                    text = "nyde",
+                                    text = rute.AQI.toString(),
                                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                                     style = MaterialTheme.typography.body2
                                 )
@@ -207,12 +207,8 @@ fun getWeatherIcon(description: String): Int {
     }
 }
 
-fun getAirIcon(description: String): Int {
-    return when (description) {
-        "good" -> R.drawable.goodair
-        "bad" -> R.drawable.badair
-        else -> {
-            R.drawable.unknown
-        }
-    }
+fun getAirIcon(index: Double?): Int {
+    if (index == null) { R.drawable.unknown}
+    else if(index<2) {return R.drawable.goodair}
+    return R.drawable.badair
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BicycleRouteRemoteDataSource
+import com.example.in2000team5.data_layer.BicycleRouteRepository
 import com.example.in2000team5.data_layer.Features
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
@@ -19,8 +20,22 @@ import org.locationtech.proj4j.CoordinateTransformFactory
 import org.locationtech.proj4j.ProjCoordinate
 
 class BicycleViewModel: ViewModel() {
+
+    val repositoryRoutes = BicycleRouteRepository()
     private val datasource = BicycleRouteRemoteDataSource()
     val bicycleRoutes = MutableLiveData<List<BicycleRoute>>()
+
+    fun fetchAirQualForRouteOnAvg(b: BicycleRoute) {
+        // Do an asynchronous operation to fetch users.
+        viewModelScope.launch(Dispatchers.IO){
+            b.coordinates?.let {
+                repositoryRoutes.fetchAirQualAtRoute(it).also {
+                    b.AQI = it
+                }
+            }
+        }
+    }
+
 
     fun makeApiRequest(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -66,10 +81,12 @@ class BicycleViewModel: ViewModel() {
                         total += lengthResult[0]
                     }
                 }
-                val bicycleRoute = BicycleRoute(id, routeNr, latLngList, startDistrict, endDistrict, start, end, total)
+                val bicycleRoute = BicycleRoute(id, routeNr, latLngList, startDistrict, endDistrict, start, end, total, null)
                 Log.d("Testing create routes: ", bicycleRoute.start + " to " + bicycleRoute.end)
                 //Log.d("LATLNG list: ", latLngList.toString())
                 routes.add(bicycleRoute)
+                //fetchAirQualForRoute(bicycleRoute)
+                fetchAirQualForRouteOnAvg(bicycleRoute)
                 // To make the view update only one time, put the next line outside the loop
                 bicycleRoutes.postValue(routes)
             }
