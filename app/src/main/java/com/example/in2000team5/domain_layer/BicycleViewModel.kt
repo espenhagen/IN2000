@@ -31,7 +31,7 @@ class BicycleViewModel: ViewModel() {
 
     fun makeApiRequest(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            bikeRoutedatasrc.fetchRoutes(context, this@BicycleViewModel, repositoryRoutes)
+            repositoryRoutes.constructRoutesThreads(this@BicycleViewModel, context)
         }
     }
 

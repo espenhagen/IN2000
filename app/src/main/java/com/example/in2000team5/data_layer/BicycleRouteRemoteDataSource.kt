@@ -1,8 +1,6 @@
 package com.example.in2000team5.data_layer
 
-import android.content.Context
 import android.util.Log
-import com.example.in2000team5.domain_layer.BicycleViewModel
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitString
 import com.google.android.gms.maps.model.LatLng
@@ -10,20 +8,17 @@ import com.google.gson.Gson
 
 class BicycleRouteRemoteDataSource {
 
-    suspend fun fetchRoutes(
-        context: Context,
-        bicycleViewModel: BicycleViewModel,
-        repositoryRoutes: BicycleRouteRepository
-    ) {
+    suspend fun fetchRoutes(): List<Features>? {
         val url = "https://geoserver.data.oslo.systems/geoserver/bym"
         val path = "/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=bym%3Abyruter&outputFormat=application/json"
         val gson = Gson()
 
-        try {
+         try {
             val response = gson.fromJson(Fuel.get(url + path).awaitString(), Base::class.java)
-            repositoryRoutes.constructRoutesThreads(response.features, context, bicycleViewModel)
+            return response.features
         } catch (exception: Exception) {
             Log.d("DATA FETCHING", "A network request exception was thrown: ${exception.message}")
+            return null
         }
     }
 }

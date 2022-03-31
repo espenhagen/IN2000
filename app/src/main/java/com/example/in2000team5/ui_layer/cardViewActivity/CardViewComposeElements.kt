@@ -1,5 +1,6 @@
 package com.example.in2000team5.ui_layer.cardViewActivity
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

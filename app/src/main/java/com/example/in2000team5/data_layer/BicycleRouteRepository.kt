@@ -17,9 +17,10 @@ import kotlin.math.round
 class BicycleRouteRepository {
 
     private val airQualDataSource = AirQualDataSource()
+    private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
 
-    fun constructRoutesThreads(features: List<Features>?, context: Context, bicycleViewModel: BicycleViewModel) {
-
+    suspend fun constructRoutesThreads(bicycleViewModel: BicycleViewModel, context: Context) {
+        val features = bikeRoutedatasrc.fetchRoutes()
         if (features != null) {
             for (bicycleFeature in features) {
                 makeEachRoute(bicycleFeature, context, bicycleViewModel)
