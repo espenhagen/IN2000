@@ -1,6 +1,8 @@
 package com.example.in2000team5.ui_layer
 
+import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
@@ -15,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.ui_layer.theme.IN2000Team5Theme
 import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,20 +31,28 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.domain_layer.BicycleViewModel
+import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.BottomNavItem
 import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
+
 var bicycleRouteList = mutableListOf<BicycleRoute>()
 
 class MainActivity : ComponentActivity() {
     private val viewModel: BicycleViewModel by viewModels()
+    private val weatherModel: WeatherDataViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.makeApiRequest(this)
+        weatherModel.fetchWeather("59.91370670", "10.7526291")
+
+        weatherModel.getTemperature().observe(this) {
+            Log.e("temperatur", it.toString())
+        }
 
 
         viewModel.getRoutes().observe(this) {
@@ -75,6 +86,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MapScreen() {
+
     val oslo = LatLng(59.9139, 10.7522)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(oslo, 10f)
