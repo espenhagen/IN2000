@@ -13,6 +13,10 @@ import java.util.*
 class WeatherDataViewModel: ViewModel() {
 
     val liveTemperature = MutableLiveData<Double?>()
+    val liveSymbol = MutableLiveData<String?>()
+    val liveWindSpeed = MutableLiveData<Double?>()
+    val liveWindDirection = MutableLiveData<Double?>()
+
     val weatherRepository = WeatherDataRepository()
 
 
@@ -26,8 +30,21 @@ class WeatherDataViewModel: ViewModel() {
         return liveTemperature
     }
 
+    // metoder under blir kalt fra WeatherDataRepository for å oppdatere liveDataobjekter
     fun postTemperature(temp: Double?) {
         liveTemperature.postValue(temp)
+    }
+
+    fun postSymbol(symbol: String?) {
+        liveSymbol.postValue(symbol)
+    }
+
+    fun postWindSpeed(speed: Double?) {
+        liveWindSpeed.postValue(speed)
+    }
+
+    fun postWindDirection(dir: Double?) {
+        liveWindDirection.postValue(dir)
     }
 
 
