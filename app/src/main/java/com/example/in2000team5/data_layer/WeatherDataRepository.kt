@@ -16,6 +16,10 @@ class WeatherDataRepository {
             getTemperature(weatherData).also {
                 weatherDataViewModel.postTemperature(it)
             }
+
+            getWeatherSymbol(weatherData).also {
+                weatherDataViewModel.postSymbol(it)
+            }
         }
 
 
@@ -29,8 +33,16 @@ class WeatherDataRepository {
         return getDetails(forecast)?.air_temperature?.toDouble()
     }
 
-    fun getWindSpeed(forecast: LocFore) {
-        val windSpeed = getDetails(forecast)?.wind_speed
+    fun getWindSpeed(forecast: LocFore): Double? {
+        return getDetails(forecast)?.wind_speed?.toDouble()
+    }
+
+    fun getWindDirection(forecast: LocFore): Double? {
+        return getDetails(forecast)?.wind_from_direction?.toDouble()
+    }
+
+    fun getWeatherSymbol(forecast: LocFore): String? {
+        return forecast.properties?.timeseries?.find {it.time == getCurrentTimeAsString()}?.data?.next_1_hours?.summary?.symbol_code
     }
 
     fun getCurrentTimeAsString() : String{
