@@ -13,12 +13,12 @@ class BicycleRouteRemoteDataSource {
         val path = "/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=bym%3Abyruter&outputFormat=application/json"
         val gson = Gson()
 
-        return try {
+         try {
             val response = gson.fromJson(Fuel.get(url + path).awaitString(), Base::class.java)
-            response.features
+            return response.features
         } catch (exception: Exception) {
             Log.d("DATA FETCHING", "A network request exception was thrown: ${exception.message}")
-            null
+            return null
         }
     }
 }
@@ -35,14 +35,3 @@ data class Geometry(val type: String?, val coordinates: List<List<Number>>?)
 
 data class Properties(val objectid: Number?, val id: Number?, val rute: Number?, val tillegg: String?, val tiltak: Any?, val tid: Any?, val gdb_geomattr_data: Any?)
 
-data class BicycleRoute(
-    val id: Number?,
-    val routeNr: Number?,
-    val coordinates: List<LatLng>?,
-    val startDistrict: String?,
-    val endDistrict: String?,
-    val start: String?,
-    val end: String?,
-    val distance: Double,
-    var AQI: Double?
-)
