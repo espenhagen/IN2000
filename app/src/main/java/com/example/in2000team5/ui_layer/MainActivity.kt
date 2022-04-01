@@ -100,6 +100,13 @@ fun MapScreen() {
             title = "Oslo",
             snippet = "Marker in Oslo"
         )
+        for (rute in bicycleRouteList)  {
+            rute.coordinates?.let { Polyline(
+                points = it,
+                color = Color.Gray
+
+            )}
+        }
     }
 }
 
