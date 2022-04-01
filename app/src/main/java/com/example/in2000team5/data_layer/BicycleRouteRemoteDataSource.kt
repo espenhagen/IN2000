@@ -35,14 +35,3 @@ data class Geometry(val type: String?, val coordinates: List<List<Number>>?)
 
 data class Properties(val objectid: Number?, val id: Number?, val rute: Number?, val tillegg: String?, val tiltak: Any?, val tid: Any?, val gdb_geomattr_data: Any?)
 
-data class BicycleRoute(
-    val id: Number?,
-    val routeNr: Number?,
-    val coordinates: List<LatLng>?,
-    val startDistrict: String?,
-    val endDistrict: String?,
-    val start: String?,
-    val end: String?,
-    val distance: Double,
-    var AQI: Double?
-)

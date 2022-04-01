@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class BicycleViewModel: ViewModel() {
 
-    val repositoryRoutes = BicycleRouteRepository()
+    private val repositoryRoutes = BicycleRouteRepository()
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
     private val bicycleRoutes = MutableLiveData<List<BicycleRoute>>()
     private val routes = mutableListOf<BicycleRoute>()
@@ -43,5 +43,4 @@ class BicycleViewModel: ViewModel() {
     fun getRoutes(): LiveData<List<BicycleRoute>> {
         return bicycleRoutes
     }
-
 }

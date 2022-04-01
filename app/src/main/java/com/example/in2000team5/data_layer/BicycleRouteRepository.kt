@@ -24,47 +24,45 @@ class BicycleRouteRepository {
         if (features != null) {
             for (bicycleFeature in features) {
                 makeEachRoute(bicycleFeature, context, bicycleViewModel)
-
             }
         }
     }
 
     private fun makeEachRoute(bicycleFeature: Features, context: Context, bicycleViewModel: BicycleViewModel) {
 
-            val geocoder = Geocoder(context)
-            val id = bicycleFeature.properties?.objectid
-            val routeNr = bicycleFeature.properties?.rute
-            val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
+        val geocoder = Geocoder(context)
+        val id = bicycleFeature.properties?.objectid
+        val routeNr = bicycleFeature.properties?.rute
+        val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
 
-            val firstLatLng = latLngList?.get(0)
-            val lastLatLng = latLngList?.get(latLngList.lastIndex)
+        val firstLatLng = latLngList?.get(0)
+        val lastLatLng = latLngList?.get(latLngList.lastIndex)
 
-            val startAddress = getAddress(geocoder, firstLatLng)
-            val endAddress = getAddress(geocoder, lastLatLng)
+        val startAddress = getAddress(geocoder, firstLatLng)
+        val endAddress = getAddress(geocoder, lastLatLng)
 
-            val startDistrict = constructDistrict(startAddress)
-            val endDistrict = constructDistrict(endAddress)
-            val start = constructAddress(startAddress)
-            val end = constructAddress(endAddress)
+        val startDistrict = constructDistrict(startAddress)
+        val endDistrict = constructDistrict(endAddress)
+        val start = constructAddress(startAddress)
+        val end = constructAddress(endAddress)
 
-            var total = 0.0
-            if (latLngList != null) {
-                for (i in 1 until latLngList.size) {
-                    val lengthResult = FloatArray(1)
-                    Location.distanceBetween(
-                        latLngList[i - 1].latitude,
-                        latLngList[i - 1].longitude,
-                        latLngList[i].latitude,
-                        latLngList[i].longitude,
-                        lengthResult
-                    )
-                    total += lengthResult[0]
-                }
+        var total = 0.0
+        if (latLngList != null) {
+            for (i in 1 until latLngList.size) {
+                val lengthResult = FloatArray(1)
+                Location.distanceBetween(
+                    latLngList[i - 1].latitude,
+                    latLngList[i - 1].longitude,
+                    latLngList[i].latitude,
+                    latLngList[i].longitude,
+                    lengthResult
+                )
+                total += lengthResult[0]
             }
+        }
         val bicycleRoute = BicycleRoute(id, routeNr, latLngList, startDistrict, endDistrict, start, end, total, null)
         bicycleViewModel.fetchAirQualForRouteOnAvg(bicycleRoute)
         bicycleViewModel.postRoutes(bicycleRoute)
-
     }
 
     private fun getAddress(geocoder: Geocoder, latLng: LatLng?): Address? {
@@ -175,5 +173,16 @@ class BicycleRouteRepository {
         repeat(decimals) { multiplier *= 10 }
         return round(this * multiplier) / multiplier
     }
-
 }
+
+data class BicycleRoute(
+    val id: Number?,
+    val routeNr: Number?,
+    val coordinates: List<LatLng>?,
+    val startDistrict: String?,
+    val endDistrict: String?,
+    val start: String?,
+    val end: String?,
+    val distance: Double,
+    var AQI: Double?
+)
