@@ -38,13 +38,13 @@ class BicycleRouteRepository {
         val firstLatLng = latLngList?.get(0)
         val lastLatLng = latLngList?.get(latLngList.lastIndex)
 
-        val startAddress = getAddress(geocoder, firstLatLng)
-        val endAddress = getAddress(geocoder, lastLatLng)
+        val startAddress = "start"//getAddress(geocoder, firstLatLng)
+        val endAddress = "stop"//getAddress(geocoder, lastLatLng)
 
-        val startDistrict = constructDistrict(startAddress)
-        val endDistrict = constructDistrict(endAddress)
-        val start = constructAddress(startAddress)
-        val end = constructAddress(endAddress)
+        val startDistrict = "start"//constructDistrict(startAddress)
+        val endDistrict = "start"//constructDistrict(endAddress)
+        val start = "start"//constructAddress(startAddress)
+        val end = "start"//constructAddress(endAddress)
 
         var total = 0.0
         if (latLngList != null) {
