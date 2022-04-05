@@ -116,7 +116,7 @@ fun MapScreen() {
 
 @Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "kart" ) {
+    NavHost(navController = navController, startDestination = "om" ) {
         composable("kart") {
             MapScreen()
             //MapProperties()
