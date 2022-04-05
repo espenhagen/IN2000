@@ -56,31 +56,35 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             IN2000Team5Theme {
-                val navController = rememberNavController()
-                Scaffold(
-                    bottomBar = {
-                        BottomNavigationBar(
-                            items = listOf(
-                                BottomNavItem(name = "Kart", route = "kart", icon = Icons.Default.Place),
-                                BottomNavItem(name = "Ruter", route = "ruter", icon = Icons.Default.ArrowForward),
-                                BottomNavItem(name = "Om", route = "om", icon = Icons.Default.Info)
-                            ),
-                            navController = navController,
-                            onItemClick = {
-                                navController.navigate(it.route)
-                            }
-                        )
-                    }
-                ) {
-                    Navigation(navController = navController)
-
-                }
+                BottomNavigation()
             }
         }
         viewModel.getRoutes().observe(this) {
             bicycleRouteList = it as MutableList<BicycleRoute>
 
         }
+    }
+}
+
+@Composable
+fun BottomNavigation() {
+    val navController = rememberNavController()
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(
+                items = listOf(
+                    BottomNavItem(name = "Kart", route = "kart", icon = Icons.Default.Place),
+                    BottomNavItem(name = "Ruter", route = "ruter", icon = Icons.Default.ArrowForward),
+                    BottomNavItem(name = "Om", route = "om", icon = Icons.Default.Info)
+                ),
+                navController = navController,
+                onItemClick = {
+                    navController.navigate(it.route)
+                }
+            )
+        }
+    ) {
+        Navigation(navController = navController)
     }
 }
 

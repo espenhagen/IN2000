@@ -9,6 +9,8 @@ import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.BicycleRouteRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class BicycleViewModel: ViewModel() {
@@ -17,6 +19,9 @@ class BicycleViewModel: ViewModel() {
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
     private val bicycleRoutes = MutableLiveData<List<BicycleRoute>>()
     private val routes = mutableListOf<BicycleRoute>()
+
+    private val _bicycleRoutesSharedFlow = MutableSharedFlow<List<BicycleRoute>>()
+    val bicycleRoutesSharedFlow = _bicycleRoutesSharedFlow.asSharedFlow()
 
     fun fetchAirQualForRouteOnAvg(route: BicycleRoute) {
         // Do an asynchronous operation to fetch users.
