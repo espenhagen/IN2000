@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Info
@@ -18,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.example.in2000team5.ui_layer.theme.IN2000Team5Theme
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -96,12 +93,8 @@ fun MapScreen() {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(oslo, 12f)
     }
-    var uiSettings by remember { mutableStateOf(MapUiSettings()) }
-    var properties by remember {
-        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
-    }
     GoogleMap(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.padding(bottom = 50.dp),
         cameraPositionState = cameraPositionState,
         uiSettings = MapUiSettings(compassEnabled = true, myLocationButtonEnabled = true)
     ) {
@@ -110,11 +103,6 @@ fun MapScreen() {
             title = "Oslo",
             snippet = "Marker in Oslo"
         )
-        Switch(
-            checked = uiSettings.zoomControlsEnabled,
-            onCheckedChange = {
-                uiSettings = uiSettings.copy(zoomControlsEnabled = it)
-            })
         for (rute in bicycleRouteList)  {
             rute.coordinates?.let { Polyline(
                 points = it,
