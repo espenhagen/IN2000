@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.example.in2000team5.ui_layer.theme.IN2000Team5Theme
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -93,17 +94,27 @@ fun MapScreen() {
 
     val oslo = LatLng(59.9139, 10.7522)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(oslo, 10f)
+        position = CameraPosition.fromLatLngZoom(oslo, 12f)
+    }
+    var uiSettings by remember { mutableStateOf(MapUiSettings()) }
+    var properties by remember {
+        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
     }
     GoogleMap(
-        modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState
+        modifier = Modifier.fillMaxWidth(),
+        cameraPositionState = cameraPositionState,
+        uiSettings = MapUiSettings(compassEnabled = true, myLocationButtonEnabled = true)
     ) {
         Marker(     // Adds marker to the map
             position = oslo,
             title = "Oslo",
             snippet = "Marker in Oslo"
         )
+        Switch(
+            checked = uiSettings.zoomControlsEnabled,
+            onCheckedChange = {
+                uiSettings = uiSettings.copy(zoomControlsEnabled = it)
+            })
         for (rute in bicycleRouteList)  {
             rute.coordinates?.let { Polyline(
                 points = it,
@@ -114,25 +125,6 @@ fun MapScreen() {
     }
 }
 
-@Composable
-fun MapProperties() {
-    var uiSettings by remember { mutableStateOf(MapUiSettings()) }
-    var properties by remember {
-        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
-    }
-    Box(Modifier.fillMaxSize()) {
-        GoogleMap(
-            modifier = Modifier.matchParentSize(),
-            properties = properties,
-            uiSettings = uiSettings
-        )
-        Switch(
-            checked = uiSettings.zoomControlsEnabled,
-            onCheckedChange = {
-                uiSettings = uiSettings.copy(zoomControlsEnabled = it)
-            })
-    }
-}
 
 @Composable
 fun Navigation(navController: NavHostController) {
@@ -144,11 +136,9 @@ fun Navigation(navController: NavHostController) {
         }
         composable("ruter") {
             VisAlleRuter(ruter = bicycleRouteList)
-
         }
         composable("om") {
             AboutScreen()
-
         }
     }
 }
