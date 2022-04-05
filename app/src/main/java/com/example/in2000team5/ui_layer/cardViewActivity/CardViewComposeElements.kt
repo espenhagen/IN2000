@@ -179,7 +179,9 @@ fun SykkelRuteCard(rute: BicycleRoute) {
 
 @Composable
 fun VisAlleRuter(ruter: List<BicycleRoute>) {
-    LazyColumn {
+    LazyColumn (
+        modifier = Modifier.padding(bottom = 55.dp)
+    ){
         items(ruter) { rute ->
             SykkelRuteCard(rute)
 
