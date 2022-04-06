@@ -106,6 +106,13 @@ fun MapScreen() {
             snippet = "Marker in Oslo"
         )
 
+        for (storRute in bicycleRouteList) {
+
+            for (liste in storRute.fragmentList) {
+                Po
+            }
+        }
+
 
 
         //Veldig ikke god kode, skal fikse det. var det forste som funka
