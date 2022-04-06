@@ -110,31 +110,71 @@ fun MapScreen() {
 
             for (liste in storRute.fragmentList) {
 
-                liste.let {
-                    Polyline(
-                        points = it!!,
-                        color = Color.Gray
-                    )
+                when(storRute.id) {
 
-                    if (storRute.id == 0) {
+                    0 -> liste.let {
                         Polyline(
-                            points = it,
+                            points = it!!,
                             color = Color.Red
-                        )
-                    } else if (storRute.id == 1) {
+                        )}
+                    1 -> liste.let {
                         Polyline(
-                            points = it,
+                            points = it!!,
                             color = Color.Blue
-                        )
-                    } else if (storRute.id == 2) {
+                        )}
+
+                    2 -> liste.let {
                         Polyline(
-                            points = it,
+                            points = it!!,
                             color = Color.Magenta
                         )
                     }
-                    
-                    
+
+                    3 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Yellow
+                        )
+                    }
+
+                    4 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Green
+                        )
+                    }
+
+                    5 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Black
+                        )
+                    }
+
+                    6 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Cyan
+                        )
+                    }
+
+                    7 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.LightGray
+                        )
+                    }
+
+                    else -> {
+                        liste.let {
+                            Polyline(
+                                points = it!!,
+                                color = Color.White
+                            )
+                        }
+                    }
                 }
+
             }
         }
     }
