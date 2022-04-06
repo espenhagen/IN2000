@@ -84,7 +84,7 @@ fun BottomNavigation() {
             )
         }
     ) {
-        androidx.navigation.Navigation(navController = navController)
+        Navigation(navController = navController)
     }
 }
 
@@ -114,8 +114,26 @@ fun MapScreen() {
                     Polyline(
                         points = it!!,
                         color = Color.Gray
-
                     )
+
+                    if (storRute.id == 0) {
+                        Polyline(
+                            points = it,
+                            color = Color.Red
+                        )
+                    } else if (storRute.id == 1) {
+                        Polyline(
+                            points = it,
+                            color = Color.Blue
+                        )
+                    } else if (storRute.id == 2) {
+                        Polyline(
+                            points = it,
+                            color = Color.Magenta
+                        )
+                    }
+                    
+                    
                 }
             }
         }
