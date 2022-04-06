@@ -105,12 +105,22 @@ fun MapScreen() {
             snippet = "Marker in Oslo"
         )
 
+        //Veldig ikke god kode, skal fikse det. var det forste som funka
         for (rute in bicycleRouteList)  {
             rute.coordinates?.let { Polyline(
                 points = it,
                 color = Color.Gray
 
-            )}
+            )
+
+            if (rute.routeNr == 0) {
+                rute.coordinates?.let {
+                    Polyline(
+                        points = it,
+                        color = Color.Red
+                    )
+                }
+            }}
         }
     }
 }
