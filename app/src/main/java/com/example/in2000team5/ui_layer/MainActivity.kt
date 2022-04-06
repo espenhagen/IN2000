@@ -28,6 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.in2000team5.data_layer.BicycleRoute
+import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.domain_layer.BicycleViewModel
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.BottomNavItem
@@ -37,7 +38,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 
-var bicycleRouteList = mutableListOf<BicycleRoute>()
+var bicycleRouteList = mutableListOf<BigBikeRoute>()
 
 class MainActivity : ComponentActivity() {
     private val viewModel: BicycleViewModel by viewModels()
@@ -59,7 +60,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         viewModel.getRoutes().observe(this) {
-            bicycleRouteList = it as MutableList<BicycleRoute>
+            bicycleRouteList = it as MutableList<BigBikeRoute>
 
         }
     }
@@ -105,23 +106,10 @@ fun MapScreen() {
             snippet = "Marker in Oslo"
         )
 
+
+
         //Veldig ikke god kode, skal fikse det. var det forste som funka
-        for (rute in bicycleRouteList)  {
-            rute.coordinates?.let { Polyline(
-                points = it,
-                color = Color.Gray
 
-            )
-
-            if (rute.routeNr == 0) {
-                rute.coordinates?.let {
-                    Polyline(
-                        points = it,
-                        color = Color.Red
-                    )
-                }
-            }}
-        }
     }
 }
 
