@@ -1,6 +1,7 @@
 package com.example.in2000team5.domain_layer
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,7 +37,10 @@ class BicycleViewModel: ViewModel() {
 
     fun makeApiRequest(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            repositoryRoutes.constructRoutesThreads(this@BicycleViewModel, context)
+            //repositoryRoutes.constructRoutesThreads(this@BicycleViewModel, context)
+            //Log.e("constructRoutesThreads Ferdig", "tommel opp")
+            repositoryRoutes.myConstructRoutes(this@BicycleViewModel, context)
+            Log.e("myConstructRoutes Ferdig", "tommel sidelengs")
         }
     }
 

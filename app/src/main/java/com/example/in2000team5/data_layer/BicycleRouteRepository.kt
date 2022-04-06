@@ -19,6 +19,7 @@ class BicycleRouteRepository {
 
     private val airQualDataSource = AirQualDataSource()
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
+    private val RouteCordMap: HashMap<Int, MutableList<LatLng>?> = HashMap()
 
     suspend fun constructRoutesThreads(bicycleViewModel: BicycleViewModel, context: Context) {
         val features = bikeRoutedatasrc.fetchRoutes()
@@ -27,6 +28,91 @@ class BicycleRouteRepository {
                 makeEachRoute(bicycleFeature, context, bicycleViewModel)
             }
         }
+    }
+
+    suspend fun myConstructRoutes(bicycleViewModel: BicycleViewModel, context: Context) {
+        bikeRoutedatasrc.fetchRoutes()?.forEach {
+            addCords(it)
+        }
+
+        //Naa har jeg et hashmap med alle kordinatene til storrutene
+
+        RouteCordMap.forEach {
+            constructRoute(it, bicycleViewModel, context)
+        }
+
+
+        //logging og testing
+        val stringBuilder = StringBuilder()
+        var antNoder = 0
+        stringBuilder.append("map->").append("\n")
+        for (i in 0 until RouteCordMap.size) {
+            stringBuilder.append("$i: ", RouteCordMap[i]?.size).append("\n")
+            antNoder += RouteCordMap[i]?.size!!
+        }
+        stringBuilder.append("antNoder: ").append(antNoder)
+        Log.e("RouteCordMap", stringBuilder.toString())
+
+
+    }
+
+    private fun addCords(bicycleFeature: Features) {
+        val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
+        val id: Int
+        if (bicycleFeature.properties?.rute == null)  {
+            id = 0
+        } else {
+            id = bicycleFeature.properties.rute.toInt()
+        }
+
+        if (!RouteCordMap.containsKey(id)) {
+            RouteCordMap[id] = latLngList as MutableList<LatLng>
+        } else {
+            RouteCordMap[id]?.plusAssign(latLngList as MutableList<LatLng>)
+        }
+
+    }
+
+    private fun constructRoute(
+        entry: Map.Entry<Int, MutableList<LatLng>?>,
+        bicycleViewModel: BicycleViewModel,
+        context: Context
+    ) {
+        val geocoder = Geocoder(context)
+
+        val routeNr = entry.key
+        val latLngList = entry.value
+
+        val firstLatLng = latLngList?.get(0)
+        val lastLatLng = latLngList?.get(latLngList.lastIndex)
+
+        val startAddress = getAddress(geocoder, firstLatLng)
+        val endAddress = getAddress(geocoder, lastLatLng)
+
+        val startDistrict = constructDistrict(startAddress)
+        val endDistrict = constructDistrict(endAddress)
+        val start = constructAddress(startAddress)
+        val end = constructAddress(endAddress)
+
+        var total = 0.0
+        if (latLngList != null) {
+            for (i in 1 until latLngList.size) {
+                val lengthResult = FloatArray(1)
+                Location.distanceBetween(
+                    latLngList[i - 1].latitude,
+                    latLngList[i - 1].longitude,
+                    latLngList[i].latitude,
+                    latLngList[i].longitude,
+                    lengthResult
+                )
+                total += lengthResult[0]
+            }
+        }
+
+        val bicycleRoute = BicycleRoute("litenRute", routeNr, latLngList, startDistrict, endDistrict, start, end, total, null)
+        bicycleViewModel.fetchAirQualForRouteOnAvg(bicycleRoute)
+        bicycleViewModel.postRoutes(bicycleRoute)
+
     }
 
     private fun makeEachRoute(bicycleFeature: Features, context: Context, bicycleViewModel: BicycleViewModel) {
@@ -61,7 +147,7 @@ class BicycleRouteRepository {
                 total += lengthResult[0]
             }
         }
-        val bicycleRoute = BicycleRoute(id, routeNr, latLngList, startDistrict, endDistrict, start, end, total, null)
+        val bicycleRoute = BicycleRoute("litenRute", routeNr, latLngList, startDistrict, endDistrict, start, end, total, null)
         bicycleViewModel.fetchAirQualForRouteOnAvg(bicycleRoute)
         bicycleViewModel.postRoutes(bicycleRoute)
     }
@@ -161,10 +247,12 @@ class BicycleRouteRepository {
         repeat(decimals) { multiplier *= 10 }
         return round(this * multiplier) / multiplier
     }
+
+
 }
 
 data class BicycleRoute(
-    val id: Number?,
+    val name: String,
     val routeNr: Number?,
     val coordinates: List<LatLng>?,
     val startDistrict: String?,
@@ -174,3 +262,5 @@ data class BicycleRoute(
     val distance: Double,
     var AQI: Double?
 )
+
+data class BigBikeRoute(val name: String, val ruter: List<BicycleRoute>)

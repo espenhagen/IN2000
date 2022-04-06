@@ -110,7 +110,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
 
                                 )
                                 Text(
-                                    text = "${String.format("%.1f", 100.10)}°C",
+                                    text = rute.routeNr.toString(),
                                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                                     style = MaterialTheme.typography.body2,
 

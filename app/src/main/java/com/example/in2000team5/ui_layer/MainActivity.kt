@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.makeApiRequest(this)
+        //hardkodet til midt i oslo
         weatherModel.fetchWeather("59.91370670", "10.7526291")
 
         weatherModel.getTemperature().observe(this) {
@@ -103,6 +104,7 @@ fun MapScreen() {
             title = "Oslo",
             snippet = "Marker in Oslo"
         )
+
         for (rute in bicycleRouteList)  {
             rute.coordinates?.let { Polyline(
                 points = it,
