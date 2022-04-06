@@ -84,7 +84,7 @@ fun BottomNavigation() {
             )
         }
     ) {
-        Navigation(navController = navController)
+        androidx.navigation.Navigation(navController = navController)
     }
 }
 
@@ -109,14 +109,16 @@ fun MapScreen() {
         for (storRute in bicycleRouteList) {
 
             for (liste in storRute.fragmentList) {
-                Po
+
+                liste.let {
+                    Polyline(
+                        points = it!!,
+                        color = Color.Gray
+
+                    )
+                }
             }
         }
-
-
-
-        //Veldig ikke god kode, skal fikse det. var det forste som funka
-
     }
 }
 
