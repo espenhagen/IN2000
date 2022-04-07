@@ -54,14 +54,18 @@ fun InfoRow(model: WeatherDataViewModel) {
             )
             Text(
                 text = "${model.liveTemperature.value}°C",
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.h4,
+                modifier = Modifier.align(alignment = Alignment.CenterVertically)
+
             )
             //kan legge til vindretning eller liknende her:
             Image(
                 painter = painterResource(id = id),
                 contentDescription = "en sol",
             )
-            Column() {
+            Column(
+                modifier = Modifier.align(alignment = Alignment.CenterVertically)
+            ) {
                 Text(
                     text = "vindretning: ${model.liveWindDirection.value}",
                     style = MaterialTheme.typography.body1,
