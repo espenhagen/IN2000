@@ -38,7 +38,8 @@ fun InfoRow(model: WeatherDataViewModel) {
         elevation = 4.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Blue)
+            .height(80.dp),
+        color = MaterialTheme.colors.background
     ) {
         Row {
             val id = getWeatherIcon(model.liveSymbol.value)
@@ -119,7 +120,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
                         Row {
                             Column {
                                 Image(
-                                    painter = painterResource(R.drawable.clearsky_day),
+                                    painter = painterResource(R.drawable.unknown),
                                     contentDescription = "Weather",
                                     modifier = Modifier
                                         .size(40.dp)
