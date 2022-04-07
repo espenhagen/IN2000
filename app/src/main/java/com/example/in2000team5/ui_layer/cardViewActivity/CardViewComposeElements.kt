@@ -1,6 +1,8 @@
 package com.example.in2000team5.ui_layer.cardViewActivity
 
+import android.text.style.BackgroundColorSpan
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,47 +15,52 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
+import com.example.in2000team5.ui_layer.theme.IN2000Team5Theme
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import org.intellij.lang.annotations.JdkConstants
 
 
 @Composable
-fun InfoRow(model:WeatherDataViewModel) {
+fun InfoRow(model: WeatherDataViewModel) {
     Surface(
-        shape = MaterialTheme.shapes.small,
-        elevation = 2.dp,
+        elevation = 4.dp,
         modifier = Modifier
-            .height(60.dp)
-            .fillMaxWidth(),
-        color = MaterialTheme.colors.secondary
+            .fillMaxWidth()
+            .background(Color.Blue)
     ) {
         Row {
-            val symbol = getWeatherIcon(model.liveSymbol.value)
+            val id = getWeatherIcon(model.liveSymbol.value)
+
+            //Det skal gå an å hente id fra en streng - men får ikke til.
+            //val denne = android.content.res.Resources.getSystem()
+            //val id= denne.getIdentifier("bike","drawable","com.example.in2000team5")
+
             Image(
-                painter = painterResource(id = symbol),
+                painter = painterResource(id = id),
                 contentDescription = "en sol",
-                //Modifier.size(200.dp)
             )
             Text(
-                text = "${model.liveTemperature.value}*C",
-                style = MaterialTheme.typography.h6,
+                text = "${model.liveTemperature.value}°C",
+                style = MaterialTheme.typography.h4
+            )
+            //kan legge til vindretning eller liknende her:
+            Image(
+                painter = painterResource(id = id),
+                contentDescription = "en sol",
             )
             Column() {
-
-
-                Text(
-                    text = "liveSymbol: ${model.liveSymbol.value}",
-                    style = MaterialTheme.typography.body1,
-                )
                 Text(
                     text = "vindretning: ${model.liveWindDirection.value}",
                     style = MaterialTheme.typography.body1,
@@ -63,6 +70,7 @@ fun InfoRow(model:WeatherDataViewModel) {
                     style = MaterialTheme.typography.body1,
                 )
             }
+
         }
     }
 }
@@ -111,7 +119,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
                         Row {
                             Column {
                                 Image(
-                                    painter = painterResource(R.drawable.sun),
+                                    painter = painterResource(R.drawable.clearsky_day),
                                     contentDescription = "Weather",
                                     modifier = Modifier
                                         .size(40.dp)
@@ -192,9 +200,9 @@ fun SykkelRuteCard(rute: BicycleRoute) {
 
 @Composable
 fun VisAlleRuter(ruter: List<BicycleRoute>) {
-    LazyColumn (
+    LazyColumn(
         modifier = Modifier.padding(bottom = 55.dp)
-    ){
+    ) {
         items(ruter) { rute ->
             SykkelRuteCard(rute)
 
@@ -213,10 +221,47 @@ fun PreviewVisAleRuter(){
 
 fun getWeatherIcon(description: String?): Int {
     return when (description) {
-        "rainy" -> R.drawable.rain
-        "sunny" -> R.drawable.sun
-        "both" -> R.drawable.suncloud
+        "clearsky" -> R.drawable.clearsky_day
         "cloudy" -> R.drawable.cloudy
+        "fair" -> R.drawable.fair_day
+        "fog" -> R.drawable.fog
+        "heavyrain" -> R.drawable.heavyrain
+        "heavyrainandthunder" -> R.drawable.heavyrainandthunder
+        "heavyrainshowers" -> R.drawable.heavyrainshowers_day
+        "heavyrainshowersandthunder" -> R.drawable.heavyrainshowersandthunder_day
+        "heavysleet" -> R.drawable.heavysleet
+        "heavysleetandthunder" -> R.drawable.heavysleetandthunder
+        "heavysleetshowers" -> R.drawable.heavysleetshowers_day
+        "heavysleetshowersandthunder" -> R.drawable.heavysleetshowersandthunder_day
+        "heavysnow" -> R.drawable.heavysnow
+        "heavysnowandthunder" -> R.drawable.heavysnowandthunder
+        "heavysnowshowers" -> R.drawable.heavysnowshowers_day
+        "heavysnowshowersandthunder" -> R.drawable.heavysnowshowersandthunder_day
+        "lightrain" -> R.drawable.lightrain
+        "lightrainandthunder" -> R.drawable.lightrainandthunder
+        "lightrainshowers" -> R.drawable.lightrainshowers_day
+        "lightrainshowersandthunder" -> R.drawable.lightrainshowersandthunder_day
+        "lightsleet" -> R.drawable.lightsleet
+        "lightsleetandthunder" -> R.drawable.lightsleetandthunder
+        "lightsleetshowers" -> R.drawable.lightsleetshowers_day
+        "lightsnow" -> R.drawable.lightsnow
+        "lightsnowandthunder" -> R.drawable.lightsnowandthunder
+        "lightsnowshowers" -> R.drawable.lightsnowshowers_day
+        "lightssleetshowersandthunder" -> R.drawable.lightssleetshowersandthunder_day
+        "lightssnowshowersandthunder" -> R.drawable.lightssnowshowersandthunder_day
+        "partlycloudy" -> R.drawable.partlycloudy_day
+        "rain" -> R.drawable.rain
+        "rainandthunder" -> R.drawable.rainandthunder
+        "rainshowers" -> R.drawable.rainshowers_day
+        "rainshowersandthunder" -> R.drawable.rainshowersandthunder_day
+        "sleet" -> R.drawable.sleet
+        "sleetandthunder" -> R.drawable.sleetandthunder
+        "sleetshowers" -> R.drawable.sleetshowers_day
+        "sleetshowersandthunder" -> R.drawable.sleetshowersandthunder_day
+        "snow" -> R.drawable.snow
+        "snowandthunder" -> R.drawable.snowandthunder
+        "snowshowers" -> R.drawable.snowshowers_day
+        "snowshowersandthunder" -> R.drawable.snowshowersandthunder_day
         else -> {
             R.drawable.unknown
         }
@@ -224,7 +269,10 @@ fun getWeatherIcon(description: String?): Int {
 }
 
 fun getAirIcon(index: Double?): Int {
-    if (index == null) { return R.drawable.unknown}
-    else if(index<2) {return R.drawable.goodair}
+    if (index == null) {
+        return R.drawable.unknown
+    } else if (index < 2) {
+        return R.drawable.goodair
+    }
     return R.drawable.badair
 }

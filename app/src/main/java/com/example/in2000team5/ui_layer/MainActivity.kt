@@ -137,7 +137,7 @@ fun Navigation(navController: NavHostController, model:WeatherDataViewModel) {
         }
         composable("ruter") {
             Column() {
-                //InfoRow(model)
+                InfoRow(model)
                 VisAlleRuter(ruter = bicycleRouteList)
 
             }
