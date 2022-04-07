@@ -1,6 +1,5 @@
 package com.example.in2000team5.ui_layer.cardViewActivity
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.BicycleRoute
+import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
@@ -27,7 +27,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 
 @Composable
-fun InfoRow(uv: Int, sykkelfore: String) {
+fun InfoRow(model:WeatherDataViewModel) {
     Surface(
         shape = MaterialTheme.shapes.small,
         elevation = 2.dp,
@@ -37,19 +37,32 @@ fun InfoRow(uv: Int, sykkelfore: String) {
         color = MaterialTheme.colors.secondary
     ) {
         Row {
+            val symbol = getWeatherIcon(model.liveSymbol.value)
             Image(
-                painter = painterResource(id = R.drawable.sunscreen),
-                contentDescription = "en sol"
+                painter = painterResource(id = symbol),
+                contentDescription = "en sol",
+                //Modifier.size(200.dp)
             )
             Text(
-                text = "UV-indeks: $uv",
-                style = MaterialTheme.typography.body1,
+                text = "${model.liveTemperature.value}*C",
+                style = MaterialTheme.typography.h6,
             )
-            Image(painter = painterResource(id = R.drawable.bike), contentDescription = "en sykkel")
-            Text(
-                text = "Sykkelføre: $sykkelfore",
-                style = MaterialTheme.typography.body1,
-            )
+            Column() {
+
+
+                Text(
+                    text = "liveSymbol: ${model.liveSymbol.value}",
+                    style = MaterialTheme.typography.body1,
+                )
+                Text(
+                    text = "vindretning: ${model.liveWindDirection.value}",
+                    style = MaterialTheme.typography.body1,
+                )
+                Text(
+                    text = "vindstyrke: ${model.liveWindSpeed.value}",
+                    style = MaterialTheme.typography.body1,
+                )
+            }
         }
     }
 }
@@ -198,12 +211,12 @@ fun PreviewVisAleRuter(){
 }
 */
 
-fun getWeatherIcon(description: String): Int {
+fun getWeatherIcon(description: String?): Int {
     return when (description) {
         "rainy" -> R.drawable.rain
         "sunny" -> R.drawable.sun
         "both" -> R.drawable.suncloud
-        "cloudy" -> R.drawable.cloud
+        "cloudy" -> R.drawable.cloudy
         else -> {
             R.drawable.unknown
         }

@@ -10,7 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class WeatherDataViewModel: ViewModel() {
+class
+WeatherDataViewModel: ViewModel() {
 
     val liveTemperature = MutableLiveData<Double?>()
     val liveSymbol = MutableLiveData<String?>()
