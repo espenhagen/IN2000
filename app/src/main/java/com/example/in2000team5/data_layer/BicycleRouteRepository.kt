@@ -269,7 +269,7 @@ class BicycleRouteRepository {
             }
         }
         Log.d("sjekkverdi", "tot ${tot} , sampledPoints ${sampledPoints}")
-        return tot.div(sampledPoints)
+        return tot.div(sampledPoints).round(2)
     }
 
     //found on internett (stackoverflow)
