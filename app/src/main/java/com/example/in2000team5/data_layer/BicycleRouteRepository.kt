@@ -21,15 +21,6 @@ class BicycleRouteRepository {
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
     private val bigRouteMap: HashMap<Int, MutableList<List<LatLng>?>> = HashMap()
 
-    suspend fun constructRoutesThreads(bicycleViewModel: BicycleViewModel, context: Context) {
-        val features = bikeRoutedatasrc.fetchRoutes()
-        if (features != null) {
-            for (bicycleFeature in features) {
-                makeEachRoute(bicycleFeature, context, bicycleViewModel)
-            }
-        }
-    }
-
     suspend fun makeBigRoutes(bicycleViewModel: BicycleViewModel, context: Context) {
         bikeRoutedatasrc.fetchRoutes()?.forEach {
             addCords(it)
@@ -37,8 +28,6 @@ class BicycleRouteRepository {
 
         //Naa har jeg et hashmap med en liste med alle smaaturene
         val routeNames = routeUtils.routeNames()
-
-
         bigRouteMap.forEach {
 
 
@@ -68,8 +57,6 @@ class BicycleRouteRepository {
         }
         stringBuilder.append("antNoder: ").append(antNoder)
         Log.d("RouteCordMap", stringBuilder.toString())
-
-
     }
 
     private fun addCords(bicycleFeature: Features) {
@@ -87,37 +74,6 @@ class BicycleRouteRepository {
             bigRouteMap[id]?.add(latLngList)
         }
     }
-
-    private fun makeEachRoute(
-        bicycleFeature: Features,
-        context: Context,
-        bicycleViewModel: BicycleViewModel
-    ) {
-
-        val geocoder = Geocoder(context)
-        val id = bicycleFeature.properties?.objectid
-        val routeNr = bicycleFeature.properties?.rute
-        val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
-
-        val firstLatLng = latLngList?.get(0)
-        val lastLatLng = latLngList?.get(latLngList.lastIndex)
-
-        val startAddress = getAddress(geocoder, firstLatLng)
-        val endAddress = getAddress(geocoder, lastLatLng)
-
-        val startDistrict = constructDistrict(startAddress)
-        val endDistrict = constructDistrict(endAddress)
-        val start = constructAddress(startAddress)
-        val end = constructAddress(endAddress)
-
-        var total: Double = 0.0
-        if (latLngList != null) {
-            total = latLngListLength(latLngList)
-        }
-        val bicycleRoute =
-            BicycleRoute(routeNr, latLngList, startDistrict, endDistrict, start, end, total)
-    }
-
 
 
 
@@ -137,15 +93,7 @@ class BicycleRouteRepository {
         return total
     }
 
-    private fun calculateRouteLength(ruteliste: MutableList<List<LatLng>?>): Double {
-        //var sum = 0.0
-
-        //ruteliste.forEach {
-        //    sum += latLngListLength(it!!)
-        //}
-
-        //return sum
-
+    private fun calculateRouteLength(ruteliste: MutableList<List<LatLng>?>) : Double {
         return ruteliste.fold(0.0) { total, next -> total + latLngListLength(next!!) }
     }
 
@@ -298,3 +246,4 @@ data class BigBikeRoute(
     val length: Double,
     var AQI: Double?
 )
+
