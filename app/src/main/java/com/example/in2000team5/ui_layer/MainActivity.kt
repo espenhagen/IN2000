@@ -28,6 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.in2000team5.data_layer.BicycleRoute
+import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.domain_layer.BicycleViewModel
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.BottomNavItem
@@ -37,7 +38,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 
-var bicycleRouteList = mutableListOf<BicycleRoute>()
+var bicycleRouteList = mutableListOf<BigBikeRoute>()
 
 class MainActivity : ComponentActivity() {
     private val viewModel: BicycleViewModel by viewModels()
@@ -46,6 +47,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.makeApiRequest(this)
+        //hardkodet til midt i oslo
         weatherModel.fetchWeather("59.91370670", "10.7526291")
 
         weatherModel.getTemperature().observe(this) {
@@ -58,7 +60,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         viewModel.getRoutes().observe(this) {
-            bicycleRouteList = it as MutableList<BicycleRoute>
+            bicycleRouteList = it as MutableList<BigBikeRoute>
 
         }
     }
@@ -103,12 +105,77 @@ fun MapScreen() {
             title = "Oslo",
             snippet = "Marker in Oslo"
         )
-        for (rute in bicycleRouteList)  {
-            rute.coordinates?.let { Polyline(
-                points = it,
-                color = Color.Gray
 
-            )}
+        for (storRute in bicycleRouteList) {
+
+            for (liste in storRute.fragmentList) {
+
+                when(storRute.id) {
+
+                    0 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Red
+                        )}
+                    1 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Blue
+                        )}
+
+                    2 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Magenta
+                        )
+                    }
+
+                    3 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Yellow
+                        )
+                    }
+
+                    4 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Green
+                        )
+                    }
+
+                    5 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Black
+                        )
+                    }
+
+                    6 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.Cyan
+                        )
+                    }
+
+                    7 -> liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = Color.LightGray
+                        )
+                    }
+
+                    else -> {
+                        liste.let {
+                            Polyline(
+                                points = it!!,
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+
+            }
         }
     }
 }

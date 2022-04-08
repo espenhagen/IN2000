@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.BicycleRoute
+import com.example.in2000team5.data_layer.BigBikeRoute
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
@@ -56,7 +57,7 @@ fun InfoRow(uv: Int, sykkelfore: String) {
 
 
 @Composable
-fun SykkelRuteCard(rute: BicycleRoute) {
+fun SykkelRuteCard(rute: BigBikeRoute) {
     Surface(
         shape = MaterialTheme.shapes.medium,
         elevation = 4.dp,
@@ -72,7 +73,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
         ) {
 
             Text(
-                text = "${rute.start} - ${rute.end}",
+                text = "${rute.start} - ${rute.slutt}",
                 color = MaterialTheme.colors.secondaryVariant,
                 style = MaterialTheme.typography.h5
             )
@@ -83,7 +84,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
                 Row {
                     Column {
                         Text(
-                            text = "Lengde: ${rute.distance.toInt()} meter",
+                            text = "Lengde: ${rute.length.toInt()} meter",
                             modifier = Modifier
                                 .padding(all = 4.dp)
                                 .width(160.dp),
@@ -110,7 +111,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
 
                                 )
                                 Text(
-                                    text = "${String.format("%.1f", 100.10)}°C",
+                                    text = rute.id.toString(),
                                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                                     style = MaterialTheme.typography.body2,
 
@@ -152,7 +153,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
             }
             Row {
                 if (isExpanded) {
-                    val plass = rute.coordinates?.get(0)
+                    val plass = rute.fragmentList[0]?.get(0)
                     //val singapore = LatLng(1.35, 103.87)
 
                     val cameraPositionState = rememberCameraPositionState {
@@ -167,7 +168,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
                             position = plass!!,
                             title = rute.start,
                         )
-                        Polyline(rute.coordinates)
+                        Polyline(rute.fragmentList[0]!!)
                     }
                 }
             }
@@ -178,7 +179,7 @@ fun SykkelRuteCard(rute: BicycleRoute) {
 
 
 @Composable
-fun VisAlleRuter(ruter: List<BicycleRoute>) {
+fun VisAlleRuter(ruter: List<BigBikeRoute>) {
     LazyColumn (
         modifier = Modifier.padding(bottom = 55.dp)
     ){

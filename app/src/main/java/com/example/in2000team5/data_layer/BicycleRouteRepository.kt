@@ -7,62 +7,85 @@ import android.location.Geocoder
 import android.location.Location
 import android.util.Log
 import com.example.in2000team5.domain_layer.BicycleViewModel
+import com.example.in2000team5.utils.metUtils
+import com.example.in2000team5.utils.routeUtils
 import com.google.android.gms.maps.model.LatLng
 import org.locationtech.proj4j.CRSFactory
 import org.locationtech.proj4j.CoordinateTransformFactory
 import org.locationtech.proj4j.ProjCoordinate
-import java.util.*
 import kotlin.math.round
 
 class BicycleRouteRepository {
 
     private val airQualDataSource = AirQualDataSource()
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
+    private val bigRouteMap: HashMap<Int, MutableList<List<LatLng>?>> = HashMap()
 
-    suspend fun constructRoutesThreads(bicycleViewModel: BicycleViewModel, context: Context) {
-        val features = bikeRoutedatasrc.fetchRoutes()
-        if (features != null) {
-            for (bicycleFeature in features) {
-                makeEachRoute(bicycleFeature, context, bicycleViewModel)
-            }
+    suspend fun makeBigRoutes(bicycleViewModel: BicycleViewModel, context: Context) {
+        bikeRoutedatasrc.fetchRoutes()?.forEach {
+            addCords(it)
+        }
+
+        //Naa har jeg et hashmap med en liste med alle smaaturene
+        val routeNames = routeUtils.routeNames()
+        bigRouteMap.forEach {
+            val bigBikeRoute = BigBikeRoute(it.key, it.value, routeNames[it.key]?.get(0)!!, routeNames[it.key]?.get(1)!!, calculateRouteLength(it.value), null)
+
+            bicycleViewModel.postRoutes(bigBikeRoute)
+            //Log.d("start", bigBikeRoute.start)
+            //Log.d("slutt", bigBikeRoute.slutt)
+            //Log.e("big Route", bigBikeRoute.toString())
+        }
+
+
+        //logging og testing
+        val stringBuilder = StringBuilder()
+        var antNoder = 0
+        stringBuilder.append("map->").append("\n")
+        for (i in 0 until bigRouteMap.size) {
+            stringBuilder.append("$i: ", bigRouteMap[i]?.size).append("\n")
+            antNoder += bigRouteMap[i]?.size!!
+        }
+        stringBuilder.append("antNoder: ").append(antNoder)
+        Log.d("RouteCordMap", stringBuilder.toString())
+    }
+
+    private fun addCords(bicycleFeature: Features) {
+        val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
+        val id: Int
+        if (bicycleFeature.properties?.rute == null)  {
+            id = 0
+        } else {
+            id = bicycleFeature.properties.rute.toInt()
+        }
+
+        if (!bigRouteMap.containsKey(id)) {
+            bigRouteMap[id] = mutableListOf(latLngList)
+        } else {
+            bigRouteMap[id]?.add(latLngList)
         }
     }
 
-    private fun makeEachRoute(bicycleFeature: Features, context: Context, bicycleViewModel: BicycleViewModel) {
 
-        val geocoder = Geocoder(context)
-        val id = bicycleFeature.properties?.objectid
-        val routeNr = bicycleFeature.properties?.rute
-        val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
 
-        val firstLatLng = latLngList?.get(0)
-        val lastLatLng = latLngList?.get(latLngList.lastIndex)
-
-        val startAddress = getAddress(geocoder, firstLatLng)
-        val endAddress = getAddress(geocoder, lastLatLng)
-
-        val startDistrict = constructDistrict(startAddress)
-        val endDistrict = constructDistrict(endAddress)
-        val start = constructAddress(startAddress)
-        val end = constructAddress(endAddress)
-
+    private fun latLngListLength(latLngList: List<LatLng>): Double {
         var total = 0.0
-        if (latLngList != null) {
-            for (i in 1 until latLngList.size) {
-                val lengthResult = FloatArray(1)
-                Location.distanceBetween(
-                    latLngList[i - 1].latitude,
-                    latLngList[i - 1].longitude,
-                    latLngList[i].latitude,
-                    latLngList[i].longitude,
-                    lengthResult
-                )
-                total += lengthResult[0]
-            }
+        for (i in 1 until latLngList.size) {
+            val lengthResult = FloatArray(1)
+            Location.distanceBetween(
+                latLngList[i - 1].latitude,
+                latLngList[i - 1].longitude,
+                latLngList[i].latitude,
+                latLngList[i].longitude,
+                lengthResult
+            )
+            total += lengthResult[0]
         }
-        val bicycleRoute = BicycleRoute(id, routeNr, latLngList, startDistrict, endDistrict, start, end, total, null)
-        bicycleViewModel.fetchAirQualForRouteOnAvg(bicycleRoute)
-        bicycleViewModel.postRoutes(bicycleRoute)
+        return total
+    }
+
+    private fun calculateRouteLength(ruteliste: MutableList<List<LatLng>?>) : Double {
+        return ruteliste.fold(0.0) { total, next -> total + latLngListLength(next!!) }
     }
 
     private fun getAddress(geocoder: Geocoder, latLng: LatLng?): Address? {
@@ -120,29 +143,12 @@ class BicycleRouteRepository {
         return routes
     }
 
-
-
     fun getRealtimeAQI(aqiDataobj : AirQualData?) : Double?{
 
-        val data = aqiDataobj?.data?.time?.find { it.from.equals(getCurrentTimeAsString())}
+        val data = aqiDataobj?.data?.time?.find { it.from.equals(metUtils.getCurrentTimeAsString())}
 
         return data?.variables?.AQI?.value?.toDouble()
 
-    }
-
-    fun getCurrentTimeAsString() : String{
-
-        //paddStart sørger for at verdier får 0 foran seg selvom verdien er under 10
-        //Calender.XXXX gir en index hvor verdien finnes i listen
-
-        val year = Calendar.getInstance()[Calendar.YEAR]
-        //Verdien fra måender starter på 0 (Januar er 0)
-        val month = Calendar.getInstance()[Calendar.MONTH].plus(1).toString().padStart(2, '0')
-        val date = Calendar.getInstance()[Calendar.DAY_OF_MONTH].toString().padStart(2, '0')
-        val hour = Calendar.getInstance()[Calendar.HOUR_OF_DAY].toString().padStart(2, '0')
-
-        //Standard reftime for luftkvalitets-API
-        return  "${year}-${month}-${date}T${hour}:00:00Z"
     }
 
     suspend fun fetchAirQualAtRoute(routeList:List<LatLng>): Double? {
@@ -173,10 +179,12 @@ class BicycleRouteRepository {
         repeat(decimals) { multiplier *= 10 }
         return round(this * multiplier) / multiplier
     }
+
+
 }
 
 data class BicycleRoute(
-    val id: Number?,
+
     val routeNr: Number?,
     val coordinates: List<LatLng>?,
     val startDistrict: String?,
@@ -186,3 +194,11 @@ data class BicycleRoute(
     val distance: Double,
     var AQI: Double?
 )
+
+data class BigBikeRoute(
+    val id: Int,
+    val fragmentList: MutableList<List<LatLng>?>,
+    val start: String,
+    val slutt: String,
+    val length: Double,
+    val AQI: Double?)
