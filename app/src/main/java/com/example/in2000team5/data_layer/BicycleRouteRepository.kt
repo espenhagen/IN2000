@@ -119,6 +119,9 @@ class BicycleRouteRepository {
             BicycleRoute(routeNr, latLngList, startDistrict, endDistrict, start, end, total)
     }
 
+
+
+
     private fun latLngListLength(latLngList: List<LatLng>): Double {
         var total = 0.0
         for (i in 1 until latLngList.size) {
