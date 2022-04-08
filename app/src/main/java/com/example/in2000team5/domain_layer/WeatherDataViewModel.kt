@@ -28,20 +28,25 @@ WeatherDataViewModel: ViewModel() {
     }
 
 
-    fun getTemperature() : MutableLiveData<Double?> {
+    fun getTemperatureLiveData() : MutableLiveData<Double?> {
         return liveTemperature
     }
 
-    fun getSymbol(): MutableLiveData<String?> {
-        return liveSymbol
+
+    fun getTemperature(): Double? {
+        return liveTemperature.value
     }
 
-    fun getWindSpeed(): MutableLiveData<Double?>{
-        return liveWindSpeed
+    fun getSymbolName(): String? {
+        return liveSymbol.value
     }
 
-    fun getWindDirection():MutableLiveData<Double?>{
-        return liveWindDirection
+    fun getWindSpeed(): Double?{
+        return liveWindSpeed.value
+    }
+
+    fun getWindDirection(): Double? {
+        return liveWindDirection.value
     }
 
     // metoder under blir kalt fra WeatherDataRepository for å oppdatere liveDataobjekter
@@ -60,6 +65,7 @@ WeatherDataViewModel: ViewModel() {
     fun postWindDirection(dir: Double?) {
         liveWindDirection.postValue(dir)
     }
+
 
 
 }

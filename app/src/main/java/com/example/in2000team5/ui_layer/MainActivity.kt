@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
         //hardkodet til midt i oslo
         weatherModel.fetchWeather("59.91370670", "10.7526291")
 
-        weatherModel.getTemperature().observe(this) {
+        weatherModel.getTemperatureLiveData().observe(this) {
             Log.e("temperatur", it.toString())
         }
 
