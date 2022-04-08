@@ -21,6 +21,14 @@ class WeatherDataRepository {
             getWeatherSymbol(weatherData).also {
                 weatherDataViewModel.postSymbol(it)
             }
+
+            getWindSpeed(weatherData).also {
+                weatherDataViewModel.postWindSpeed(it)
+            }
+
+            getWindDirection(weatherData).also {
+                weatherDataViewModel.postWindDirection(it)
+            }
         }
 
 
