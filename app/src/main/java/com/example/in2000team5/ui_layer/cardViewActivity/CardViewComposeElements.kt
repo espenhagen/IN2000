@@ -42,9 +42,9 @@ fun InfoRow(model: WeatherDataViewModel) {
         color = MaterialTheme.colors.background
     ) {
         Row {
-            val id = getWeatherIcon(model.liveSymbol.value)
+            val id = getWeatherIcon(model.getSymbol().value)
 
-            //Det skal gå an å hente id fra en streng - men får ikke til.
+            //Det skal gå an å hente id fra en streng - men får ikke til, så bruker "getWeatherIcon()"
             //val denne = android.content.res.Resources.getSystem()
             //val id= denne.getIdentifier("bike","drawable","com.example.in2000team5")
 
@@ -53,7 +53,7 @@ fun InfoRow(model: WeatherDataViewModel) {
                 contentDescription = "en sol",
             )
             Text(
-                text = "${model.liveTemperature.value}°C",
+                text = "${model.getTemperature()}°C",
                 style = MaterialTheme.typography.h4,
                 modifier = Modifier.align(alignment = Alignment.CenterVertically)
 
@@ -67,11 +67,11 @@ fun InfoRow(model: WeatherDataViewModel) {
                 modifier = Modifier.align(alignment = Alignment.CenterVertically)
             ) {
                 Text(
-                    text = "vindretning: ${model.liveWindDirection.value}",
+                    text = "vindretning: ${model.getWindDirection()}",
                     style = MaterialTheme.typography.body1,
                 )
                 Text(
-                    text = "vindstyrke: ${model.liveWindSpeed.value}",
+                    text = "vindstyrke: ${model.getWindSpeed()}",
                     style = MaterialTheme.typography.body1,
                 )
             }
