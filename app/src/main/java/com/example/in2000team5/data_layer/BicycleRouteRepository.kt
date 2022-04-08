@@ -21,15 +21,6 @@ class BicycleRouteRepository {
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
     private val bigRouteMap: HashMap<Int, MutableList<List<LatLng>?>> = HashMap()
 
-    suspend fun constructRoutesThreads(bicycleViewModel: BicycleViewModel, context: Context) {
-        val features = bikeRoutedatasrc.fetchRoutes()
-        if (features != null) {
-            for (bicycleFeature in features) {
-                makeEachRoute(bicycleFeature, context, bicycleViewModel)
-            }
-        }
-    }
-
     suspend fun makeBigRoutes(bicycleViewModel: BicycleViewModel, context: Context) {
         bikeRoutedatasrc.fetchRoutes()?.forEach {
             addCords(it)
@@ -57,8 +48,6 @@ class BicycleRouteRepository {
         }
         stringBuilder.append("antNoder: ").append(antNoder)
         Log.d("RouteCordMap", stringBuilder.toString())
-
-
     }
 
     private fun addCords(bicycleFeature: Features) {
@@ -77,32 +66,7 @@ class BicycleRouteRepository {
         }
     }
 
-    private fun makeEachRoute(bicycleFeature: Features, context: Context, bicycleViewModel: BicycleViewModel) {
 
-        val geocoder = Geocoder(context)
-        val id = bicycleFeature.properties?.objectid
-        val routeNr = bicycleFeature.properties?.rute
-        val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
-
-        val firstLatLng = latLngList?.get(0)
-        val lastLatLng = latLngList?.get(latLngList.lastIndex)
-
-        val startAddress = getAddress(geocoder, firstLatLng)
-        val endAddress = getAddress(geocoder, lastLatLng)
-
-        val startDistrict = constructDistrict(startAddress)
-        val endDistrict = constructDistrict(endAddress)
-        val start = constructAddress(startAddress)
-        val end = constructAddress(endAddress)
-
-        var total: Double = 0.0
-        if (latLngList != null) {
-            total = latLngListLength(latLngList)
-        }
-        val bicycleRoute = BicycleRoute(routeNr, latLngList, startDistrict, endDistrict, start, end, total, null)
-        bicycleViewModel.fetchAirQualForRouteOnAvg(bicycleRoute)
-       // bicycleViewModel.postRoutes(bicycleRoute)
-    }
 
     private fun latLngListLength(latLngList: List<LatLng>): Double {
         var total = 0.0
@@ -121,14 +85,6 @@ class BicycleRouteRepository {
     }
 
     private fun calculateRouteLength(ruteliste: MutableList<List<LatLng>?>) : Double {
-        //var sum = 0.0
-
-        //ruteliste.forEach {
-        //    sum += latLngListLength(it!!)
-        //}
-
-        //return sum
-
         return ruteliste.fold(0.0) { total, next -> total + latLngListLength(next!!) }
     }
 
@@ -239,4 +195,10 @@ data class BicycleRoute(
     var AQI: Double?
 )
 
-data class BigBikeRoute(val id: Int, val fragmentList: MutableList<List<LatLng>?>, val start: String, val slutt: String, val length: Double, val AQI: Double?)
+data class BigBikeRoute(
+    val id: Int,
+    val fragmentList: MutableList<List<LatLng>?>,
+    val start: String,
+    val slutt: String,
+    val length: Double,
+    val AQI: Double?)
