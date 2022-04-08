@@ -1,14 +1,11 @@
 package com.example.in2000team5.domain_layer
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.in2000team5.data_layer.LocFore
-import com.example.in2000team5.data_layer.WeatherDataRepository
+import com.example.in2000team5.data_layer.repository.WeatherDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 class
 WeatherDataViewModel: ViewModel() {

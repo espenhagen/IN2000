@@ -1,8 +1,10 @@
-package com.example.in2000team5.data_layer
+package com.example.in2000team5.data_layer.repository
 
+import com.example.in2000team5.data_layer.Details
+import com.example.in2000team5.data_layer.ForecastDataSource
+import com.example.in2000team5.data_layer.LocFore
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.utils.metUtils
-import java.util.*
 
 class WeatherDataRepository {
 
