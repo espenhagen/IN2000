@@ -14,12 +14,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BigBikeRoute
+import com.example.in2000team5.ui_layer.bicycleRouteList
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
@@ -164,11 +166,10 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
                         cameraPositionState = cameraPositionState,
 
                         ) {
-                        Marker(
-                            position = plass!!,
-                            title = rute.start,
-                        )
-                        Polyline(rute.fragmentList[0]!!)
+//
+                        for (fragment in rute.fragmentList) {
+                            Polyline(fragment!!, color = Color.Gray)
+                        }
                     }
                 }
             }
