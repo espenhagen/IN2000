@@ -47,8 +47,7 @@ class BicycleRouteRepository {
                 it.value,
                 routeNames[it.key]?.get(0)!!,
                 routeNames[it.key]?.get(1)!!,
-                calculateRouteLength(it.value),
-                2.0
+                calculateRouteLength(it.value),null
             )
             bicycleViewModel.getAirQualAvgForRoute(bigBikeRoute)
 
@@ -269,7 +268,7 @@ class BicycleRouteRepository {
             }
         }
         Log.d("sjekkverdi", "tot ${tot} , sampledPoints ${sampledPoints}")
-        return tot.div(sampledPoints).round(2)
+        return tot.div(sampledPoints).round(3)
     }
 
     //found on internett (stackoverflow)
