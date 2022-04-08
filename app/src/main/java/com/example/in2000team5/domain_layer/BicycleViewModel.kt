@@ -26,16 +26,15 @@ class BicycleViewModel: ViewModel() {
     private val _bicycleRoutesSharedFlow = MutableSharedFlow<List<BicycleRoute>>()
     val bicycleRoutesSharedFlow = _bicycleRoutesSharedFlow.asSharedFlow()
 
-    fun getAirQualAvgForRoute(route: MutableList<List<LatLng>?>):Double? {
+    fun getAirQualAvgForRoute(route: BigBikeRoute) {
         var avgAQI: Double? = null
         // Do an asynchronous operation to fetch users.
 
         viewModelScope.launch(Dispatchers.IO){
-                avgAQI = repositoryRoutes.fetchAvgAirQualAtRoute(route)
+                avgAQI = repositoryRoutes.fetchAvgAirQualAtRoute(route.fragmentList)
         }
         if (avgAQI == null) Log.d("Response", "Error getting avg. AQI")
-
-        return avgAQI
+        route.AQI = avgAQI
     }
 
     fun makeApiRequest(context: Context) {

@@ -40,7 +40,7 @@ class BicycleRouteRepository {
 
 
         bigRouteMap.forEach {
-            val ruteAQI = bicycleViewModel.getAirQualAvgForRoute(it.value)
+
 
             val bigBikeRoute = BigBikeRoute(
                 it.key,
@@ -48,9 +48,9 @@ class BicycleRouteRepository {
                 routeNames[it.key]?.get(0)!!,
                 routeNames[it.key]?.get(1)!!,
                 calculateRouteLength(it.value),
-                ruteAQI
+                2.0
             )
-
+            bicycleViewModel.getAirQualAvgForRoute(bigBikeRoute)
 
             bicycleViewModel.postRoutes(bigBikeRoute)
             //Log.d("start", bigBikeRoute.start)
@@ -294,5 +294,5 @@ data class BigBikeRoute(
     val start: String,
     val slutt: String,
     val length: Double,
-    val AQI: Double?
+    var AQI: Double?
 )
