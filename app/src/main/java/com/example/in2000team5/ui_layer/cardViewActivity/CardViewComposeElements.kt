@@ -42,6 +42,7 @@ fun InfoRow(model: WeatherDataViewModel) {
     ) {
         Row {
             val id = getWeatherIcon(model.getSymbolName())
+            Log.d("symbolnavn","${model.getSymbolName()}" )
 
             //Det skal gå an å hente id fra en streng - men får ikke til, så bruker "getWeatherIcon()"
             //val denne = android.content.res.Resources.getSystem()

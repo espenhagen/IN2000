@@ -21,7 +21,7 @@ class metUtils {
         }
         fun getWeatherIcon(description: String?): Int {
             return when (description) {
-                "clearsky", "clearsky_day" -> R.drawable.clearsky_day
+                "clearsky", "clearsky_day"-> R.drawable.clearsky_day
                 "cloudy" -> R.drawable.cloudy
                 "fair", "fair_day" -> R.drawable.fair_day
                 "fog" -> R.drawable.fog
@@ -56,7 +56,7 @@ class metUtils {
                 "rainshowersandthunder","rainshowersandthunder_day" -> R.drawable.rainshowersandthunder_day
                 "sleet" -> R.drawable.sleet
                 "sleetandthunder" -> R.drawable.sleetandthunder
-                "sleetshowers" -> R.drawable.sleetshowers_day
+                "sleetshowers", "sleetshowers_day" -> R.drawable.sleetshowers_day
                 "sleetshowersandthunder","sleetshowersandthunder_day" -> R.drawable.sleetshowersandthunder_day
                 "snow" -> R.drawable.snow
                 "snowandthunder" -> R.drawable.snowandthunder
@@ -81,6 +81,8 @@ class metUtils {
                 "sleetshowersandthunder_night" -> R.drawable.sleetshowersandthunder_night
                 "snowshowers_night" -> R.drawable.snowshowers_night
                 "snowshowersandthunder_night" -> R.drawable.snowshowersandthunder_night
+                "clearsky_night" -> R.drawable.clearsky_night
+                "fair_night" -> R.drawable.fair_night
                 else -> {
                     R.drawable.unknown
                 }
