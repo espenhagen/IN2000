@@ -32,6 +32,7 @@ import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.domain_layer.BicycleViewModel
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.BottomNavItem
+import com.example.in2000team5.ui_layer.cardViewActivity.InfoRow
 import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -50,13 +51,13 @@ class MainActivity : ComponentActivity() {
         //hardkodet til midt i oslo
         weatherModel.fetchWeather("59.91370670", "10.7526291")
 
-        weatherModel.getTemperature().observe(this) {
+        weatherModel.getTemperatureLiveData().observe(this) {
             Log.e("temperatur", it.toString())
         }
 
         setContent {
             IN2000Team5Theme {
-                BottomNavigation()
+                BottomNavigation(weatherModel)
             }
         }
         viewModel.getRoutes().observe(this) {
@@ -67,7 +68,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun BottomNavigation() {
+fun BottomNavigation(model:WeatherDataViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -84,7 +85,7 @@ fun BottomNavigation() {
             )
         }
     ) {
-        Navigation(navController = navController)
+        Navigation(navController = navController, model)
     }
 }
 
@@ -182,7 +183,7 @@ fun MapScreen() {
 
 
 @Composable
-fun Navigation(navController: NavHostController) {
+fun Navigation(navController: NavHostController, model:WeatherDataViewModel) {
     NavHost(navController = navController, startDestination = "om" ) {
         composable("kart") {
             MapScreen()
@@ -190,7 +191,11 @@ fun Navigation(navController: NavHostController) {
 
         }
         composable("ruter") {
-            VisAlleRuter(ruter = bicycleRouteList)
+            Column() {
+                InfoRow(model)
+                VisAlleRuter(ruter = bicycleRouteList)
+
+            }
         }
         composable("om") {
             AboutScreen()

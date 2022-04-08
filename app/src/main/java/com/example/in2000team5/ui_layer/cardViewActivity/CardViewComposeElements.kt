@@ -22,6 +22,8 @@ import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.ui_layer.bicycleRouteList
+import com.example.in2000team5.domain_layer.WeatherDataViewModel
+import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
@@ -30,29 +32,49 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 
 @Composable
-fun InfoRow(uv: Int, sykkelfore: String) {
+fun InfoRow(model: WeatherDataViewModel) {
     Surface(
-        shape = MaterialTheme.shapes.small,
-        elevation = 2.dp,
+        elevation = 4.dp,
         modifier = Modifier
-            .height(60.dp)
-            .fillMaxWidth(),
-        color = MaterialTheme.colors.secondary
+            .fillMaxWidth()
+            .height(80.dp),
+        color = MaterialTheme.colors.background
     ) {
         Row {
+            val id = getWeatherIcon(model.getSymbolName())
+
+            //Det skal gå an å hente id fra en streng - men får ikke til, så bruker "getWeatherIcon()"
+            //val denne = android.content.res.Resources.getSystem()
+            //val id= denne.getIdentifier("bike","drawable","com.example.in2000team5")
             Image(
-                painter = painterResource(id = R.drawable.sunscreen),
-                contentDescription = "en sol"
+                painter = painterResource(id = id),
+
+                contentDescription = "en sol",
             )
             Text(
-                text = "UV-indeks: $uv",
-                style = MaterialTheme.typography.body1,
+                text = "${model.getTemperature()}°C",
+                style = MaterialTheme.typography.h4,
+                modifier = Modifier.align(alignment = Alignment.CenterVertically)
+
             )
-            Image(painter = painterResource(id = R.drawable.bike), contentDescription = "en sykkel")
-            Text(
-                text = "Sykkelføre: $sykkelfore",
-                style = MaterialTheme.typography.body1,
+            //kan legge til vindretning eller liknende her:
+            Image(
+                painter = painterResource(id = id),
+                contentDescription = "en sol",
             )
+            Column(
+                modifier = Modifier.align(alignment = Alignment.CenterVertically)
+            ) {
+                Text(
+                    text = "vindretning: ${model.getWindDirection()}",
+                    style = MaterialTheme.typography.body1,
+                )
+                Text(
+                    text = "vindstyrke: ${model.getWindSpeed()}",
+                    style = MaterialTheme.typography.body1,
+                )
+            }
+
         }
     }
 }
@@ -101,7 +123,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
                         Row {
                             Column {
                                 Image(
-                                    painter = painterResource(R.drawable.sun),
+                                    painter = painterResource(R.drawable.unknown),
                                     contentDescription = "Weather",
                                     modifier = Modifier
                                         .size(40.dp)
@@ -181,9 +203,9 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
 
 @Composable
 fun VisAlleRuter(ruter: List<BigBikeRoute>) {
-    LazyColumn (
+    LazyColumn(
         modifier = Modifier.padding(bottom = 55.dp)
-    ){
+    ) {
         items(ruter) { rute ->
             SykkelRuteCard(rute)
 
@@ -191,29 +213,13 @@ fun VisAlleRuter(ruter: List<BigBikeRoute>) {
     }
 }
 
-/*@Preview
-@Composable
-fun PreviewVisAleRuter(){
-    IN2000Team5Theme() {
-        VisAlleRuter(ruter = SampleData.eksempelRuter)
-    }
-}
-*/
 
-fun getWeatherIcon(description: String): Int {
-    return when (description) {
-        "rainy" -> R.drawable.rain
-        "sunny" -> R.drawable.sun
-        "both" -> R.drawable.suncloud
-        "cloudy" -> R.drawable.cloud
-        else -> {
-            R.drawable.unknown
-        }
-    }
-}
 
 fun getAirIcon(index: Double?): Int {
-    if (index == null) { return R.drawable.unknown}
-    else if(index<2) {return R.drawable.goodair}
+    if (index == null) {
+        return R.drawable.unknown
+    } else if (index < 2) {
+        return R.drawable.goodair
+    }
     return R.drawable.badair
 }

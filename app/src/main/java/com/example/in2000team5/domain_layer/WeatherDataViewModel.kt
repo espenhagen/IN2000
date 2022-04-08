@@ -1,16 +1,14 @@
 package com.example.in2000team5.domain_layer
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.in2000team5.data_layer.LocFore
-import com.example.in2000team5.data_layer.WeatherDataRepository
+import com.example.in2000team5.data_layer.repository.WeatherDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
-class WeatherDataViewModel: ViewModel() {
+class
+WeatherDataViewModel: ViewModel() {
 
     val liveTemperature = MutableLiveData<Double?>()
     val liveSymbol = MutableLiveData<String?>()
@@ -26,8 +24,26 @@ class WeatherDataViewModel: ViewModel() {
         }
     }
 
-    fun getTemperature() : MutableLiveData<Double?> {
+
+    fun getTemperatureLiveData() : MutableLiveData<Double?> {
         return liveTemperature
+    }
+
+
+    fun getTemperature(): Double? {
+        return liveTemperature.value
+    }
+
+    fun getSymbolName(): String? {
+        return liveSymbol.value
+    }
+
+    fun getWindSpeed(): Double?{
+        return liveWindSpeed.value
+    }
+
+    fun getWindDirection(): Double? {
+        return liveWindDirection.value
     }
 
     // metoder under blir kalt fra WeatherDataRepository for å oppdatere liveDataobjekter
@@ -46,6 +62,7 @@ class WeatherDataViewModel: ViewModel() {
     fun postWindDirection(dir: Double?) {
         liveWindDirection.postValue(dir)
     }
+
 
 
 }
