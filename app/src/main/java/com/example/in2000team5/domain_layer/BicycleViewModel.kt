@@ -10,6 +10,7 @@ import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.BicycleRouteRepository
 import com.example.in2000team5.data_layer.BigBikeRoute
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -25,15 +26,14 @@ class BicycleViewModel: ViewModel() {
     private val _bicycleRoutesSharedFlow = MutableSharedFlow<List<BicycleRoute>>()
     val bicycleRoutesSharedFlow = _bicycleRoutesSharedFlow.asSharedFlow()
 
-    fun fetchAirQualForRouteOnAvg(route: BicycleRoute) {
+    fun getAirQualAvgForRoute(route: BigBikeRoute) {
+        //var avgAQI: Double? = null
         // Do an asynchronous operation to fetch users.
+
         viewModelScope.launch(Dispatchers.IO){
-            route.coordinates?.let { list ->
-                repositoryRoutes.fetchAirQualAtRoute(list).also {
-                    route.AQI = it
-                }
-            }
+                route.AQI = repositoryRoutes.fetchAvgAirQualAtRoute(route.fragmentList)
         }
+        //if (avgAQI == null) Log.d("Response", "Error getting avg. AQI")
     }
 
     fun makeApiRequest(context: Context) {

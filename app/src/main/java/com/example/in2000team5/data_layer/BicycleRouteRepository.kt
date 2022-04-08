@@ -29,7 +29,16 @@ class BicycleRouteRepository {
         //Naa har jeg et hashmap med en liste med alle smaaturene
         val routeNames = routeUtils.routeNames()
         bigRouteMap.forEach {
-            val bigBikeRoute = BigBikeRoute(it.key, it.value, routeNames[it.key]?.get(0)!!, routeNames[it.key]?.get(1)!!, calculateRouteLength(it.value), null)
+
+
+            val bigBikeRoute = BigBikeRoute(
+                it.key,
+                it.value,
+                routeNames[it.key]?.get(0)!!,
+                routeNames[it.key]?.get(1)!!,
+                calculateRouteLength(it.value),null
+            )
+            bicycleViewModel.getAirQualAvgForRoute(bigBikeRoute)
 
             bicycleViewModel.postRoutes(bigBikeRoute)
             //Log.d("start", bigBikeRoute.start)
@@ -53,7 +62,7 @@ class BicycleRouteRepository {
     private fun addCords(bicycleFeature: Features) {
         val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
         val id: Int
-        if (bicycleFeature.properties?.rute == null)  {
+        if (bicycleFeature.properties?.rute == null) {
             id = 0
         } else {
             id = bicycleFeature.properties.rute.toInt()
@@ -143,34 +152,71 @@ class BicycleRouteRepository {
         return routes
     }
 
-    fun getRealtimeAQI(aqiDataobj : AirQualData?) : Double?{
+    fun getRealtimeAQI(aqiDataobj: AirQualData?): Double? {
 
-        val data = aqiDataobj?.data?.time?.find { it.from.equals(metUtils.getCurrentTimeAsString())}
+        val data =
+            aqiDataobj?.data?.time?.find { it.from.equals(metUtils.getCurrentTimeAsString()) }
 
         return data?.variables?.AQI?.value?.toDouble()
 
     }
 
-    suspend fun fetchAirQualAtRoute(routeList:List<LatLng>): Double? {
-        var avg = 0.0
-        var numberOfPoint = routeList.size
-        for(point in routeList){
-            val data = airQualDataSource.fetchAirQualAtPointDS(point.latitude.toString(), point.longitude.toString())
-            val airIndex = getRealtimeAQI(data)
 
-            if (airIndex != null) {
-                avg += airIndex
+    suspend fun fetchAvgAirQualAtRoute(routeList: MutableList<List<LatLng>?>): Double? {
+        var tot = 0.0
+        var sampledPoints = 0
+        val MIN_NUM_OF_SAMPLEPOINTS = 10
+
+        val numberOfFragments = routeList.size
+
+        if (numberOfFragments >= MIN_NUM_OF_SAMPLEPOINTS) {
+            for (frag in routeList) {
+                val point = frag?.get(0) //henter ut første punkt i fragmentet
+                if (point != null) {
+                    val data = airQualDataSource.fetchAirQualAtPointDS(
+                        point.latitude.toString(),
+                        point.longitude.toString()
+                    )
+                    val AQIatPoint = getRealtimeAQI(data)
+                    if (AQIatPoint != null) {
+                        tot += AQIatPoint
+                        sampledPoints++
+                    }
+                }
             }
-            else{
-                numberOfPoint-=1
+        } else {
+            val perFrag = 10 / numberOfFragments
+            for (frag in routeList) {
+                if (frag!!.size <= perFrag) {
+                    for (point in frag) {
+                        val data = airQualDataSource.fetchAirQualAtPointDS(
+                            point.latitude.toString(),
+                            point.longitude.toString()
+                        )
+                        val AQIatPoint = getRealtimeAQI(data)
+                        if (AQIatPoint != null) {
+                            tot += AQIatPoint
+                            sampledPoints++
+                        }
+                    }
+                } else {
+                    for (x in 0..frag.size - 2 step frag.size / perFrag) {
+                        val point = frag.get(x) //henter ut første punkt i fragmentet
+                        val data = airQualDataSource.fetchAirQualAtPointDS(
+                            point.latitude.toString(),
+                            point.longitude.toString()
+                        )
+                        val AQIatPoint = getRealtimeAQI(data)
+                        if (AQIatPoint != null) {
+                            tot += AQIatPoint
+                            sampledPoints++
+                        }
+                    }
+                }
             }
         }
-        return try {
-            avg.div(numberOfPoint).round(2)
-        } catch (exception: Exception) {
-            Log.d("Response", "Error while finding air index: ${exception.message}")
-            null
-        }
+        Log.d("sjekkverdi", "tot ${tot} , sampledPoints ${sampledPoints}")
+        return tot.div(sampledPoints).round(3)
     }
 
     //found on internett (stackoverflow)
@@ -179,8 +225,6 @@ class BicycleRouteRepository {
         repeat(decimals) { multiplier *= 10 }
         return round(this * multiplier) / multiplier
     }
-
-
 }
 
 data class BicycleRoute(
@@ -192,7 +236,6 @@ data class BicycleRoute(
     val start: String?,
     val end: String?,
     val distance: Double,
-    var AQI: Double?
 )
 
 data class BigBikeRoute(
@@ -201,4 +244,6 @@ data class BigBikeRoute(
     val start: String,
     val slutt: String,
     val length: Double,
-    val AQI: Double?)
+    var AQI: Double?
+)
+
