@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
+import com.example.in2000team5.data_layer.AQI
 import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.ui_layer.bicycleRouteList
@@ -207,14 +208,73 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
 }
 
 
+
+
+
+
 @Composable
 fun VisAlleRuter(ruter: List<BigBikeRoute>) {
+    val choices = mutableListOf("ID", "Luftkvalitet", "Lengde")
+
+
+//SPINNER:
+    //Kode hentet fra: https://intensecoder.com/spinner-in-jetpack-compose-dropdown/
+    //variabler for å holde på state.
+    var valg: String by remember { mutableStateOf(choices[0]) }
+    var expanded by remember { mutableStateOf(false)}
+
+
+    Box(Modifier.fillMaxWidth(),contentAlignment = Alignment.Center) {
+        Row( modifier = Modifier
+            .padding(6.dp)
+            .clickable {
+                expanded = !expanded
+            }
+            .padding (8.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = valg,fontSize = 18.sp,modifier = Modifier.padding(end = 8.dp))
+            Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = {
+            expanded = false
+        }) {
+            choices.forEach{ choice->
+                DropdownMenuItem(onClick = {
+                    expanded = false
+                    valg = choice
+
+                }) {
+                    Text(text = choice)
+                }
+            }
+        }
+    }
+
+//OPPRETTER KORTENE BASERT PÅ VALG I SPINNER (DEFAULT: ID)
     LazyColumn(
         modifier = Modifier.padding(bottom = 55.dp)
     ) {
-        items(ruter) { rute ->
-            SykkelRuteCard(rute)
+        if (valg =="ID") {
+            items(ruter.sortedBy { it.id }) { rute ->
+                SykkelRuteCard(rute)
 
+            }
+        }else if (valg =="Luftkvalitet") {
+            items(ruter.sortedBy { it.AQI }) { rute ->
+                SykkelRuteCard(rute)
+
+            }
+        }else if(valg =="Lengde"){
+            items(ruter.sortedBy { it.length }) { rute ->
+                SykkelRuteCard(rute)
+
+            }
+        }else{
+            items(ruter) { rute ->
+                SykkelRuteCard(rute)
+            }
         }
     }
 }
