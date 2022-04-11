@@ -19,6 +19,7 @@ class metUtils {
             //Standard reftime for luftkvalitets-API
             return  "${year}-${month}-${date}T${hour}:00:00Z"
         }
+
         fun getWeatherIcon(description: String?): Int {
             return when (description) {
                 "clearsky", "clearsky_day"-> R.drawable.clearsky_day

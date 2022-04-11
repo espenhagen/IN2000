@@ -50,13 +50,19 @@ fun InfoRow(model: WeatherDataViewModel) {
             Image(
                 painter = painterResource(id = id),
 
+
                 contentDescription = "en sol",
+                Modifier
+                    .size(70.dp)
+                    .padding(3.dp)
 
             )
             Text(
                 text = "${model.getTemperature()}°C",
                 style = MaterialTheme.typography.h4,
-                modifier = Modifier.align(alignment = Alignment.CenterVertically)
+                modifier = Modifier
+                    .align(alignment = Alignment.CenterVertically)
+                    .padding(horizontal = 6.dp)
 
             )
             //kan legge til vindretning eller liknende her:
@@ -71,7 +77,8 @@ fun InfoRow(model: WeatherDataViewModel) {
                     contentDescription = "en sol",
                     Modifier
                         .rotate(windDirection.toFloat())
-                        . padding(3.dp)
+                        . padding(horizontal = 20.dp, vertical = 10.dp)
+                        .size(40.dp)
                 )
             }
             Column(
@@ -177,26 +184,13 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
             }
             Row {
                 if (isExpanded) {
-                    Text(
-                        text = "bad",
-                        modifier = Modifier
-                            .padding(all = 4.dp)
-                            .fillMaxWidth(),
-                        style = MaterialTheme.typography.body2,
-                        lineHeight = 30.sp
-                    )
-                }
-            }
-            Row {
-                if (isExpanded) {
                     val plass = rute.fragmentList[0]?.get(0)
-                    //val singapore = LatLng(1.35, 103.87)
 
                     val cameraPositionState = rememberCameraPositionState {
                         position = CameraPosition.fromLatLngZoom(plass!!, 10f)
                     }
                     GoogleMap(
-                        //modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.height(200.dp),
                         cameraPositionState = cameraPositionState,
 
                         ) {
