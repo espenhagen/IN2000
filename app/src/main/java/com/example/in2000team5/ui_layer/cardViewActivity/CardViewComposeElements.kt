@@ -25,6 +25,7 @@ import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.ui_layer.bicycleRouteList
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
+import com.example.in2000team5.utils.routeUtils.Companion.routeColor
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.*
 import kotlin.math.absoluteValue
@@ -201,7 +202,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
                         ) {
 //
                         for (fragment in rute.fragmentList) {
-                            Polyline(fragment!!, color = Color.Gray)
+                            Polyline(fragment!!, color = routeColor(rute.id))
                         }
                     }
                 }

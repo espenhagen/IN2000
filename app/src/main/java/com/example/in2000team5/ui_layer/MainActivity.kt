@@ -34,6 +34,7 @@ import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.BottomNavItem
 import com.example.in2000team5.ui_layer.cardViewActivity.InfoRow
 import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
+import com.example.in2000team5.utils.routeUtils.Companion.routeColor
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
@@ -107,76 +108,18 @@ fun MapScreen() {
             snippet = "Marker in Oslo"
         )
 
+
+
+
+
         for (storRute in bicycleRouteList) {
 
             for (liste in storRute.fragmentList) {
-
-                when(storRute.id) {
-
-                    0 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Red
-                        )}
-                    1 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Blue
-                        )}
-
-                    2 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Magenta
-                        )
-                    }
-
-                    3 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Yellow
-                        )
-                    }
-
-                    4 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Green
-                        )
-                    }
-
-                    5 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Black
-                        )
-                    }
-
-                    6 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Cyan
-                        )
-                    }
-
-                    7 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.LightGray
-                        )
-                    }
-
-                    else -> {
-                        liste.let {
-                            Polyline(
-                                points = it!!,
-                                color = Color.White
-                            )
-                        }
-                    }
+                liste.let {
+                    Polyline(points = it!!, color = routeColor(storRute.id))
                 }
-
             }
+//
         }
     }
 }
