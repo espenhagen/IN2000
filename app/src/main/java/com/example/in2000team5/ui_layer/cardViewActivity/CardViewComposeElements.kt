@@ -14,6 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -25,10 +26,8 @@ import com.example.in2000team5.ui_layer.bicycleRouteList
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.Polyline
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.*
+import kotlin.math.absoluteValue
 
 
 @Composable
@@ -51,6 +50,7 @@ fun InfoRow(model: WeatherDataViewModel) {
                 painter = painterResource(id = id),
 
                 contentDescription = "en sol",
+
             )
             Text(
                 text = "${model.getTemperature()}°C",
@@ -59,10 +59,20 @@ fun InfoRow(model: WeatherDataViewModel) {
 
             )
             //kan legge til vindretning eller liknende her:
-            Image(
-                painter = painterResource(id = id),
-                contentDescription = "en sol",
-            )
+            val windDirection = model.getWindDirection()
+            if (windDirection == null){
+                Image(
+                    painter = painterResource(R.drawable.unknown),
+                    contentDescription = "kunne ikke hente vindretning")
+            }else {
+                Image(
+                    painter = painterResource(R.drawable.wind_arrow),
+                    contentDescription = "en sol",
+                    Modifier
+                        .rotate(windDirection.toFloat())
+                        . padding(3.dp)
+                )
+            }
             Column(
                 modifier = Modifier.align(alignment = Alignment.CenterVertically)
             ) {
