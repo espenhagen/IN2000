@@ -12,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -203,7 +204,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
 
 
 @Composable
-fun VisAlleRuter(ruter: List<BigBikeRoute>) {
+fun VisAlleRuter(ruter: SnapshotStateList<BigBikeRoute>) {
     LazyColumn(
         modifier = Modifier.padding(bottom = 55.dp)
     ) {
