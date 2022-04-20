@@ -37,7 +37,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
-
+//TODO flytte dette inn i BicycleViewModel, sende ViewModel med til de ulike compose-elementene
 var bicycleRouteList = SnapshotStateList<SnapshotMutableState<BigBikeRoute>>()
 
 

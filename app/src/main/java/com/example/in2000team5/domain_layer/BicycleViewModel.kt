@@ -25,16 +25,14 @@ class BicycleViewModel: ViewModel() {
     private val airQualRepo = AirQualityRepository()
     private val repositoryRoutes = BicycleRouteRepository()
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
-    private val bicycleRoutes = SnapshotStateList<List<BigBikeRoute>>()
-    private val routes = SnapshotStateList<SnapshotMutableState<BigBikeRoute>>()
+    private val bicycleRoutes = SnapshotStateList<SnapshotMutableState<BigBikeRoute>>()
 
-    private val _bicycleRoutesSharedFlow = MutableSharedFlow<List<BicycleRoute>>()
-    val bicycleRoutesSharedFlow = _bicycleRoutesSharedFlow.asSharedFlow()
+//    private val _bicycleRoutesSharedFlow = MutableSharedFlow<List<BicycleRoute>>()
+//    val bicycleRoutesSharedFlow = _bicycleRoutesSharedFlow.asSharedFlow()
 
     fun getAirQualAvgForRoute(route: MutableState<BigBikeRoute>) {
         // Do an asynchronous operation to fetch users.
         viewModelScope.launch(Dispatchers.IO){
-            val nyroute = route
 
             route.value.AQI.value = airQualRepo.fetchAvgAirQualAtRoute(route.value.fragmentList)
         }
@@ -46,16 +44,16 @@ class BicycleViewModel: ViewModel() {
             //repositoryRoutes.constructRoutesThreads(this@BicycleViewModel, context)
             //Log.e("constructRoutesThreads Ferdig", "tommel opp")
             repositoryRoutes.makeBigRoutes(this@BicycleViewModel, context)
-            Log.e("myConstructRoutes Ferdig", "tommel sidelengs")
+            //Log.d("myConstructRoutes Ferdig", "tommel sidelengs")
         }
     }
 
     fun postRoutes(route: SnapshotMutableState<BigBikeRoute>){
-        routes.add(route)
+        bicycleRoutes.add(route)
         //bicycleRoutes.add(routes)
     }
 
     fun getRoutes(): SnapshotStateList<SnapshotMutableState<BigBikeRoute>> {
-        return routes
+        return bicycleRoutes
     }
 }
