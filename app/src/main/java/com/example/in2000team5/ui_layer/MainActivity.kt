@@ -1,6 +1,5 @@
 package com.example.in2000team5.ui_layer
 
-import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
@@ -14,10 +13,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.ui_layer.theme.IN2000Team5Theme
 import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotMutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -27,19 +27,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.domain_layer.BicycleViewModel
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
-import com.example.in2000team5.ui_layer.BottomNavItem
 import com.example.in2000team5.ui_layer.cardViewActivity.InfoRow
 import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
+import com.example.in2000team5.utils.routeUtils.Companion.routeColor
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 
-var bicycleRouteList = mutableListOf<BigBikeRoute>()
+var bicycleRouteList = SnapshotStateList<SnapshotMutableState<BigBikeRoute>>()
+
 
 class MainActivity : ComponentActivity() {
     private val viewModel: BicycleViewModel by viewModels()
@@ -60,10 +60,11 @@ class MainActivity : ComponentActivity() {
                 BottomNavigation(weatherModel)
             }
         }
-        viewModel.getRoutes().observe(this) {
-            bicycleRouteList = it as MutableList<BigBikeRoute>
+        bicycleRouteList = viewModel.getRoutes()
+/*        viewModel.getRoutes().observe(this) {
+            bicycleRouteList = it as mutableStateListOf<BigBikeRoute>
 
-        }
+        }*/
     }
 }
 
@@ -107,76 +108,18 @@ fun MapScreen() {
             snippet = "Marker in Oslo"
         )
 
+
+
+
+
         for (storRute in bicycleRouteList) {
 
-            for (liste in storRute.fragmentList) {
-
-                when(storRute.id) {
-
-                    0 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Red
-                        )}
-                    1 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Blue
-                        )}
-
-                    2 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Magenta
-                        )
-                    }
-
-                    3 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Yellow
-                        )
-                    }
-
-                    4 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Green
-                        )
-                    }
-
-                    5 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Black
-                        )
-                    }
-
-                    6 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.Cyan
-                        )
-                    }
-
-                    7 -> liste.let {
-                        Polyline(
-                            points = it!!,
-                            color = Color.LightGray
-                        )
-                    }
-
-                    else -> {
-                        liste.let {
-                            Polyline(
-                                points = it!!,
-                                color = Color.White
-                            )
-                        }
-                    }
+            for (liste in storRute.value.fragmentList) {
+                liste.let {
+                    Polyline(points = it!!, color = routeColor(storRute.value.id))
                 }
-
             }
+//
         }
     }
 }
@@ -191,7 +134,7 @@ fun Navigation(navController: NavHostController, model:WeatherDataViewModel) {
 
         }
         composable("ruter") {
-            Column() {
+            Column {
                 InfoRow(model)
                 VisAlleRuter(ruter = bicycleRouteList)
 
