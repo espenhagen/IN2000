@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.Snapshot
+import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,16 +25,18 @@ class BicycleViewModel: ViewModel() {
     private val airQualRepo = AirQualityRepository()
     private val repositoryRoutes = BicycleRouteRepository()
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
-    private val bicycleRoutes = MutableLiveData<List<BigBikeRoute>>()
-    private val routes = mutableStateListOf<BigBikeRoute>()
+    private val bicycleRoutes = SnapshotStateList<List<BigBikeRoute>>()
+    private val routes = SnapshotStateList<SnapshotMutableState<BigBikeRoute>>()
 
     private val _bicycleRoutesSharedFlow = MutableSharedFlow<List<BicycleRoute>>()
     val bicycleRoutesSharedFlow = _bicycleRoutesSharedFlow.asSharedFlow()
 
-    fun getAirQualAvgForRoute(route: BigBikeRoute) {
+    fun getAirQualAvgForRoute(route: MutableState<BigBikeRoute>) {
         // Do an asynchronous operation to fetch users.
         viewModelScope.launch(Dispatchers.IO){
-                route.AQI = airQualRepo.fetchAvgAirQualAtRoute(route.fragmentList)
+            val nyroute = route
+
+            route.value.AQI.value = airQualRepo.fetchAvgAirQualAtRoute(route.value.fragmentList)
         }
         //if (avgAQI == null) Log.d("Response", "Error getting avg. AQI")
     }
@@ -46,12 +50,12 @@ class BicycleViewModel: ViewModel() {
         }
     }
 
-    fun postRoutes(route: BigBikeRoute){
+    fun postRoutes(route: SnapshotMutableState<BigBikeRoute>){
         routes.add(route)
-        bicycleRoutes.postValue(routes)
+        //bicycleRoutes.add(routes)
     }
 
-    fun getRoutes(): SnapshotStateList<BigBikeRoute> {
+    fun getRoutes(): SnapshotStateList<SnapshotMutableState<BigBikeRoute>> {
         return routes
     }
 }

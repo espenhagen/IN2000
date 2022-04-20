@@ -1,6 +1,5 @@
 package com.example.in2000team5.ui_layer
 
-import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
@@ -14,10 +13,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.ui_layer.theme.IN2000Team5Theme
 import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,11 +27,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.domain_layer.BicycleViewModel
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
-import com.example.in2000team5.ui_layer.BottomNavItem
 import com.example.in2000team5.ui_layer.cardViewActivity.InfoRow
 import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
 import com.example.in2000team5.utils.routeUtils.Companion.routeColor
@@ -41,7 +38,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 
-var bicycleRouteList = SnapshotStateList<BigBikeRoute>()
+var bicycleRouteList = SnapshotStateList<SnapshotMutableState<BigBikeRoute>>()
 
 
 class MainActivity : ComponentActivity() {
@@ -117,9 +114,9 @@ fun MapScreen() {
 
         for (storRute in bicycleRouteList) {
 
-            for (liste in storRute.fragmentList) {
+            for (liste in storRute.value.fragmentList) {
                 liste.let {
-                    Polyline(points = it!!, color = routeColor(storRute.id))
+                    Polyline(points = it!!, color = routeColor(storRute.value.id))
                 }
             }
 //

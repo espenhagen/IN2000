@@ -12,25 +12,21 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
-import com.example.in2000team5.data_layer.AQI
-import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BigBikeRoute
-import com.example.in2000team5.ui_layer.bicycleRouteList
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
 import com.example.in2000team5.utils.routeUtils.Companion.routeColor
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.*
-import kotlin.math.absoluteValue
 
 
 @Composable
@@ -102,7 +98,7 @@ fun InfoRow(model: WeatherDataViewModel) {
 
 
 @Composable
-fun SykkelRuteCard(rute: BigBikeRoute) {
+fun SykkelRuteCard(rute: SnapshotMutableState<BigBikeRoute>) {
     Surface(
         shape = MaterialTheme.shapes.medium,
         elevation = 4.dp,
@@ -118,7 +114,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
         ) {
 
             Text(
-                text = "${rute.start} - ${rute.slutt}",
+                text = "${rute.value.start} - ${rute.value.slutt}",
                 color = MaterialTheme.colors.secondaryVariant,
                 style = MaterialTheme.typography.h5
             )
@@ -129,7 +125,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
                 Row {
                     Column {
                         Text(
-                            text = "Lengde: ${rute.length.toInt()} meter",
+                            text = "Lengde: ${rute.value.length.toInt()} meter",
                             modifier = Modifier
                                 .padding(all = 4.dp)
                                 .width(160.dp),
@@ -156,7 +152,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
 
                                 )
                                 Text(
-                                    text = rute.id.toString(),
+                                    text = rute.value.id.toString(),
                                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                                     style = MaterialTheme.typography.body2,
 
@@ -164,7 +160,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
                             }
                             Column {
                                 Image(
-                                    painter = painterResource(getAirIcon(rute.AQI)),
+                                    painter = painterResource(getAirIcon(rute.value.AQI.value)),
                                     contentDescription = "Weather",
                                     modifier = Modifier
                                         .size(40.dp)
@@ -175,7 +171,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
                                         )
                                 )
                                 Text(
-                                    text = rute.AQI.toString(),
+                                    text = rute.value.AQI.value.toString(),
                                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                                     style = MaterialTheme.typography.body2
                                 )
@@ -186,7 +182,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
             }
             Row {
                 if (isExpanded) {
-                    val plass = rute.fragmentList[0]?.get(0)
+                    val plass = rute.value.fragmentList[0]?.get(0)
 
                     val cameraPositionState = rememberCameraPositionState {
                         position = CameraPosition.fromLatLngZoom(plass!!, 10f)
@@ -197,8 +193,8 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
 
                         ) {
 //
-                        for (fragment in rute.fragmentList) {
-                            Polyline(fragment!!, color = routeColor(rute.id))
+                        for (fragment in rute.value.fragmentList) {
+                            Polyline(fragment!!, color = routeColor(rute.value.id))
                         }
                     }
                 }
@@ -214,7 +210,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
 
 
 @Composable
-fun VisAlleRuter(ruter: SnapshotStateList<BigBikeRoute>) {
+fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
     val choices = mutableListOf("ID", "Luftkvalitet", "Lengde")
 
 
@@ -258,17 +254,17 @@ fun VisAlleRuter(ruter: SnapshotStateList<BigBikeRoute>) {
         modifier = Modifier.padding(bottom = 55.dp)
     ) {
         if (valg =="ID") {
-            items(ruter.sortedBy { it.id }) { rute ->
+            items(ruter.sortedBy { it.value.id }) { rute ->
                 SykkelRuteCard(rute)
 
             }
         }else if (valg =="Luftkvalitet") {
-            items(ruter.sortedBy { it.AQI }) { rute ->
+            items(ruter.sortedBy { it.value.AQI.value }) { rute ->
                 SykkelRuteCard(rute)
 
             }
         }else if(valg =="Lengde"){
-            items(ruter.sortedBy { it.length }) { rute ->
+            items(ruter.sortedBy { it.value.length }) { rute ->
                 SykkelRuteCard(rute)
 
             }

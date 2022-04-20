@@ -6,15 +6,15 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotMutableState
 import com.example.in2000team5.domain_layer.BicycleViewModel
-import com.example.in2000team5.utils.genUtils.Companion.round
-import com.example.in2000team5.utils.metUtils
 import com.example.in2000team5.utils.routeUtils
 import com.google.android.gms.maps.model.LatLng
 import org.locationtech.proj4j.CRSFactory
 import org.locationtech.proj4j.CoordinateTransformFactory
 import org.locationtech.proj4j.ProjCoordinate
-import kotlin.math.round
 
 class BicycleRouteRepository {
 
@@ -32,16 +32,17 @@ class BicycleRouteRepository {
         bigRouteMap.forEach {
 
 
-            val bigBikeRoute = BigBikeRoute(
+            val bigBikeRoute = mutableStateOf(BigBikeRoute(
                 it.key,
                 it.value,
                 routeNames[it.key]?.get(0)!!,
                 routeNames[it.key]?.get(1)!!,
-                calculateRouteLength(it.value),null
-            )
+                calculateRouteLength(it.value), mutableStateOf(null)
+
+            ))
             bicycleViewModel.getAirQualAvgForRoute(bigBikeRoute)
 
-            bicycleViewModel.postRoutes(bigBikeRoute)
+            bicycleViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BigBikeRoute>)
             //Log.d("start", bigBikeRoute.start)
             //Log.d("slutt", bigBikeRoute.slutt)
             //Log.e("big Route", bigBikeRoute.toString())
@@ -172,6 +173,6 @@ data class BigBikeRoute(
     val start: String,
     val slutt: String,
     val length: Double,
-    var AQI: Double?
+    var AQI: MutableState<Double?>
 )
 
