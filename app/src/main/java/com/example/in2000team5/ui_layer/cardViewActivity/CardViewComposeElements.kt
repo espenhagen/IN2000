@@ -8,28 +8,29 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
+import com.example.in2000team5.data_layer.AQI
 import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.ui_layer.bicycleRouteList
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
+import com.example.in2000team5.utils.routeUtils.Companion.routeColor
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.Polyline
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.*
+import kotlin.math.absoluteValue
 
 
 @Composable
@@ -51,19 +52,37 @@ fun InfoRow(model: WeatherDataViewModel) {
             Image(
                 painter = painterResource(id = id),
 
+
                 contentDescription = "en sol",
+                Modifier
+                    .size(70.dp)
+                    .padding(3.dp)
+
             )
             Text(
                 text = "${model.getTemperature()}°C",
                 style = MaterialTheme.typography.h4,
-                modifier = Modifier.align(alignment = Alignment.CenterVertically)
+                modifier = Modifier
+                    .align(alignment = Alignment.CenterVertically)
+                    .padding(horizontal = 6.dp)
 
             )
             //kan legge til vindretning eller liknende her:
-            Image(
-                painter = painterResource(id = id),
-                contentDescription = "en sol",
-            )
+            val windDirection = model.getWindDirection()
+            if (windDirection == null){
+                Image(
+                    painter = painterResource(R.drawable.unknown),
+                    contentDescription = "kunne ikke hente vindretning")
+            }else {
+                Image(
+                    painter = painterResource(R.drawable.wind_arrow),
+                    contentDescription = "en sol",
+                    Modifier
+                        .rotate(windDirection.toFloat())
+                        . padding(horizontal = 20.dp, vertical = 10.dp)
+                        .size(40.dp)
+                )
+            }
             Column(
                 modifier = Modifier.align(alignment = Alignment.CenterVertically)
             ) {
@@ -167,32 +186,19 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
             }
             Row {
                 if (isExpanded) {
-                    Text(
-                        text = "bad",
-                        modifier = Modifier
-                            .padding(all = 4.dp)
-                            .fillMaxWidth(),
-                        style = MaterialTheme.typography.body2,
-                        lineHeight = 30.sp
-                    )
-                }
-            }
-            Row {
-                if (isExpanded) {
                     val plass = rute.fragmentList[0]?.get(0)
-                    //val singapore = LatLng(1.35, 103.87)
 
                     val cameraPositionState = rememberCameraPositionState {
                         position = CameraPosition.fromLatLngZoom(plass!!, 10f)
                     }
                     GoogleMap(
-                        //modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.height(200.dp),
                         cameraPositionState = cameraPositionState,
 
                         ) {
 //
                         for (fragment in rute.fragmentList) {
-                            Polyline(fragment!!, color = Color.Gray)
+                            Polyline(fragment!!, color = routeColor(rute.id))
                         }
                     }
                 }
@@ -203,14 +209,73 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
 }
 
 
+
+
+
+
 @Composable
 fun VisAlleRuter(ruter: SnapshotStateList<BigBikeRoute>) {
+    val choices = mutableListOf("ID", "Luftkvalitet", "Lengde")
+
+
+//SPINNER:
+    //Kode hentet fra: https://intensecoder.com/spinner-in-jetpack-compose-dropdown/
+    //variabler for å holde på state.
+    var valg: String by remember { mutableStateOf(choices[0]) }
+    var expanded by remember { mutableStateOf(false)}
+
+
+    Box(Modifier.fillMaxWidth(),contentAlignment = Alignment.Center) {
+        Row( modifier = Modifier
+            .padding(6.dp)
+            .clickable {
+                expanded = !expanded
+            }
+            .padding (8.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = valg,fontSize = 18.sp,modifier = Modifier.padding(end = 8.dp))
+            Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = {
+            expanded = false
+        }) {
+            choices.forEach{ choice->
+                DropdownMenuItem(onClick = {
+                    expanded = false
+                    valg = choice
+
+                }) {
+                    Text(text = choice)
+                }
+            }
+        }
+    }
+
+//OPPRETTER KORTENE BASERT PÅ VALG I SPINNER (DEFAULT: ID)
     LazyColumn(
         modifier = Modifier.padding(bottom = 55.dp)
     ) {
-        items(ruter) { rute ->
-            SykkelRuteCard(rute)
+        if (valg =="ID") {
+            items(ruter.sortedBy { it.id }) { rute ->
+                SykkelRuteCard(rute)
 
+            }
+        }else if (valg =="Luftkvalitet") {
+            items(ruter.sortedBy { it.AQI }) { rute ->
+                SykkelRuteCard(rute)
+
+            }
+        }else if(valg =="Lengde"){
+            items(ruter.sortedBy { it.length }) { rute ->
+                SykkelRuteCard(rute)
+
+            }
+        }else{
+            items(ruter) { rute ->
+                SykkelRuteCard(rute)
+            }
         }
     }
 }
