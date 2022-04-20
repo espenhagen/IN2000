@@ -7,6 +7,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.util.Log
 import com.example.in2000team5.domain_layer.BicycleViewModel
+import com.example.in2000team5.utils.genUtils.Companion.round
 import com.example.in2000team5.utils.metUtils
 import com.example.in2000team5.utils.routeUtils
 import com.google.android.gms.maps.model.LatLng
@@ -17,9 +18,9 @@ import kotlin.math.round
 
 class BicycleRouteRepository {
 
-    private val airQualDataSource = AirQualDataSource()
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
     private val bigRouteMap: HashMap<Int, MutableList<List<LatLng>?>> = HashMap()
+
 
     suspend fun makeBigRoutes(bicycleViewModel: BicycleViewModel, context: Context) {
         bikeRoutedatasrc.fetchRoutes()?.forEach {
@@ -152,79 +153,6 @@ class BicycleRouteRepository {
         return routes
     }
 
-    fun getRealtimeAQI(aqiDataobj: AirQualData?): Double? {
-
-        val data =
-            aqiDataobj?.data?.time?.find { it.from.equals(metUtils.getCurrentTimeAsString()) }
-
-        return data?.variables?.AQI?.value?.toDouble()
-
-    }
-
-
-    suspend fun fetchAvgAirQualAtRoute(routeList: MutableList<List<LatLng>?>): Double? {
-        var tot = 0.0
-        var sampledPoints = 0
-        val MIN_NUM_OF_SAMPLEPOINTS = 10
-
-        val numberOfFragments = routeList.size
-
-        if (numberOfFragments >= MIN_NUM_OF_SAMPLEPOINTS) {
-            for (frag in routeList) {
-                val point = frag?.get(0) //henter ut første punkt i fragmentet
-                if (point != null) {
-                    val data = airQualDataSource.fetchAirQualAtPointDS(
-                        point.latitude.toString(),
-                        point.longitude.toString()
-                    )
-                    val AQIatPoint = getRealtimeAQI(data)
-                    if (AQIatPoint != null) {
-                        tot += AQIatPoint
-                        sampledPoints++
-                    }
-                }
-            }
-        } else {
-            val perFrag = 10 / numberOfFragments
-            for (frag in routeList) {
-                if (frag!!.size <= perFrag) {
-                    for (point in frag) {
-                        val data = airQualDataSource.fetchAirQualAtPointDS(
-                            point.latitude.toString(),
-                            point.longitude.toString()
-                        )
-                        val AQIatPoint = getRealtimeAQI(data)
-                        if (AQIatPoint != null) {
-                            tot += AQIatPoint
-                            sampledPoints++
-                        }
-                    }
-                } else {
-                    for (x in 0..frag.size - 2 step frag.size / perFrag) {
-                        val point = frag.get(x) //henter ut første punkt i fragmentet
-                        val data = airQualDataSource.fetchAirQualAtPointDS(
-                            point.latitude.toString(),
-                            point.longitude.toString()
-                        )
-                        val AQIatPoint = getRealtimeAQI(data)
-                        if (AQIatPoint != null) {
-                            tot += AQIatPoint
-                            sampledPoints++
-                        }
-                    }
-                }
-            }
-        }
-        Log.d("sjekkverdi", "tot ${tot} , sampledPoints ${sampledPoints}")
-        return tot.div(sampledPoints).round(3)
-    }
-
-    //found on internett (stackoverflow)
-    fun Double.round(decimals: Int): Double {
-        var multiplier = 1.0
-        repeat(decimals) { multiplier *= 10 }
-        return round(this * multiplier) / multiplier
-    }
 }
 
 data class BicycleRoute(
