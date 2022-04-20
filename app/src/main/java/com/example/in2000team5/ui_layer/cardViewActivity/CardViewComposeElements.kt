@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -213,7 +214,7 @@ fun SykkelRuteCard(rute: BigBikeRoute) {
 
 
 @Composable
-fun VisAlleRuter(ruter: List<BigBikeRoute>) {
+fun VisAlleRuter(ruter: SnapshotStateList<BigBikeRoute>) {
     val choices = mutableListOf("ID", "Luftkvalitet", "Lengde")
 
 

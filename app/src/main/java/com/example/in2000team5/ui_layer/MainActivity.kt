@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -40,7 +41,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 
-var bicycleRouteList = mutableListOf<BigBikeRoute>()
+var bicycleRouteList = SnapshotStateList<BigBikeRoute>()
+
 
 class MainActivity : ComponentActivity() {
     private val viewModel: BicycleViewModel by viewModels()
@@ -61,10 +63,11 @@ class MainActivity : ComponentActivity() {
                 BottomNavigation(weatherModel)
             }
         }
-        viewModel.getRoutes().observe(this) {
-            bicycleRouteList = it as MutableList<BigBikeRoute>
+        bicycleRouteList = viewModel.getRoutes()
+/*        viewModel.getRoutes().observe(this) {
+            bicycleRouteList = it as mutableStateListOf<BigBikeRoute>
 
-        }
+        }*/
     }
 }
 
