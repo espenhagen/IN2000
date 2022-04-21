@@ -276,8 +276,6 @@ fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
     }
 }
 
-
-
 fun getAirIcon(index: Double?): Int {
     if (index == null) {
         return R.drawable.unknown

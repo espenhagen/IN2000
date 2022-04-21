@@ -36,6 +36,7 @@ import com.example.in2000team5.utils.routeUtils.Companion.routeColor
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import com.example.in2000team5.ui_layer.VisNyRuteKnapp
 
 //TODO flytte dette inn i BicycleViewModel, sende ViewModel med til de ulike compose-elementene
 var bicycleRouteList = SnapshotStateList<SnapshotMutableState<BigBikeRoute>>()
@@ -57,7 +58,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             IN2000Team5Theme {
-                BottomNavigation(weatherModel)
+                BottomNavigation(weatherModel, viewModel)
             }
         }
         bicycleRouteList = viewModel.getRoutes()
@@ -69,7 +70,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun BottomNavigation(model:WeatherDataViewModel) {
+fun BottomNavigation(model:WeatherDataViewModel, bicycleViewModel: BicycleViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -86,7 +87,7 @@ fun BottomNavigation(model:WeatherDataViewModel) {
             )
         }
     ) {
-        Navigation(navController = navController, model)
+        Navigation(navController = navController, model, bicycleViewModel)
     }
 }
 
@@ -126,7 +127,9 @@ fun MapScreen() {
 
 
 @Composable
-fun Navigation(navController: NavHostController, model:WeatherDataViewModel) {
+fun Navigation(navController: NavHostController,
+               model:WeatherDataViewModel,
+               bicycleViewModel: BicycleViewModel) {
     NavHost(navController = navController, startDestination = "om" ) {
         composable("kart") {
             MapScreen()
@@ -142,6 +145,7 @@ fun Navigation(navController: NavHostController, model:WeatherDataViewModel) {
         }
         composable("om") {
             AboutScreen()
+            VisNyRuteKnapp(bicycleViewModel)
         }
     }
 }

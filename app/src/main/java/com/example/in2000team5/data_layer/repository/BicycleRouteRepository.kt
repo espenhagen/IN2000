@@ -31,7 +31,7 @@ class BicycleRouteRepository {
         val routeNames = routeUtils.routeNames()
         bigRouteMap.forEach {
 
-
+            // TODO: Sjekk ut dette når jeg skal legge til nye ruter
             val bigBikeRoute = mutableStateOf(BigBikeRoute(
                 it.key,
                 it.value,
