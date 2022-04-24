@@ -13,22 +13,22 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.IN2000Team5">
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAUrIgHuWwx-z1fPhoA-fXZiTpdGnP2O-o" />
-
+        android:theme="@style/Theme.CustomSplashScreenTheme">
         <activity
             android:name=".ui_layer.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.IN2000Team5">
+            android:theme="@style/Theme.CustomSplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAUrIgHuWwx-z1fPhoA-fXZiTpdGnP2O-o" />
+
     </application>
 
 </manifest>
