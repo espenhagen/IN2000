@@ -21,6 +21,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -47,6 +48,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Display splash until viewModel init is not loading anymore
+        // Splash screen shows only when app is started from launcher or phone, not from AS
+        installSplashScreen().setKeepOnScreenCondition {
+           !viewModel.isLoading.value
+        }
+
         viewModel.makeApiRequest(this)
         //hardkodet til midt i oslo
         weatherModel.fetchWeather("59.91370670", "10.7526291")

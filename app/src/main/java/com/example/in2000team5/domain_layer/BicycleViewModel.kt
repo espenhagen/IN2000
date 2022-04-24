@@ -3,14 +3,13 @@ package com.example.in2000team5.domain_layer
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.BicycleRouteRepository
@@ -20,12 +19,16 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import com.example.in2000team5.data_layer.repository.AirQualityRepository
+import com.example.in2000team5.ui_layer.MainActivity
 
 class BicycleViewModel: ViewModel() {
+
     private val airQualRepo = AirQualityRepository()
     private val repositoryRoutes = BicycleRouteRepository()
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
     private val bicycleRoutes = SnapshotStateList<SnapshotMutableState<BigBikeRoute>>()
+    private val _isLoading: MutableState<Boolean> = mutableStateOf(true) // Used to decide when to close splash screen
+    val isLoading: State<Boolean> = _isLoading
 
 //    private val _bicycleRoutesSharedFlow = MutableSharedFlow<List<BicycleRoute>>()
 //    val bicycleRoutesSharedFlow = _bicycleRoutesSharedFlow.asSharedFlow()
@@ -45,6 +48,7 @@ class BicycleViewModel: ViewModel() {
             //Log.e("constructRoutesThreads Ferdig", "tommel opp")
             repositoryRoutes.makeBigRoutes(this@BicycleViewModel, context)
             //Log.d("myConstructRoutes Ferdig", "tommel sidelengs")
+            _isLoading.value = false
         }
     }
 
