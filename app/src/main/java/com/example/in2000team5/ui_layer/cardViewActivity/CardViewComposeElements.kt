@@ -2,6 +2,7 @@ package com.example.in2000team5.ui_layer.cardViewActivity
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,16 +18,117 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.util.toRange
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
 import com.example.in2000team5.utils.routeUtils.Companion.routeColor
+import com.example.in2000team5.utils.supportInfo
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.*
+
+val wDetails = mutableStateOf<String?>(null)
+val rClothing = mutableStateOf<String?>(null)
+val conditons = mutableStateOf<String?>(null)
+val checklist = mutableStateOf<String?>(null)
+
+@Composable
+fun SupportBox(model: WeatherDataViewModel) {
+
+    Surface(
+        elevation = 4.dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        color = MaterialTheme.colors.background
+    ) {
+            Column {
+                Text(
+                    text = "Planlegg Dagen:",
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.h3,
+                    textDecoration = TextDecoration.Underline
+                )
+
+                timeSlide(model)
+                checklist.value = supportInfo.getChecklist()
+
+                infoBox(model = model, "Detaljert om været:", wDetails, Color.LightGray)
+                infoBox(model = model, "Anbefalt påkledning:", rClothing, Color.White)
+                infoBox(model = model, "Sykkelforhold:", conditons, Color.LightGray)
+                infoBox(model = model, "Vedlikehold checklist:", checklist, Color.White)
+
+
+            }
+        }
+    }
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun timeSlide(model: WeatherDataViewModel) {
+    var sliderPosition by remember { mutableStateOf(0f..(model.weaterTimes.size).toFloat()) }
+    updateSupportData(model, sliderPosition)
+    Text(text = "Fra: " + model.weaterTimes[sliderPosition.toRange().lower.toInt()].time.toString() + " Til: " + model.weaterTimes[sliderPosition.toRange().upper.toInt()-1].time.toString()  )
+    RangeSlider(
+        values = sliderPosition,
+        onValueChange = { sliderPosition = it },
+        valueRange = 0f..model.weaterTimes.size.toFloat(),
+        steps = model.weaterTimes.size,
+        onValueChangeFinished = {
+            updateSupportData(model, sliderPosition)
+        },
+    )
+}
+
+fun updateSupportData(
+    model: WeatherDataViewModel,
+    sliderPosition: ClosedFloatingPointRange<Float>
+) {
+    val start = sliderPosition.start.toInt()
+    val end = sliderPosition.endInclusive.toInt() -1
+    wDetails.value = supportInfo.getWeatherDetailsInfo(model, start, end)
+    rClothing.value = supportInfo.getRecommendedClothing(model, start, end)
+    conditons.value = supportInfo.getBikeConditions(model, start, end)
+}
+
+@Composable
+fun infoBox(
+    model: WeatherDataViewModel,
+    headText: String,
+    info: MutableState<String?>,
+    lightGray: Color
+){
+    Column(
+        Modifier
+            .padding(6.dp)
+            .fillMaxWidth()
+            .background(color = Color.LightGray)
+    ){
+        Text(
+            modifier = Modifier.padding(5.dp),
+            text = headText,
+            color = MaterialTheme.colors.secondaryVariant,
+            style = MaterialTheme.typography.h5
+        )
+
+        if (info.value!= null){
+
+            Text(
+                modifier = Modifier.padding(3.dp),
+                text = info.value!!
+            )
+        }
+    }
+
+}
+
+
 
 
 @Composable
@@ -75,7 +177,7 @@ fun InfoRow(model: WeatherDataViewModel) {
                     contentDescription = "en sol",
                     Modifier
                         .rotate(windDirection.toFloat())
-                        . padding(horizontal = 20.dp, vertical = 10.dp)
+                        .padding(horizontal = 20.dp, vertical = 10.dp)
                         .size(40.dp)
                 )
             }
@@ -227,7 +329,7 @@ fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
             .clickable {
                 expanded = !expanded
             }
-            .padding (8.dp),
+            .padding(8.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -286,3 +388,18 @@ fun getAirIcon(index: Double?): Int {
     }
     return R.drawable.badair
 }
+
+
+
+fun checkCloating(model: WeatherDataViewModel): String? {
+    /*
+    if(model.getTemperature() ){
+
+    }
+    */
+    return null
+}
+
+//Buff: under 10 +-
+//Hansker: 5-7
+

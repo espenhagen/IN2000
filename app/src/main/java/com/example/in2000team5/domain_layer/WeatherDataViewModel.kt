@@ -1,28 +1,42 @@
 package com.example.in2000team5.domain_layer
 
+import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.Snapshot
+import androidx.compose.runtime.snapshots.SnapshotMutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.in2000team5.data_layer.LocFore
+import com.example.in2000team5.data_layer.Timeseries
 import com.example.in2000team5.data_layer.repository.WeatherDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class
-WeatherDataViewModel: ViewModel() {
+class WeatherDataViewModel: ViewModel() {
 
     val liveTemperature = MutableLiveData<Double?>()
     val liveSymbol = MutableLiveData<String?>()
     val liveWindSpeed = MutableLiveData<Double?>()
     val liveWindDirection = MutableLiveData<Double?>()
 
+    var weaterTimes = mutableStateListOf<Timeseries>()
+
+
+
     val weatherRepository = WeatherDataRepository()
 
+    //NYTT
+    fun postWetherObj(data: List<Timeseries>?){
+        weaterTimes.addAll(data as Collection<Timeseries>)
+    }
 
     fun fetchWeather(lat: String, lon: String) {
         viewModelScope.launch(Dispatchers.IO) {
             weatherRepository.processWeatherData(lat, lon, this@WeatherDataViewModel)
         }
     }
+
 
 
     fun getTemperatureLiveData() : MutableLiveData<Double?> {
@@ -33,6 +47,12 @@ WeatherDataViewModel: ViewModel() {
     fun getTemperature(): Double? {
         return liveTemperature.value
     }
+
+    /*
+    fun getRainNext1H(): Double?{
+        return liveRain1H.value
+    }
+    */
 
     fun getSymbolName(): String? {
         return liveSymbol.value
@@ -66,3 +86,4 @@ WeatherDataViewModel: ViewModel() {
 
 
 }
+

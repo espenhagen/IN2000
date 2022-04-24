@@ -31,6 +31,7 @@ import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.domain_layer.BicycleViewModel
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.cardViewActivity.InfoRow
+import com.example.in2000team5.ui_layer.cardViewActivity.SupportBox
 import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
 import com.example.in2000team5.utils.routeUtils.Companion.routeColor
 import com.google.android.gms.maps.model.CameraPosition
@@ -141,10 +142,14 @@ fun Navigation(navController: NavHostController, model:WeatherDataViewModel) {
             }
         }
         composable("om") {
-            AboutScreen()
+            //InfoRow(model)
+            SupportBox(model)
+            //AboutScreen()
         }
     }
 }
+
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
