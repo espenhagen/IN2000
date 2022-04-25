@@ -26,7 +26,6 @@ class WeatherDataViewModel: ViewModel() {
 
     val weatherRepository = WeatherDataRepository()
 
-    //NYTT
     fun postWetherObj(data: List<Timeseries>?){
         weaterTimes.addAll(data as Collection<Timeseries>)
     }

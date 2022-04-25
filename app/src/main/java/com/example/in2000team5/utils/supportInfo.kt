@@ -5,31 +5,6 @@ import com.example.in2000team5.domain_layer.WeatherDataViewModel
 class supportInfo {
     companion object {
 
-        fun checkIfSlippery(temp: Double?): Boolean {
-            if(temp == null){
-                return false
-            }
-            else if(temp <= 4){
-                return true
-            }
-            return false
-        }
-
-        fun findClothTips(temp: Double?): String? {
-            if(temp == null){
-                return null
-            }
-            else if(temp <= 0){
-                return "I dag er det kaldt, vi anbefaler å bruke lange jakke, buff, hansker, briller og varme sokker eller vintersko"
-            }
-
-            else if (temp > 0 && temp < 5){
-                return "I dag er det ganske kaldt, vi anbefaler"
-            }
-
-            return "blablabl dsafkdsamfkldsam"
-        }
-
         fun getWeatherDetailsInfo(model: WeatherDataViewModel, start: Int, end: Int): String? {
             var str = model.weaterTimes[start].data?.next_1_hours?.details?.precipitation_amount.toString() + " mm regn neste time \r\n"
             str += model.weaterTimes[start].data?.instant?.details?.wind_speed.toString() + "m/s "

@@ -55,8 +55,10 @@ fun SupportBox(model: WeatherDataViewModel) {
                     style = MaterialTheme.typography.h3,
                     textDecoration = TextDecoration.Underline
                 )
+                if(model.weaterTimes.size!=0){
+                    timeSlide(model)
+                }
 
-                timeSlide(model)
                 checklist.value = supportInfo.getChecklist()
 
                 infoBox(model = model, "Detaljert om været:", wDetails, Color.LightGray)
