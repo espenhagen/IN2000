@@ -108,10 +108,6 @@ fun MapScreen() {
             snippet = "Marker in Oslo"
         )
 
-
-
-
-
         for (storRute in bicycleRouteList) {
 
             for (liste in storRute.value.fragmentList) {
@@ -138,13 +134,13 @@ fun Navigation(navController: NavHostController,
         composable("ruter") {
             Column {
                 InfoRow(model)
-                VisAlleRuter(ruter = bicycleRouteList)
+
+                VisNyRuteKnapp(bicycleViewModel = bicycleViewModel)
 
             }
         }
         composable("om") {
             AboutScreen()
-            VisNyRuteKnapp(bicycleViewModel)
         }
     }
 }

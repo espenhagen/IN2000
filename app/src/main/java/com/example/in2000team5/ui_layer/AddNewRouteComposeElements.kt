@@ -20,12 +20,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.domain_layer.BicycleViewModel
+import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
 
 @Composable
 fun VisNyRuteKnapp(bicycleViewModel: BicycleViewModel) {
     val showForm = remember { mutableStateOf(false) }
     Scaffold(
+        content = { VisAlleRuter(ruter = bicycleViewModel.getRoutes())},
         floatingActionButton = {
+
             FloatingActionButton(
                 modifier = Modifier.padding(24.dp, 64.dp),
                 onClick = {
@@ -46,9 +49,7 @@ fun VisNyRuteKnapp(bicycleViewModel: BicycleViewModel) {
                 Icon(imageVector = Icons.Default.Add, "")
             }
         }
-    ) {
-
-    }
+    )
     if (showForm.value) VisNyRuteSkjema(showForm, bicycleViewModel)
 }
 
