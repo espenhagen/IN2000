@@ -1,6 +1,7 @@
 package com.example.in2000team5.ui_layer
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -101,8 +102,8 @@ fun OpprettDialog(showForm: MutableState<Boolean>,
         confirmButton = {
             TextButton(onClick = {
                 Log.d("TEST LEGG TIL", start.value + " - " + slutt.value)
-                bicycleViewModel.addRouteFromUser(context, start.value, slutt.value)
-                showForm.value = false
+                if (bicycleViewModel.addRouteFromUser(context, start.value, slutt.value))
+                    showForm.value = false
             })
             { Text(text = "Legg til rute") }
         },

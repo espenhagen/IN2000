@@ -6,6 +6,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
@@ -159,37 +160,64 @@ class BicycleRouteRepository {
     }
 
     private fun getCoordinatesFromName(geocoder: Geocoder, name: String): LatLng? {
-        val response = geocoder.getFromLocationName(name, 1)[0]
-        if (response.hasLatitude() && response.hasLongitude()) {
-            return LatLng(response.latitude, response.longitude)
+        val response = geocoder.getFromLocationName(name, 1)
+        if (response.size < 1) return null
+        if (response[0].hasLatitude() && response[0].hasLongitude()) {
+            return LatLng(response[0].latitude, response[0].longitude)
         }
         return null
     }
 
-    fun addRouteFromUser(bicycleViewModel: BicycleViewModel, context: Context, start: String, slutt: String) {
+    // Denne snur om på latitude og longtitude grunnet formatet som returneres av geocoder-en
+    private fun userInputRouteLength(latLngList: List<LatLng>): Double {
+        var total = 0.0
+        for (i in 1 until latLngList.size) {
+            val lengthResult = FloatArray(1)
+            Location.distanceBetween(
+                latLngList[i - 1].longitude,
+                latLngList[i - 1].latitude,
+                latLngList[i].longitude,
+                latLngList[i].latitude,
+                lengthResult
+            )
+            total += lengthResult[0]
+        }
+        return total
+    }
+
+    fun addRouteFromUser(bicycleViewModel: BicycleViewModel, context: Context, start: String, slutt: String): Boolean {
         val geocoder = Geocoder(context)
         val startLatLng = getCoordinatesFromName(geocoder, start)
         val sluttLatLng = getCoordinatesFromName(geocoder, slutt)
+        var text = "Oppgi gyldig start og slutt"
 
         var latLngList: MutableList<List<LatLng>?> = mutableListOf(listOf(LatLng(59.911491, 10.757933)))
+        var lagtTil = false
         if (startLatLng != null && sluttLatLng != null) {
             latLngList = mutableListOf(listOf(startLatLng, sluttLatLng))
+            val nyRute = mutableStateOf(BigBikeRoute(
+                antallRuter++,
+                latLngList,
+                start,
+                slutt,
+                userInputRouteLength(latLngList[0]!!),
+                mutableStateOf(null)
+            ))
+
+            bicycleViewModel.getAirQualAvgForRoute(nyRute)
+            bicycleViewModel.postRoutes(nyRute as SnapshotMutableState<BigBikeRoute>)
+            lagtTil = true
+            text = "Rute lagt til"
         }
 
-        val nyRute = mutableStateOf(BigBikeRoute(
-            antallRuter++,
-            latLngList,
-            start,
-            slutt,
-            2000.2,
-            mutableStateOf(2.0)
-        ))
-        bicycleViewModel.postRoutes(nyRute as SnapshotMutableState<BigBikeRoute>)
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(context, text, duration)
+        toast.show()
+        return lagtTil
     }
 }
 
 data class BicycleRoute(
-
     val routeNr: Number?,
     val coordinates: List<LatLng>?,
     val startDistrict: String?,

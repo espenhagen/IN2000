@@ -49,7 +49,7 @@ class BicycleViewModel: ViewModel() {
         return bicycleRoutes
     }
 
-    fun addRouteFromUser(context: Context, start: String, slutt: String) {
-        repositoryRoutes.addRouteFromUser(this@BicycleViewModel, context, start, slutt)
+    fun addRouteFromUser(context: Context, start: String, slutt: String): Boolean {
+        return repositoryRoutes.addRouteFromUser(this@BicycleViewModel, context, start, slutt)
     }
 }
