@@ -1,9 +1,7 @@
 package com.example.in2000team5.ui_layer
 
 import android.util.Log
-import android.widget.EditText
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -13,8 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotMutableState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -22,11 +18,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.in2000team5.data_layer.BicycleRoute
-import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.domain_layer.BicycleViewModel
-import com.example.in2000team5.ui_layer.bicycleRouteList
 
 @Composable
 fun VisNyRuteKnapp(bicycleViewModel: BicycleViewModel) {
@@ -64,29 +56,30 @@ fun VisNyRuteKnapp(bicycleViewModel: BicycleViewModel) {
 @Composable
 fun VisNyRuteSkjema(showForm: MutableState<Boolean>) {
     if (showForm.value) {
-        OpprettDialog(showForm) {
-            BrukerInputView()
+        val start = remember { mutableStateOf("") }
+        val slutt = remember { mutableStateOf("") }
+
+        OpprettDialog(showForm, start, slutt) {
+            BrukerInputView(start, slutt)
         }
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun BrukerInputView() {
+fun BrukerInputView(start: MutableState<String>, slutt: MutableState<String>) {
     Column(
         Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Divider()
-        StartOgSluttInput()
+        StartOgSluttInput(Modifier, start, slutt)
     }
 }
 
 @Composable
-fun OpprettDialog(showForm: MutableState<Boolean>, content: @Composable (() -> Unit)? = null) {
-    // TODO: Create the form and make user input values
-    Log.d("test", "test klikk")
-    var start = ""
+fun OpprettDialog(showForm: MutableState<Boolean>, start: MutableState<String>,
+                  slutt: MutableState<String>, content: @Composable (() -> Unit)? = null) {
     AlertDialog(
         onDismissRequest = { showForm.value = false }, // sjekk ut om dette er riktig
         title = {
@@ -99,11 +92,13 @@ fun OpprettDialog(showForm: MutableState<Boolean>, content: @Composable (() -> U
         },
         text = content,
         confirmButton = {
-            TextButton(onClick = {})
+            TextButton(onClick = {
+                Log.d("TEST LEGG TIL", start.value + " - " + slutt.value)
+            })
             { Text(text = "Legg til rute") }
         },
         dismissButton = {
-            TextButton(onClick = {})
+            TextButton(onClick = { showForm.value = false })
             { Text(text = "Avbryt") }
         },
         modifier = Modifier.padding(vertical = 8.dp)

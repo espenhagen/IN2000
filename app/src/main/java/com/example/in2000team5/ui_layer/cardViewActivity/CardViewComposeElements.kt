@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
-import com.example.in2000team5.data_layer.BigBikeRoute
+import com.example.in2000team5.data_layer.repository.BigBikeRoute
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
 import com.example.in2000team5.utils.routeUtils.Companion.routeColor

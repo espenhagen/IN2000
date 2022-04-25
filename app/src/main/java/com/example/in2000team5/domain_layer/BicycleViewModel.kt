@@ -1,23 +1,15 @@
 package com.example.in2000team5.domain_layer
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BicycleRouteRemoteDataSource
-import com.example.in2000team5.data_layer.BicycleRouteRepository
-import com.example.in2000team5.data_layer.BigBikeRoute
+import com.example.in2000team5.data_layer.repository.BicycleRouteRepository
+import com.example.in2000team5.data_layer.repository.BigBikeRoute
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import com.example.in2000team5.data_layer.repository.AirQualityRepository
 

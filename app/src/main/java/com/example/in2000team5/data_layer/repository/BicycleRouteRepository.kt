@@ -1,4 +1,4 @@
-package com.example.in2000team5.data_layer
+package com.example.in2000team5.data_layer.repository
 
 
 import android.content.Context
@@ -9,6 +9,8 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
+import com.example.in2000team5.data_layer.BicycleRouteRemoteDataSource
+import com.example.in2000team5.data_layer.Features
 import com.example.in2000team5.domain_layer.BicycleViewModel
 import com.example.in2000team5.utils.routeUtils
 import com.google.android.gms.maps.model.LatLng
@@ -32,14 +34,16 @@ class BicycleRouteRepository {
         bigRouteMap.forEach {
 
             // TODO: Sjekk ut dette når jeg skal legge til nye ruter
-            val bigBikeRoute = mutableStateOf(BigBikeRoute(
+            val bigBikeRoute = mutableStateOf(
+                BigBikeRoute(
                 it.key,
                 it.value,
                 routeNames[it.key]?.get(0)!!,
                 routeNames[it.key]?.get(1)!!,
                 calculateRouteLength(it.value), mutableStateOf(null)
 
-            ))
+            )
+            )
             bicycleViewModel.getAirQualAvgForRoute(bigBikeRoute)
 
             bicycleViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BigBikeRoute>)
