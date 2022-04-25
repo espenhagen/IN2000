@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,18 +49,16 @@ fun VisNyRuteKnapp(bicycleViewModel: BicycleViewModel) {
     ) {
 
     }
-    if (showForm.value) VisNyRuteSkjema(showForm)
-    // TODO: remove form showForm is true
+    if (showForm.value) VisNyRuteSkjema(showForm, bicycleViewModel)
 }
 
-
 @Composable
-fun VisNyRuteSkjema(showForm: MutableState<Boolean>) {
+fun VisNyRuteSkjema(showForm: MutableState<Boolean>, bicycleViewModel: BicycleViewModel) {
     if (showForm.value) {
         val start = remember { mutableStateOf("") }
         val slutt = remember { mutableStateOf("") }
 
-        OpprettDialog(showForm, start, slutt) {
+        OpprettDialog(showForm, start, slutt, bicycleViewModel) {
             BrukerInputView(start, slutt)
         }
     }
@@ -78,8 +77,15 @@ fun BrukerInputView(start: MutableState<String>, slutt: MutableState<String>) {
 }
 
 @Composable
-fun OpprettDialog(showForm: MutableState<Boolean>, start: MutableState<String>,
-                  slutt: MutableState<String>, content: @Composable (() -> Unit)? = null) {
+fun OpprettDialog(showForm: MutableState<Boolean>,
+                  start: MutableState<String>,
+                  slutt: MutableState<String>,
+                  bicycleViewModel: BicycleViewModel,
+                  content: @Composable (() -> Unit)? = null
+                  )
+{
+    val context = LocalContext.current
+
     AlertDialog(
         onDismissRequest = { showForm.value = false }, // sjekk ut om dette er riktig
         title = {
@@ -94,6 +100,8 @@ fun OpprettDialog(showForm: MutableState<Boolean>, start: MutableState<String>,
         confirmButton = {
             TextButton(onClick = {
                 Log.d("TEST LEGG TIL", start.value + " - " + slutt.value)
+                bicycleViewModel.addRouteFromUser(context, start.value, slutt.value)
+                showForm.value = false
             })
             { Text(text = "Legg til rute") }
         },

@@ -22,7 +22,7 @@ class BicycleRouteRepository {
 
     private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
     private val bigRouteMap: HashMap<Int, MutableList<List<LatLng>?>> = HashMap()
-
+    private var antallRuter = 50 // TODO: hør med gruppa ang. dette
 
     suspend fun makeBigRoutes(bicycleViewModel: BicycleViewModel, context: Context) {
         bikeRoutedatasrc.fetchRoutes()?.forEach {
@@ -158,6 +158,34 @@ class BicycleRouteRepository {
         return routes
     }
 
+    private fun getCoordinatesFromName(geocoder: Geocoder, name: String): LatLng? {
+        val response = geocoder.getFromLocationName(name, 1)[0]
+        if (response.hasLatitude() && response.hasLongitude()) {
+            return LatLng(response.latitude, response.longitude)
+        }
+        return null
+    }
+
+    fun addRouteFromUser(bicycleViewModel: BicycleViewModel, context: Context, start: String, slutt: String) {
+        val geocoder = Geocoder(context)
+        val startLatLng = getCoordinatesFromName(geocoder, start)
+        val sluttLatLng = getCoordinatesFromName(geocoder, slutt)
+
+        var latLngList: MutableList<List<LatLng>?> = mutableListOf(listOf(LatLng(59.911491, 10.757933)))
+        if (startLatLng != null && sluttLatLng != null) {
+            latLngList = mutableListOf(listOf(startLatLng, sluttLatLng))
+        }
+
+        val nyRute = mutableStateOf(BigBikeRoute(
+            antallRuter++,
+            latLngList,
+            start,
+            slutt,
+            2000.2,
+            mutableStateOf(2.0)
+        ))
+        bicycleViewModel.postRoutes(nyRute as SnapshotMutableState<BigBikeRoute>)
+    }
 }
 
 data class BicycleRoute(

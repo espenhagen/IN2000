@@ -48,4 +48,8 @@ class BicycleViewModel: ViewModel() {
     fun getRoutes(): SnapshotStateList<SnapshotMutableState<BigBikeRoute>> {
         return bicycleRoutes
     }
+
+    fun addRouteFromUser(context: Context, start: String, slutt: String) {
+        repositoryRoutes.addRouteFromUser(this@BicycleViewModel, context, start, slutt)
+    }
 }
