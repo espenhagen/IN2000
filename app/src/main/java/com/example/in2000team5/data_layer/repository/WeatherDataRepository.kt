@@ -41,7 +41,16 @@ class WeatherDataRepository {
     fun getTimeseries(forecast: LocFore): List<Timeseries>? {
 
         val details = forecast.properties?.timeseries
-        return details
+        var startIndex = 0;
+        if (details != null) {
+            details.forEachIndexed { index, elm ->
+                if(metUtils.isNowTime(elm.time.toString())){
+                    startIndex = index
+                }
+            }
+            return details.subList(startIndex, startIndex+24)
+        }
+        return null
     }
 
     fun getDetails(forecast: LocFore): Details? {

@@ -27,6 +27,7 @@ import androidx.core.util.toRange
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
+import com.example.in2000team5.utils.metUtils
 import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
 import com.example.in2000team5.utils.routeUtils.Companion.routeColor
 import com.example.in2000team5.utils.supportInfo
@@ -74,13 +75,13 @@ fun SupportBox(model: WeatherDataViewModel) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun timeSlide(model: WeatherDataViewModel) {
-    var sliderPosition by remember { mutableStateOf(0f..(model.weaterTimes.size).toFloat()) }
+    var sliderPosition by remember { mutableStateOf(0f..(model.weaterTimes.lastIndex).toFloat()) }
     updateSupportData(model, sliderPosition)
-    Text(text = "Fra: " + model.weaterTimes[sliderPosition.toRange().lower.toInt()].time.toString() + " Til: " + model.weaterTimes[sliderPosition.toRange().upper.toInt()-1].time.toString()  )
+    Text(text = "Fra: " + metUtils.getDateAndHour(model.weaterTimes[sliderPosition.start.toInt()].time.toString()) + " Til: " + metUtils.getDateAndHour(model.weaterTimes[sliderPosition.endInclusive.toInt()].time.toString())  )
     RangeSlider(
         values = sliderPosition,
         onValueChange = { sliderPosition = it },
-        valueRange = 0f..model.weaterTimes.size.toFloat(),
+        valueRange = 0f..model.weaterTimes.lastIndex.toFloat(),
         steps = model.weaterTimes.size,
         onValueChangeFinished = {
             updateSupportData(model, sliderPosition)
@@ -391,17 +392,4 @@ fun getAirIcon(index: Double?): Int {
     return R.drawable.badair
 }
 
-
-
-fun checkCloating(model: WeatherDataViewModel): String? {
-    /*
-    if(model.getTemperature() ){
-
-    }
-    */
-    return null
-}
-
-//Buff: under 10 +-
-//Hansker: 5-7
 
