@@ -63,10 +63,10 @@ fun SupportBox(model: WeatherDataViewModel) {
 
                 checklist.value = supportInfo.getChecklist()
 
-                infoBox(model = model, "Detaljert om været:", wDetails, Color.LightGray)
-                infoBox(model = model, "Anbefalt påkledning:", rClothing, Color.White)
-                infoBox(model = model, "Sykkelforhold:", conditons, Color.LightGray)
-                infoBox(model = model, "Vedlikehold checklist:", checklist, Color.White)
+                InfoBox(model = model, "Detaljert om været:", wDetails, Color.LightGray)
+                InfoBox(model = model, "Anbefalt påkledning:", rClothing, Color.White)
+                InfoBox(model = model, "Sykkelforhold:", conditons, Color.LightGray)
+                InfoBox(model = model, "Vedlikehold checklist:", checklist, Color.White)
 
 
             }
@@ -102,7 +102,7 @@ fun updateSupportData(
 }
 
 @Composable
-fun infoBox(
+fun InfoBox(
     model: WeatherDataViewModel,
     headText: String,
     info: MutableState<String?>,
