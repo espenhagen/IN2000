@@ -323,10 +323,8 @@ fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
     var expanded by remember { mutableStateOf(false)}
 
     Column() {
-
-
-        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            Row(modifier = Modifier
+        Box(Modifier.fillMaxWidth(),contentAlignment = Alignment.Center) {
+            Row( modifier = Modifier
                 .padding(6.dp)
                 .clickable {
                     expanded = !expanded
@@ -335,36 +333,16 @@ fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = valg, fontSize = 18.sp, modifier = Modifier.padding(end = 8.dp))
+                Text(text = valg,fontSize = 18.sp,modifier = Modifier.padding(end = 8.dp))
                 Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
             }
             DropdownMenu(expanded = expanded, onDismissRequest = {
                 expanded = false
             }) {
-                choices.forEach { choice ->
+                choices.forEach{ choice->
                     DropdownMenuItem(onClick = {
                         expanded = false
                         valg = choice
-    Box(Modifier.fillMaxWidth(),contentAlignment = Alignment.Center) {
-        Row( modifier = Modifier
-            .padding(6.dp)
-            .clickable {
-                expanded = !expanded
-            }
-            .padding(8.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = valg,fontSize = 18.sp,modifier = Modifier.padding(end = 8.dp))
-            Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
-        }
-        DropdownMenu(expanded = expanded, onDismissRequest = {
-            expanded = false
-        }) {
-            choices.forEach{ choice->
-                DropdownMenuItem(onClick = {
-                    expanded = false
-                    valg = choice
 
                     }) {
                         Text(text = choice)
@@ -373,7 +351,7 @@ fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
             }
         }
 
-//OPPRETTER KORTENE BASERT PÅ VALG I SPINNER (DEFAULT: ID)
+        //OPPRETTER KORTENE BASERT PÅ VALG I SPINNER (DEFAULT: ID)
         LazyColumn(
             modifier = Modifier.padding(bottom = 55.dp)
         ) {
