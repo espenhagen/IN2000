@@ -1,5 +1,8 @@
 package com.example.in2000team5.domain_layer
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,10 +20,14 @@ WeatherDataViewModel: ViewModel() {
 
     val weatherRepository = WeatherDataRepository()
 
+    private val _isLoading: MutableState<Boolean> = mutableStateOf(true) // Used to decide when to close splash screen
+    val isLoading: State<Boolean> = _isLoading
+
 
     fun fetchWeather(lat: String, lon: String) {
         viewModelScope.launch(Dispatchers.IO) {
             weatherRepository.processWeatherData(lat, lon, this@WeatherDataViewModel)
+            _isLoading.value = false
         }
     }
 
