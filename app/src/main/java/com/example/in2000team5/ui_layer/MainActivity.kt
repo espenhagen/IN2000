@@ -28,7 +28,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.in2000team5.data_layer.BigBikeRoute
+import com.example.in2000team5.data_layer.repository.BigBikeRoute
 import com.example.in2000team5.domain_layer.BicycleViewModel
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.cardViewActivity.InfoRow
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             IN2000Team5Theme {
-                BottomNavigation(weatherModel)
+                BottomNavigation(weatherModel, viewModel)
             }
         }
         bicycleRouteList = viewModel.getRoutes()
@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun BottomNavigation(model:WeatherDataViewModel) {
+fun BottomNavigation(model:WeatherDataViewModel, bicycleViewModel: BicycleViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -94,7 +94,7 @@ fun BottomNavigation(model:WeatherDataViewModel) {
             )
         }
     ) {
-        Navigation(navController = navController, model)
+        Navigation(navController = navController, model, bicycleViewModel)
     }
 }
 
@@ -116,10 +116,6 @@ fun MapScreen() {
             snippet = "Marker in Oslo"
         )
 
-
-
-
-
         for (storRute in bicycleRouteList) {
 
             for (liste in storRute.value.fragmentList) {
@@ -134,7 +130,9 @@ fun MapScreen() {
 
 
 @Composable
-fun Navigation(navController: NavHostController, model:WeatherDataViewModel) {
+fun Navigation(navController: NavHostController,
+               model:WeatherDataViewModel,
+               bicycleViewModel: BicycleViewModel) {
     NavHost(navController = navController, startDestination = "om" ) {
         composable("kart") {
             MapScreen()
@@ -144,7 +142,8 @@ fun Navigation(navController: NavHostController, model:WeatherDataViewModel) {
         composable("ruter") {
             Column {
                 InfoRow(model)
-                VisAlleRuter(ruter = bicycleRouteList)
+
+                VisNyRuteKnapp(bicycleViewModel = bicycleViewModel)
 
             }
         }

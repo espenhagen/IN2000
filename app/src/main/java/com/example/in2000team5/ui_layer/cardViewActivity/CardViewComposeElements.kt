@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
-import com.example.in2000team5.data_layer.BigBikeRoute
+import com.example.in2000team5.data_layer.repository.BigBikeRoute
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
 import com.example.in2000team5.utils.routeUtils.Companion.routeColor
@@ -75,7 +75,7 @@ fun InfoRow(model: WeatherDataViewModel) {
                     contentDescription = "en sol",
                     Modifier
                         .rotate(windDirection.toFloat())
-                        . padding(horizontal = 20.dp, vertical = 10.dp)
+                        .padding(horizontal = 20.dp, vertical = 10.dp)
                         .size(40.dp)
                 )
             }
@@ -213,70 +213,70 @@ fun SykkelRuteCard(rute: SnapshotMutableState<BigBikeRoute>) {
 fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
     val choices = mutableListOf("ID", "Luftkvalitet", "Lengde")
 
-
 //SPINNER:
     //Kode hentet fra: https://intensecoder.com/spinner-in-jetpack-compose-dropdown/
     //variabler for å holde på state.
     var valg: String by remember { mutableStateOf(choices[0]) }
     var expanded by remember { mutableStateOf(false)}
 
+    Column() {
 
-    Box(Modifier.fillMaxWidth(),contentAlignment = Alignment.Center) {
-        Row( modifier = Modifier
-            .padding(6.dp)
-            .clickable {
-                expanded = !expanded
+
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Row(modifier = Modifier
+                .padding(6.dp)
+                .clickable {
+                    expanded = !expanded
+                }
+                .padding(8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = valg, fontSize = 18.sp, modifier = Modifier.padding(end = 8.dp))
+                Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
             }
-            .padding (8.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = valg,fontSize = 18.sp,modifier = Modifier.padding(end = 8.dp))
-            Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
-        }
-        DropdownMenu(expanded = expanded, onDismissRequest = {
-            expanded = false
-        }) {
-            choices.forEach{ choice->
-                DropdownMenuItem(onClick = {
-                    expanded = false
-                    valg = choice
+            DropdownMenu(expanded = expanded, onDismissRequest = {
+                expanded = false
+            }) {
+                choices.forEach { choice ->
+                    DropdownMenuItem(onClick = {
+                        expanded = false
+                        valg = choice
 
-                }) {
-                    Text(text = choice)
+                    }) {
+                        Text(text = choice)
+                    }
+                }
+            }
+        }
+
+//OPPRETTER KORTENE BASERT PÅ VALG I SPINNER (DEFAULT: ID)
+        LazyColumn(
+            modifier = Modifier.padding(bottom = 55.dp)
+        ) {
+            if (valg == "ID") {
+                items(ruter.sortedBy { it.value.id }) { rute ->
+                    SykkelRuteCard(rute)
+
+                }
+            } else if (valg == "Luftkvalitet") {
+                items(ruter.sortedBy { it.value.AQI.value }) { rute ->
+                    SykkelRuteCard(rute)
+
+                }
+            } else if (valg == "Lengde") {
+                items(ruter.sortedBy { it.value.length }) { rute ->
+                    SykkelRuteCard(rute)
+
+                }
+            } else {
+                items(ruter) { rute ->
+                    SykkelRuteCard(rute)
                 }
             }
         }
     }
-
-//OPPRETTER KORTENE BASERT PÅ VALG I SPINNER (DEFAULT: ID)
-    LazyColumn(
-        modifier = Modifier.padding(bottom = 55.dp)
-    ) {
-        if (valg =="ID") {
-            items(ruter.sortedBy { it.value.id }) { rute ->
-                SykkelRuteCard(rute)
-
-            }
-        }else if (valg =="Luftkvalitet") {
-            items(ruter.sortedBy { it.value.AQI.value }) { rute ->
-                SykkelRuteCard(rute)
-
-            }
-        }else if(valg =="Lengde"){
-            items(ruter.sortedBy { it.value.length }) { rute ->
-                SykkelRuteCard(rute)
-
-            }
-        }else{
-            items(ruter) { rute ->
-                SykkelRuteCard(rute)
-            }
-        }
-    }
 }
-
-
 
 fun getAirIcon(index: Double?): Int {
     if (index == null) {
