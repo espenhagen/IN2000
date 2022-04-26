@@ -9,7 +9,6 @@ import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.*
-import com.example.in2000team5.data_layer.BicycleRoute
 import com.example.in2000team5.data_layer.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.repository.BicycleRouteRepository
 import com.example.in2000team5.data_layer.repository.BigBikeRoute
