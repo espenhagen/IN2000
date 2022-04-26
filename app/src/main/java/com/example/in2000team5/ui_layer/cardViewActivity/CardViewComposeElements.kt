@@ -20,10 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.util.toRange
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.BigBikeRoute
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
@@ -50,14 +48,17 @@ fun SupportBox(model: WeatherDataViewModel) {
         color = MaterialTheme.colors.background
     ) {
             Column {
+                /*
                 Text(
                     text = "Planlegg Dagen:",
                     color = MaterialTheme.colors.primary,
                     style = MaterialTheme.typography.h3,
                     textDecoration = TextDecoration.Underline
                 )
+                */
+
                 if(model.weaterTimes.size!=0){
-                    timeSlide(model)
+                    TimeSlide(model)
                 }
 
                 checklist.value = supportInfo.getChecklist()
@@ -74,10 +75,10 @@ fun SupportBox(model: WeatherDataViewModel) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun timeSlide(model: WeatherDataViewModel) {
+fun TimeSlide(model: WeatherDataViewModel) {
     var sliderPosition by remember { mutableStateOf(0f..(model.weaterTimes.lastIndex).toFloat()) }
     updateSupportData(model, sliderPosition)
-    Text(text = "Fra: " + metUtils.getDateAndHour(model.weaterTimes[sliderPosition.start.toInt()].time.toString()) + " Til: " + metUtils.getDateAndHour(model.weaterTimes[sliderPosition.endInclusive.toInt()].time.toString())  )
+    Text(text = "Fra: " + metUtils.getDateAndHour(model.weaterTimes[sliderPosition.start.toInt()].time.toString()) + "\r\nTil: " + metUtils.getDateAndHour(model.weaterTimes[sliderPosition.endInclusive.toInt()].time.toString())  )
     RangeSlider(
         values = sliderPosition,
         onValueChange = { sliderPosition = it },
@@ -311,9 +312,6 @@ fun SykkelRuteCard(rute: SnapshotMutableState<BigBikeRoute>) {
 
 
 
-
-
-
 @Composable
 fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
     val choices = mutableListOf("ID", "Luftkvalitet", "Lengde")
@@ -380,8 +378,6 @@ fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
         }
     }
 }
-
-
 
 fun getAirIcon(index: Double?): Int {
     if (index == null) {

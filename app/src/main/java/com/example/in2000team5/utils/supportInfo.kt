@@ -13,8 +13,7 @@ class supportInfo {
 
         fun getRecommendedClothing(model: WeatherDataViewModel, start: Int, end: Int): String? {
             var str = "Hjelm!";
-            var rain =
-                model.weaterTimes[start].data?.next_1_hours?.details?.precipitation_amount?.toDouble()
+            val rain = model.weaterTimes[start].data?.next_1_hours?.details?.precipitation_amount?.toDouble()
             if (rain != null) {
                 if (rain > 1) {
                     str += "\r\n Regnjakke \r\nRegnbukse"
@@ -26,7 +25,7 @@ class supportInfo {
 
             }
 
-            var temp = model.weaterTimes[start].data?.instant?.details?.air_temperature?.toDouble()
+            val temp = model.weaterTimes[start].data?.instant?.details?.air_temperature?.toDouble()
             if (temp != null) {
                 if (temp < 0) {
                     str += "\r\nJakke \r\nLang bukse \r\nHansker, \r\nBuff/Ørevarmer \r\nVintersko/Tykke sokker \r\nBriller"
@@ -40,7 +39,7 @@ class supportInfo {
 
             }
 
-            var sky = model.weaterTimes[start].data?.instant?.details?.cloud_area_fraction?.toDouble()
+            val sky = model.weaterTimes[start].data?.instant?.details?.cloud_area_fraction?.toDouble()
             if (sky != null) {
                 if (sky < 0.0) {
                     str += "\r\nSolbriller \r\nSolkrem"
@@ -50,7 +49,7 @@ class supportInfo {
         }
 
         fun getBikeConditions(model: WeatherDataViewModel, start: Int, end: Int): String? {
-            var temp = model.weaterTimes[start].data?.instant?.details?.air_temperature?.toDouble()
+            val temp = model.weaterTimes[start].data?.instant?.details?.air_temperature?.toDouble()
             var str = ""
             if(temp != null){
                 if(temp<=4){
@@ -66,7 +65,7 @@ class supportInfo {
         }
 
         fun getChecklist(): String? {
-            var str = "Luft i dekkene \r\nStyreskruen er godt strammet \r\nHjulskrune sitter godt, \r\nKjedet er oljet \r\nDekkene har ingen sprekker"
+            val str = "Luft i dekkene \r\nStyreskruen er godt strammet \r\nHjulskrune sitter godt, \r\nKjedet er oljet \r\nDekkene har ingen sprekker"
             return str
         }
     }
