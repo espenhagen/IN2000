@@ -3,6 +3,7 @@ package com.example.in2000team5.data_layer.repository
 import com.example.in2000team5.data_layer.Details
 import com.example.in2000team5.data_layer.ForecastDataSource
 import com.example.in2000team5.data_layer.LocFore
+import com.example.in2000team5.data_layer.Timeseries
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
 import com.example.in2000team5.utils.metUtils
 
@@ -15,6 +16,10 @@ class WeatherDataRepository {
         weatherDataViewModel: WeatherDataViewModel
     ) {
             val weatherData = source.fetchWeatherNow(lat, lon) ?: return
+            getTimeseries(weatherData).also {
+                weatherDataViewModel.postWetherObj(it)
+            }
+
 
             getTemperature(weatherData).also {
                 weatherDataViewModel.postTemperature(it)
@@ -33,6 +38,20 @@ class WeatherDataRepository {
             }
         }
 
+    fun getTimeseries(forecast: LocFore): List<Timeseries>? {
+
+        val details = forecast.properties?.timeseries
+        var startIndex = 0;
+        if (details != null) {
+            details.forEachIndexed { index, elm ->
+                if(metUtils.isNowTime(elm.time.toString())){
+                    startIndex = index
+                }
+            }
+            return details.subList(startIndex, startIndex+24)
+        }
+        return null
+    }
 
     fun getDetails(forecast: LocFore): Details? {
 

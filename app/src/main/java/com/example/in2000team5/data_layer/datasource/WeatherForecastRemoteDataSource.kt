@@ -28,7 +28,7 @@ data class LocFore(val type: String?, val geometry: ForecastGeometry?, val prope
 
 data class Data(val instant: Instant?, val next_12_hours: Next_12_hours?, val next_1_hours: Next_1_hours?, val next_6_hours: Next_6_hours?)
 
-data class Details(val air_pressure_at_sea_level: Number?, val air_temperature: Number?, val cloud_area_fraction: Number?, val relative_humidity: Number?, val wind_from_direction: Number?, val wind_speed: Number?)
+data class Details(val air_pressure_at_sea_level: Number?, val air_temperature: Number?, val cloud_area_fraction: Number?, val relative_humidity: Number?, val wind_from_direction: Number?, val wind_speed: Number?, val precipitation_amount: Number?)
 
 data class ForecastGeometry(val type: String?, val coordinates: List<Number>?)
 

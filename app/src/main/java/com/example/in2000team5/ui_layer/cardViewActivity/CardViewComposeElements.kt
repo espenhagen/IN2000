@@ -2,6 +2,7 @@ package com.example.in2000team5.ui_layer.cardViewActivity
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,16 +18,121 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.repository.BigBikeRoute
 import com.example.in2000team5.domain_layer.WeatherDataViewModel
+import com.example.in2000team5.utils.metUtils
 import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
 import com.example.in2000team5.utils.routeUtils.Companion.routeColor
+import com.example.in2000team5.utils.supportInfo
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.*
+
+val wDetails = mutableStateOf<String?>(null)
+val rClothing = mutableStateOf<String?>(null)
+val conditons = mutableStateOf<String?>(null)
+val checklist = mutableStateOf<String?>(null)
+
+@Composable
+fun SupportBox(model: WeatherDataViewModel) {
+
+    Surface(
+        elevation = 4.dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        color = MaterialTheme.colors.background
+    ) {
+            Column {
+                /*
+                Text(
+                    text = "Planlegg Dagen:",
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.h3,
+                    textDecoration = TextDecoration.Underline
+                )
+                */
+
+                if(model.weaterTimes.size!=0){
+                    TimeSlide(model)
+                }
+
+                checklist.value = supportInfo.getChecklist()
+
+                InfoBox(model = model, "Detaljert om været:", wDetails, Color.LightGray)
+                InfoBox(model = model, "Anbefalt påkledning:", rClothing, Color.White)
+                InfoBox(model = model, "Sykkelforhold:", conditons, Color.LightGray)
+                InfoBox(model = model, "Vedlikehold checklist:", checklist, Color.White)
+
+
+            }
+        }
+    }
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun TimeSlide(model: WeatherDataViewModel) {
+    var sliderPosition by remember { mutableStateOf(0f..(model.weaterTimes.lastIndex).toFloat()) }
+    updateSupportData(model, sliderPosition)
+    Text(text = "Fra: " + metUtils.getDateAndHour(model.weaterTimes[sliderPosition.start.toInt()].time.toString()) + "\r\nTil: " + metUtils.getDateAndHour(model.weaterTimes[sliderPosition.endInclusive.toInt()].time.toString())  )
+    RangeSlider(
+        values = sliderPosition,
+        onValueChange = { sliderPosition = it },
+        valueRange = 0f..model.weaterTimes.lastIndex.toFloat(),
+        steps = model.weaterTimes.size,
+        onValueChangeFinished = {
+            updateSupportData(model, sliderPosition)
+        },
+    )
+}
+
+fun updateSupportData(
+    model: WeatherDataViewModel,
+    sliderPosition: ClosedFloatingPointRange<Float>
+) {
+    val start = sliderPosition.start.toInt()
+    val end = sliderPosition.endInclusive.toInt() -1
+    wDetails.value = supportInfo.getWeatherDetailsInfo(model, start, end)
+    rClothing.value = supportInfo.getRecommendedClothing(model, start, end)
+    conditons.value = supportInfo.getBikeConditions(model, start, end)
+}
+
+@Composable
+fun InfoBox(
+    model: WeatherDataViewModel,
+    headText: String,
+    info: MutableState<String?>,
+    lightGray: Color
+){
+    Column(
+        Modifier
+            .padding(6.dp)
+            .fillMaxWidth()
+            .background(color = Color.LightGray)
+    ){
+        Text(
+            modifier = Modifier.padding(5.dp),
+            text = headText,
+            color = MaterialTheme.colors.secondaryVariant,
+            style = MaterialTheme.typography.h5
+        )
+
+        if (info.value!= null){
+
+            Text(
+                modifier = Modifier.padding(3.dp),
+                text = info.value!!
+            )
+        }
+    }
+
+}
+
+
 
 
 @Composable
@@ -206,9 +312,6 @@ fun SykkelRuteCard(rute: SnapshotMutableState<BigBikeRoute>) {
 
 
 
-
-
-
 @Composable
 fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
     val choices = mutableListOf("ID", "Luftkvalitet", "Lengde")
@@ -242,6 +345,26 @@ fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
                     DropdownMenuItem(onClick = {
                         expanded = false
                         valg = choice
+    Box(Modifier.fillMaxWidth(),contentAlignment = Alignment.Center) {
+        Row( modifier = Modifier
+            .padding(6.dp)
+            .clickable {
+                expanded = !expanded
+            }
+            .padding(8.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = valg,fontSize = 18.sp,modifier = Modifier.padding(end = 8.dp))
+            Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = {
+            expanded = false
+        }) {
+            choices.forEach{ choice->
+                DropdownMenuItem(onClick = {
+                    expanded = false
+                    valg = choice
 
                     }) {
                         Text(text = choice)

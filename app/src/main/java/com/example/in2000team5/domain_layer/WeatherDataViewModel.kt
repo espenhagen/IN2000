@@ -3,26 +3,38 @@ package com.example.in2000team5.domain_layer
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.Snapshot
+import androidx.compose.runtime.snapshots.SnapshotMutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.in2000team5.data_layer.LocFore
+import com.example.in2000team5.data_layer.Timeseries
 import com.example.in2000team5.data_layer.repository.WeatherDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class
-WeatherDataViewModel: ViewModel() {
+class WeatherDataViewModel: ViewModel() {
 
     val liveTemperature = MutableLiveData<Double?>()
     val liveSymbol = MutableLiveData<String?>()
     val liveWindSpeed = MutableLiveData<Double?>()
     val liveWindDirection = MutableLiveData<Double?>()
 
+    var weaterTimes = mutableStateListOf<Timeseries>()
+
+
+
     val weatherRepository = WeatherDataRepository()
 
     private val _isLoading: MutableState<Boolean> = mutableStateOf(true) // Used to decide when to close splash screen
     val isLoading: State<Boolean> = _isLoading
 
+    fun postWetherObj(data: List<Timeseries>?){
+        weaterTimes.addAll(data as Collection<Timeseries>)
+    }
 
     fun fetchWeather(lat: String, lon: String) {
         viewModelScope.launch(Dispatchers.IO) {
