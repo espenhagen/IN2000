@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.repository.BigBikeRoute
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
-import com.example.in2000team5.utils.metUtils
-import com.example.in2000team5.utils.metUtils.Companion.getWeatherIcon
-import com.example.in2000team5.utils.routeUtils.Companion.routeColor
-import com.example.in2000team5.utils.supportInfo
+import com.example.in2000team5.utils.MetUtils
+import com.example.in2000team5.utils.MetUtils.Companion.getWeatherIcon
+import com.example.in2000team5.utils.RouteUtils.Companion.routeColor
+import com.example.in2000team5.utils.SupportInfo
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.*
 
@@ -61,7 +61,7 @@ fun SupportBox(model: WeatherDataViewModel) {
                     TimeSlide(model)
                 }
 
-                checklist.value = supportInfo.getChecklist()
+                checklist.value = SupportInfo.getChecklist()
 
                 InfoBox(model = model, "Detaljert om været:", wDetails, Color.LightGray)
                 InfoBox(model = model, "Anbefalt påkledning:", rClothing, Color.White)
@@ -78,7 +78,7 @@ fun SupportBox(model: WeatherDataViewModel) {
 fun TimeSlide(model: WeatherDataViewModel) {
     var sliderPosition by remember { mutableStateOf(0f..(model.weaterTimes.lastIndex).toFloat()) }
     updateSupportData(model, sliderPosition)
-    Text(text = "Fra: " + metUtils.getDateAndHour(model.weaterTimes[sliderPosition.start.toInt()].time.toString()) + "\r\nTil: " + metUtils.getDateAndHour(model.weaterTimes[sliderPosition.endInclusive.toInt()].time.toString())  )
+    Text(text = "Fra: " + MetUtils.getDateAndHour(model.weaterTimes[sliderPosition.start.toInt()].time.toString()) + "\r\nTil: " + MetUtils.getDateAndHour(model.weaterTimes[sliderPosition.endInclusive.toInt()].time.toString())  )
     RangeSlider(
         values = sliderPosition,
         onValueChange = { sliderPosition = it },
@@ -96,9 +96,9 @@ fun updateSupportData(
 ) {
     val start = sliderPosition.start.toInt()
     val end = sliderPosition.endInclusive.toInt() -1
-    wDetails.value = supportInfo.getWeatherDetailsInfo(model, start, end)
-    rClothing.value = supportInfo.getRecommendedClothing(model, start, end)
-    conditons.value = supportInfo.getBikeConditions(model, start, end)
+    wDetails.value = SupportInfo.getWeatherDetailsInfo(model, start, end)
+    rClothing.value = SupportInfo.getRecommendedClothing(model, start, end)
+    conditons.value = SupportInfo.getBikeConditions(model, start, end)
 }
 
 @Composable

@@ -2,20 +2,20 @@ package com.example.in2000team5.data_layer.repository
 
 import android.util.Log
 import com.example.in2000team5.data_layer.datasource.AirQualData
-import com.example.in2000team5.data_layer.datasource.AirQualDataSource
-import com.example.in2000team5.utils.metUtils
+import com.example.in2000team5.data_layer.datasource.AirQualityRemoteDataSource
+import com.example.in2000team5.utils.MetUtils
 import com.google.android.gms.maps.model.LatLng
-import com.example.in2000team5.utils.genUtils.Companion.round
+import com.example.in2000team5.utils.GeneralUtils.Companion.round
 
 
 class AirQualityRepository {
-    private val airQualDataSource = AirQualDataSource()
+    private val airQualDataSource = AirQualityRemoteDataSource()
 
 
     fun getRealtimeAQI(aqiDataobj: AirQualData?): Double? {
 
         val data =
-            aqiDataobj?.data?.time?.find { it.from.equals(metUtils.getCurrentTimeAsString()) }
+            aqiDataobj?.data?.time?.find { it.from.equals(MetUtils.getCurrentTimeAsString()) }
 
         return data?.variables?.AQI?.value?.toDouble()
 
@@ -33,7 +33,7 @@ class AirQualityRepository {
             for (frag in routeList) {
                 val point = frag?.get(0) //henter ut første punkt i fragmentet
                 if (point != null) {
-                    val data = airQualDataSource.fetchAirQualAtPointDS(
+                    val data = airQualDataSource.fetchAirQualityAtPointDataSource(
                         point.latitude.toString(),
                         point.longitude.toString()
                     )
@@ -49,7 +49,7 @@ class AirQualityRepository {
             for (frag in routeList) {
                 if (frag!!.size <= perFrag) {
                     for (point in frag) {
-                        val data = airQualDataSource.fetchAirQualAtPointDS(
+                        val data = airQualDataSource.fetchAirQualityAtPointDataSource(
                             point.latitude.toString(),
                             point.longitude.toString()
                         )
@@ -62,7 +62,7 @@ class AirQualityRepository {
                 } else {
                     for (x in 0..frag.size - 2 step frag.size / perFrag) {
                         val point = frag.get(x) //henter ut første punkt i fragmentet
-                        val data = airQualDataSource.fetchAirQualAtPointDS(
+                        val data = airQualDataSource.fetchAirQualityAtPointDataSource(
                             point.latitude.toString(),
                             point.longitude.toString()
                         )

@@ -1,6 +1,6 @@
 package com.example.in2000team5.utils
 
-class genUtils {
+class GeneralUtils {
 
     companion object{
         //found on internett (stackoverflow)
@@ -10,6 +10,4 @@ class genUtils {
             return kotlin.math.round(this * multiplier) / multiplier
         }
     }
-
-
 }

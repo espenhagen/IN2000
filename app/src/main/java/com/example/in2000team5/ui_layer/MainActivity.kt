@@ -33,7 +33,7 @@ import com.example.in2000team5.ui_layer.viewmodels.BicycleViewModel
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.cardViewActivity.InfoRow
 import com.example.in2000team5.ui_layer.cardViewActivity.SupportBox
-import com.example.in2000team5.utils.routeUtils.Companion.routeColor
+import com.example.in2000team5.utils.RouteUtils.Companion.routeColor
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*

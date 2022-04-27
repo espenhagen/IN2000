@@ -10,10 +10,10 @@ import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
-import com.example.in2000team5.data_layer.BicycleRouteRemoteDataSource
-import com.example.in2000team5.data_layer.Features
+import com.example.in2000team5.data_layer.datasource.BicycleRouteRemoteDataSource
+import com.example.in2000team5.data_layer.datasource.Features
 import com.example.in2000team5.ui_layer.viewmodels.BicycleViewModel
-import com.example.in2000team5.utils.routeUtils
+import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.model.LatLng
 import org.locationtech.proj4j.CRSFactory
 import org.locationtech.proj4j.CoordinateTransformFactory
@@ -31,7 +31,7 @@ class BicycleRouteRepository {
         }
 
         //Naa har jeg et hashmap med en liste med alle smaaturene
-        val routeNames = routeUtils.routeNames()
+        val routeNames = RouteUtils.routeNames()
         bigRouteMap.forEach {
 
             // TODO: Sjekk ut dette når jeg skal legge til nye ruter

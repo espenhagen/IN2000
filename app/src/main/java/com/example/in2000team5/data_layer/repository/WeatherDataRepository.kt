@@ -1,15 +1,15 @@
 package com.example.in2000team5.data_layer.repository
 
-import com.example.in2000team5.data_layer.Details
-import com.example.in2000team5.data_layer.ForecastDataSource
-import com.example.in2000team5.data_layer.LocFore
-import com.example.in2000team5.data_layer.Timeseries
+import com.example.in2000team5.data_layer.datasource.Details
+import com.example.in2000team5.data_layer.datasource.WeatherForecastRemoteDataSource
+import com.example.in2000team5.data_layer.datasource.LocationForecast
+import com.example.in2000team5.data_layer.datasource.Timeseries
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
-import com.example.in2000team5.utils.metUtils
+import com.example.in2000team5.utils.MetUtils
 
 class WeatherDataRepository {
 
-    val source = ForecastDataSource()
+    val source = WeatherForecastRemoteDataSource()
     suspend fun processWeatherData(
         lat: String,
         lon: String,
@@ -38,13 +38,13 @@ class WeatherDataRepository {
             }
         }
 
-    fun getTimeseries(forecast: LocFore): List<Timeseries>? {
+    fun getTimeseries(forecast: LocationForecast): List<Timeseries>? {
 
         val details = forecast.properties?.timeseries
         var startIndex = 0;
         if (details != null) {
             details.forEachIndexed { index, elm ->
-                if(metUtils.isNowTime(elm.time.toString())){
+                if(MetUtils.isNowTime(elm.time.toString())){
                     startIndex = index
                 }
             }
@@ -53,26 +53,26 @@ class WeatherDataRepository {
         return null
     }
 
-    fun getDetails(forecast: LocFore): Details? {
+    fun getDetails(forecast: LocationForecast): Details? {
 
-        val details = forecast.properties?.timeseries?.find {it.time == metUtils.getCurrentTimeAsString()}?.data?.instant?.details
+        val details = forecast.properties?.timeseries?.find {it.time == MetUtils.getCurrentTimeAsString()}?.data?.instant?.details
         return details
     }
 
-    fun getTemperature(forecast: LocFore): Double? {
+    fun getTemperature(forecast: LocationForecast): Double? {
         return getDetails(forecast)?.air_temperature?.toDouble()
     }
 
-    fun getWindSpeed(forecast: LocFore): Double? {
+    fun getWindSpeed(forecast: LocationForecast): Double? {
         return getDetails(forecast)?.wind_speed?.toDouble()
     }
 
-    fun getWindDirection(forecast: LocFore): Double? {
+    fun getWindDirection(forecast: LocationForecast): Double? {
         return getDetails(forecast)?.wind_from_direction?.toDouble()
     }
 
-    fun getWeatherSymbol(forecast: LocFore): String? {
-        return forecast.properties?.timeseries?.find {it.time == metUtils.getCurrentTimeAsString()}?.data?.next_1_hours?.summary?.symbol_code
+    fun getWeatherSymbol(forecast: LocationForecast): String? {
+        return forecast.properties?.timeseries?.find {it.time == MetUtils.getCurrentTimeAsString()}?.data?.next_1_hours?.summary?.symbol_code
     }
 
 

@@ -2,7 +2,8 @@ package com.example.in2000team5.utils
 
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 
-class supportInfo {
+// TODO: refaktorering etter ferdig implementert
+class SupportInfo {
     companion object {
 
         fun getWeatherDetailsInfo(model: WeatherDataViewModel, start: Int, end: Int): String? {
