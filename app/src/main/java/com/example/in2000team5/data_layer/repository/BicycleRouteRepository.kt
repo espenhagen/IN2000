@@ -10,7 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import com.example.in2000team5.data_layer.datasource.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.datasource.Features
-import com.example.in2000team5.ui_layer.viewmodels.BicycleViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.utils.RouteUtils.Companion.routeNames
 import com.google.android.gms.maps.model.LatLng
 import org.locationtech.proj4j.CRSFactory
@@ -28,7 +28,7 @@ class BicycleRouteRepository {
     private var routeCount = routeNames().size
 
     // Maps the smaller routes to larger routes, with the route-number being the joining variable.
-    suspend fun makeBigRoutes(bicycleViewModel: BicycleViewModel) {
+    suspend fun makeBigRoutes(bicycleRouteViewModel: BicycleRouteViewModel) {
         bicycleRouteRemoteDataSource.fetchRoutes()?.forEach {
             addCords(it)
         }
@@ -46,9 +46,9 @@ class BicycleRouteRepository {
                 calculateRouteLength(it.value), mutableStateOf(null)
                 )
             )
-            bicycleViewModel.getAirQualAvgForRoute(bigBikeRoute)
+            bicycleRouteViewModel.getAirQualityAvgForRoute(bigBikeRoute)
 
-            bicycleViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BicycleRoute>)
+            bicycleRouteViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BicycleRoute>)
         }
     }
 
@@ -150,7 +150,7 @@ class BicycleRouteRepository {
     /* Takes inn start and end, and creates a bicycleroutes based on these values, and posts it to
        the viewmodel.
      */
-    fun addRouteFromUser(bicycleViewModel: BicycleViewModel, context: Context, start: String, end: String): Boolean {
+    fun addRouteFromUser(bicycleRouteViewModel: BicycleRouteViewModel, context: Context, start: String, end: String): Boolean {
         val geocoder = Geocoder(context)
         val startLatLng = getCoordinatesFromName(geocoder, start)
         val sluttLatLng = getCoordinatesFromName(geocoder, end)
@@ -169,8 +169,8 @@ class BicycleRouteRepository {
                 mutableStateOf(null)
             ))
 
-            bicycleViewModel.getAirQualAvgForRoute(nyRute)
-            bicycleViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
+            bicycleRouteViewModel.getAirQualityAvgForRoute(nyRute)
+            bicycleRouteViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
             isAdded = true
             text = "Rute lagt til"
         }

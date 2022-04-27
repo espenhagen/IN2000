@@ -19,14 +19,14 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.in2000team5.ui_layer.viewmodels.BicycleViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
 
 @Composable
-fun VisNyRuteKnapp(bicycleViewModel: BicycleViewModel) {
+fun VisNyRuteKnapp(bicycleRouteViewModel: BicycleRouteViewModel) {
     val showForm = remember { mutableStateOf(false) }
     Scaffold(
-        content = { VisAlleRuter(ruter = bicycleViewModel.getRoutes())},
+        content = { VisAlleRuter(ruter = bicycleRouteViewModel.getRoutes())},
         floatingActionButton = {
 
             FloatingActionButton(
@@ -50,16 +50,16 @@ fun VisNyRuteKnapp(bicycleViewModel: BicycleViewModel) {
             }
         }
     )
-    if (showForm.value) VisNyRuteSkjema(showForm, bicycleViewModel)
+    if (showForm.value) VisNyRuteSkjema(showForm, bicycleRouteViewModel)
 }
 
 @Composable
-fun VisNyRuteSkjema(showForm: MutableState<Boolean>, bicycleViewModel: BicycleViewModel) {
+fun VisNyRuteSkjema(showForm: MutableState<Boolean>, bicycleRouteViewModel: BicycleRouteViewModel) {
     if (showForm.value) {
         val start = remember { mutableStateOf("") }
         val slutt = remember { mutableStateOf("") }
 
-        OpprettDialog(showForm, start, slutt, bicycleViewModel) {
+        OpprettDialog(showForm, start, slutt, bicycleRouteViewModel) {
             BrukerInputView(start, slutt)
         }
     }
@@ -81,7 +81,7 @@ fun BrukerInputView(start: MutableState<String>, slutt: MutableState<String>) {
 fun OpprettDialog(showForm: MutableState<Boolean>,
                   start: MutableState<String>,
                   slutt: MutableState<String>,
-                  bicycleViewModel: BicycleViewModel,
+                  bicycleRouteViewModel: BicycleRouteViewModel,
                   content: @Composable (() -> Unit)? = null
                   )
 {
@@ -101,7 +101,7 @@ fun OpprettDialog(showForm: MutableState<Boolean>,
         confirmButton = {
             TextButton(onClick = {
                 Log.d("TEST LEGG TIL", start.value + " - " + slutt.value)
-                if (bicycleViewModel.addRouteFromUser(context, start.value, slutt.value))
+                if (bicycleRouteViewModel.addRouteFromUser(context, start.value, slutt.value))
                     showForm.value = false
             })
             { Text(text = "Legg til rute") }

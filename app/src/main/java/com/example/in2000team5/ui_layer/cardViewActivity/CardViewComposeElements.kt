@@ -57,7 +57,7 @@ fun SupportBox(model: WeatherDataViewModel) {
                 )
                 */
 
-                if(model.weaterTimes.size!=0){
+                if(model.weatherTimes.size!=0){
                     TimeSlide(model)
                 }
 
@@ -76,14 +76,14 @@ fun SupportBox(model: WeatherDataViewModel) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TimeSlide(model: WeatherDataViewModel) {
-    var sliderPosition by remember { mutableStateOf(0f..(model.weaterTimes.lastIndex).toFloat()) }
+    var sliderPosition by remember { mutableStateOf(0f..(model.weatherTimes.lastIndex).toFloat()) }
     updateSupportData(model, sliderPosition)
-    Text(text = "Fra: " + MetUtils.getDateAndHour(model.weaterTimes[sliderPosition.start.toInt()].time.toString()) + "\r\nTil: " + MetUtils.getDateAndHour(model.weaterTimes[sliderPosition.endInclusive.toInt()].time.toString())  )
+    Text(text = "Fra: " + MetUtils.getDateAndHour(model.weatherTimes[sliderPosition.start.toInt()].time.toString()) + "\r\nTil: " + MetUtils.getDateAndHour(model.weatherTimes[sliderPosition.endInclusive.toInt()].time.toString())  )
     RangeSlider(
         values = sliderPosition,
         onValueChange = { sliderPosition = it },
-        valueRange = 0f..model.weaterTimes.lastIndex.toFloat(),
-        steps = model.weaterTimes.size,
+        valueRange = 0f..model.weatherTimes.lastIndex.toFloat(),
+        steps = model.weatherTimes.size,
         onValueChangeFinished = {
             updateSupportData(model, sliderPosition)
         },

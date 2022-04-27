@@ -1,7 +1,6 @@
 package com.example.in2000team5.ui_layer
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.*
@@ -29,7 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.in2000team5.data_layer.repository.BicycleRoute
-import com.example.in2000team5.ui_layer.viewmodels.BicycleViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.cardViewActivity.InfoRow
 import com.example.in2000team5.ui_layer.cardViewActivity.SupportBox
@@ -43,8 +42,8 @@ var bicycleRouteList = SnapshotStateList<SnapshotMutableState<BicycleRoute>>()
 
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: BicycleViewModel by viewModels()
-    private val weatherModel: WeatherDataViewModel by viewModels()
+    private val bicycleRouteViewModel: BicycleRouteViewModel by viewModels()
+    private val weatherDataViewModel: WeatherDataViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,23 +51,19 @@ class MainActivity : ComponentActivity() {
         // Display splash until viewModel init is not loading anymore
         // Splash screen shows only when app is started from launcher or phone, not from AS
         installSplashScreen().setKeepOnScreenCondition {
-           !viewModel.isLoading.value
+            //TODO: bestemme hvilken betingelse som skal settes (bicycle eller weather-viewmodel?)
+            !bicycleRouteViewModel.isLoading.value
         }
 
-        viewModel.makeApiRequest(this)
-        //hardkodet til midt i oslo
-        weatherModel.fetchWeather("59.91370670", "10.7526291")
-
-        weatherModel.getTemperatureLiveData().observe(this) {
-            Log.e("temperatur", it.toString())
-        }
+        // TODO: sjekk om dette kan dyttes i en init-blokk i viewmodel-klassen, og om det må endres etter posisjon hentes
+        // weatherDataViewModel.fetchWeather("59.91370670", "10.7526291")
 
         setContent {
             IN2000Team5Theme {
-                BottomNavigation(weatherModel, viewModel)
+                BottomNavigation(weatherDataViewModel, bicycleRouteViewModel)
             }
         }
-        bicycleRouteList = viewModel.getRoutes()
+        bicycleRouteList = bicycleRouteViewModel.getRoutes()
 /*        viewModel.getRoutes().observe(this) {
             bicycleRouteList = it as mutableStateListOf<BigBikeRoute>
 
@@ -77,7 +72,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun BottomNavigation(model: WeatherDataViewModel, bicycleViewModel: BicycleViewModel) {
+fun BottomNavigation(model: WeatherDataViewModel, bicycleRouteViewModel: BicycleRouteViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -94,7 +89,7 @@ fun BottomNavigation(model: WeatherDataViewModel, bicycleViewModel: BicycleViewM
             )
         }
     ) {
-        Navigation(navController = navController, model, bicycleViewModel)
+        Navigation(navController = navController, model, bicycleRouteViewModel)
     }
 }
 
@@ -132,7 +127,7 @@ fun MapScreen() {
 @Composable
 fun Navigation(navController: NavHostController,
                model: WeatherDataViewModel,
-               bicycleViewModel: BicycleViewModel
+               bicycleRouteViewModel: BicycleRouteViewModel
 ) {
     NavHost(navController = navController, startDestination = "om" ) {
         composable("kart") {
@@ -144,7 +139,7 @@ fun Navigation(navController: NavHostController,
             Column {
                 InfoRow(model)
 
-                VisNyRuteKnapp(bicycleViewModel = bicycleViewModel)
+                VisNyRuteKnapp(bicycleRouteViewModel = bicycleRouteViewModel)
 
             }
         }

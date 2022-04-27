@@ -7,14 +7,14 @@ class SupportInfo {
     companion object {
 
         fun getWeatherDetailsInfo(model: WeatherDataViewModel, start: Int, end: Int): String? {
-            var str = model.weaterTimes[start].data?.next_1_hours?.details?.precipitation_amount.toString() + " mm regn neste time \r\n"
-            str += model.weaterTimes[start].data?.instant?.details?.wind_speed.toString() + "m/s "
+            var str = model.weatherTimes[start].data?.next_1_hours?.details?.precipitation_amount.toString() + " mm regn neste time \r\n"
+            str += model.weatherTimes[start].data?.instant?.details?.wind_speed.toString() + "m/s "
             return str
         }
 
         fun getRecommendedClothing(model: WeatherDataViewModel, start: Int, end: Int): String? {
             var str = "Hjelm!";
-            val rain = model.weaterTimes[start].data?.next_1_hours?.details?.precipitation_amount?.toDouble()
+            val rain = model.weatherTimes[start].data?.next_1_hours?.details?.precipitation_amount?.toDouble()
             if (rain != null) {
                 if (rain > 1) {
                     str += "\r\n Regnjakke \r\nRegnbukse"
@@ -26,7 +26,7 @@ class SupportInfo {
 
             }
 
-            val temp = model.weaterTimes[start].data?.instant?.details?.air_temperature?.toDouble()
+            val temp = model.weatherTimes[start].data?.instant?.details?.air_temperature?.toDouble()
             if (temp != null) {
                 if (temp < 0) {
                     str += "\r\nJakke \r\nLang bukse \r\nHansker, \r\nBuff/Ørevarmer \r\nVintersko/Tykke sokker \r\nBriller"
@@ -40,7 +40,7 @@ class SupportInfo {
 
             }
 
-            val sky = model.weaterTimes[start].data?.instant?.details?.cloud_area_fraction?.toDouble()
+            val sky = model.weatherTimes[start].data?.instant?.details?.cloud_area_fraction?.toDouble()
             if (sky != null) {
                 if (sky < 0.0) {
                     str += "\r\nSolbriller \r\nSolkrem"
@@ -50,7 +50,7 @@ class SupportInfo {
         }
 
         fun getBikeConditions(model: WeatherDataViewModel, start: Int, end: Int): String? {
-            val temp = model.weaterTimes[start].data?.instant?.details?.air_temperature?.toDouble()
+            val temp = model.weatherTimes[start].data?.instant?.details?.air_temperature?.toDouble()
             var str = ""
             if(temp != null){
                 if(temp<=4){
