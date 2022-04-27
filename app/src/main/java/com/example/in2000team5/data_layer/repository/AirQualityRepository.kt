@@ -7,8 +7,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.example.in2000team5.utils.GeneralUtils.Companion.round
 
 // Fetches current AQI from remote datasource, and prepares AQI-data for the viewmodel.
-class AirQualityRepository {
-    private val airQualityDataSource = AirQualityRemoteDataSource()
+class AirQualityRepository(
+    private val airQualityDataSource: AirQualityRemoteDataSource
+) {
 
     private fun getRealtimeAQI(aqiDataObject: AirQualData?): Double? {
 
