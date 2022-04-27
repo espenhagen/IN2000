@@ -1,4 +1,4 @@
-package com.example.in2000team5.ui_layer
+package com.example.in2000team5.ui_layer.compose_screen_elements
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
@@ -20,69 +20,56 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
-import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
 
 @Composable
-fun VisNyRuteKnapp(bicycleRouteViewModel: BicycleRouteViewModel) {
+fun ShowNewRouteButton(bicycleRouteViewModel: BicycleRouteViewModel) {
     val showForm = remember { mutableStateOf(false) }
     Scaffold(
-        content = { VisAlleRuter(ruter = bicycleRouteViewModel.getRoutes())},
+        content = { ShowAllRoutes(ruter = bicycleRouteViewModel.getRoutes())},
         floatingActionButton = {
 
             FloatingActionButton(
                 modifier = Modifier.padding(24.dp, 64.dp),
                 onClick = {
-                    /*
-                    val nyRute = mutableStateOf(BigBikeRoute(
-                        200,
-                        bicycleRouteList[2].value.fragmentList,
-                        "Oslo",
-                        "Tøyen",
-                        200000.20,
-                        mutableStateOf(2.0)
-                    ))
-
-                    bicycleViewModel.postRoutes(nyRute as SnapshotMutableState<BigBikeRoute>)
-                     */
                     showForm.value = true
                 }) {
                 Icon(imageVector = Icons.Default.Add, "")
             }
         }
     )
-    if (showForm.value) VisNyRuteSkjema(showForm, bicycleRouteViewModel)
+    if (showForm.value) ShowNewRouteForm(showForm, bicycleRouteViewModel)
 }
 
 @Composable
-fun VisNyRuteSkjema(showForm: MutableState<Boolean>, bicycleRouteViewModel: BicycleRouteViewModel) {
+fun ShowNewRouteForm(showForm: MutableState<Boolean>, bicycleRouteViewModel: BicycleRouteViewModel) {
     if (showForm.value) {
         val start = remember { mutableStateOf("") }
-        val slutt = remember { mutableStateOf("") }
+        val end = remember { mutableStateOf("") }
 
-        OpprettDialog(showForm, start, slutt, bicycleRouteViewModel) {
-            BrukerInputView(start, slutt)
+        CreateDialog(showForm, start, end, bicycleRouteViewModel) {
+            UserInputView(start, end)
         }
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun BrukerInputView(start: MutableState<String>, slutt: MutableState<String>) {
+fun UserInputView(start: MutableState<String>, end: MutableState<String>) {
     Column(
         Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Divider()
-        StartOgSluttInput(Modifier, start, slutt)
+        StartAndEndInput(Modifier, start, end)
     }
 }
 
 @Composable
-fun OpprettDialog(showForm: MutableState<Boolean>,
-                  start: MutableState<String>,
-                  slutt: MutableState<String>,
-                  bicycleRouteViewModel: BicycleRouteViewModel,
-                  content: @Composable (() -> Unit)? = null
+fun CreateDialog(showForm: MutableState<Boolean>,
+                 start: MutableState<String>,
+                 end: MutableState<String>,
+                 bicycleRouteViewModel: BicycleRouteViewModel,
+                 content: @Composable (() -> Unit)? = null
                   )
 {
     val context = LocalContext.current
@@ -100,8 +87,8 @@ fun OpprettDialog(showForm: MutableState<Boolean>,
         text = content,
         confirmButton = {
             TextButton(onClick = {
-                Log.d("TEST LEGG TIL", start.value + " - " + slutt.value)
-                if (bicycleRouteViewModel.addRouteFromUser(context, start.value, slutt.value))
+                Log.d("TEST LEGG TIL", start.value + " - " + end.value)
+                if (bicycleRouteViewModel.addRouteFromUser(context, start.value, end.value))
                     showForm.value = false
             })
             { Text(text = "Legg til rute") }
@@ -116,11 +103,11 @@ fun OpprettDialog(showForm: MutableState<Boolean>,
 
 @ExperimentalComposeUiApi
 @Composable
-fun StartOgSluttInput(
+fun StartAndEndInput(
     modifier: Modifier = Modifier,
     start: MutableState<String> = remember {
         mutableStateOf("")
-    }, slutt: MutableState<String> = remember {
+    }, end: MutableState<String> = remember {
         mutableStateOf("")
     }
 ) {
@@ -148,8 +135,8 @@ fun StartOgSluttInput(
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = slutt.value,
-            onValueChange = { slutt.value = it },
+            value = end.value,
+            onValueChange = { end.value = it },
             label = { Text("Slutt") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
