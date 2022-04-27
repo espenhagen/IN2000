@@ -4,7 +4,7 @@ import com.example.in2000team5.data_layer.Details
 import com.example.in2000team5.data_layer.ForecastDataSource
 import com.example.in2000team5.data_layer.LocFore
 import com.example.in2000team5.data_layer.Timeseries
-import com.example.in2000team5.domain_layer.WeatherDataViewModel
+import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.utils.metUtils
 
 class WeatherDataRepository {

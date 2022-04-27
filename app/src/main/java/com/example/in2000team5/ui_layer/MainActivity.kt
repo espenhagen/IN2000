@@ -29,11 +29,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.in2000team5.data_layer.repository.BigBikeRoute
-import com.example.in2000team5.domain_layer.BicycleViewModel
-import com.example.in2000team5.domain_layer.WeatherDataViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleViewModel
+import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.cardViewActivity.InfoRow
 import com.example.in2000team5.ui_layer.cardViewActivity.SupportBox
-import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
 import com.example.in2000team5.utils.routeUtils.Companion.routeColor
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -78,7 +77,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun BottomNavigation(model:WeatherDataViewModel, bicycleViewModel: BicycleViewModel) {
+fun BottomNavigation(model: WeatherDataViewModel, bicycleViewModel: BicycleViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -132,8 +131,9 @@ fun MapScreen() {
 
 @Composable
 fun Navigation(navController: NavHostController,
-               model:WeatherDataViewModel,
-               bicycleViewModel: BicycleViewModel) {
+               model: WeatherDataViewModel,
+               bicycleViewModel: BicycleViewModel
+) {
     NavHost(navController = navController, startDestination = "om" ) {
         composable("kart") {
             MapScreen()

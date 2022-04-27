@@ -12,7 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import com.example.in2000team5.data_layer.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.Features
-import com.example.in2000team5.domain_layer.BicycleViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleViewModel
 import com.example.in2000team5.utils.routeUtils
 import com.google.android.gms.maps.model.LatLng
 import org.locationtech.proj4j.CRSFactory
