@@ -1,6 +1,6 @@
 package com.example.in2000team5.utils
 
-import com.example.in2000team5.domain_layer.WeatherDataViewModel
+import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 
 class supportInfo {
     companion object {

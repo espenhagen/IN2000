@@ -1,7 +1,6 @@
 package com.example.in2000team5.ui_layer
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,7 +19,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.in2000team5.domain_layer.BicycleViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleViewModel
 import com.example.in2000team5.ui_layer.cardViewActivity.VisAlleRuter
 
 @Composable
