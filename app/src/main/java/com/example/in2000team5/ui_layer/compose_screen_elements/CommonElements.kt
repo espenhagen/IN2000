@@ -79,7 +79,7 @@ fun InfoRow(model: WeatherDataViewModel) {
             .height(80.dp),
         color = MaterialTheme.colors.background
     ) {
-        Row {
+        Row (Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceEvenly){
             val id = MetUtils.getWeatherIcon(model.getSymbolName())
             Log.d("symbolnavn","${model.getSymbolName()}" )
 
@@ -104,32 +104,22 @@ fun InfoRow(model: WeatherDataViewModel) {
                     .padding(horizontal = 6.dp)
 
             )
-            //kan legge til vindretning eller liknende her:
-            val windDirection = model.getWindDirection()
-            if (windDirection == null){
-                Image(
-                    painter = painterResource(R.drawable.unknown),
-                    contentDescription = "kunne ikke hente vindretning")
-            }else {
-                Image(
-                    painter = painterResource(R.drawable.wind_arrow),
-                    contentDescription = "en sol",
-                    Modifier
-                        .rotate(windDirection.toFloat())
-                        .padding(horizontal = 20.dp, vertical = 10.dp)
-                        .size(40.dp)
-                )
-            }
+
             Column(
                 modifier = Modifier.align(alignment = Alignment.CenterVertically)
             ) {
                 Text(
-                    text = "vindretning: ${model.getWindDirection()}",
+                    text = "Regn neste time:",
                     style = MaterialTheme.typography.body1,
+                    modifier = Modifier
+                        .align(alignment = Alignment.CenterHorizontally)
                 )
                 Text(
-                    text = "vindstyrke: ${model.getWindSpeed()}",
-                    style = MaterialTheme.typography.body1,
+                    text = model.weatherTimes.first().data?.next_1_hours?.details?.precipitation_amount.toString() + " mm",
+                    style = MaterialTheme.typography.h5,
+                    modifier = Modifier
+                        .align(alignment = Alignment.CenterHorizontally)
+
                 )
             }
 
