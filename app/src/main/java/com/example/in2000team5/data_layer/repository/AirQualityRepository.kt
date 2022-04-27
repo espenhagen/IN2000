@@ -1,8 +1,8 @@
 package com.example.in2000team5.data_layer.repository
 
 import android.util.Log
-import com.example.in2000team5.data_layer.AirQualData
-import com.example.in2000team5.data_layer.AirQualDataSource
+import com.example.in2000team5.data_layer.datasource.AirQualData
+import com.example.in2000team5.data_layer.datasource.AirQualDataSource
 import com.example.in2000team5.utils.metUtils
 import com.google.android.gms.maps.model.LatLng
 import com.example.in2000team5.utils.genUtils.Companion.round
