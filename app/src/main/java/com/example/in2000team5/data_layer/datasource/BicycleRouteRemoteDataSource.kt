@@ -1,12 +1,11 @@
-package com.example.in2000team5.data_layer
+package com.example.in2000team5.data_layer.datasource
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitString
-import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 
+// The class fetches the bicycle routes from the API from Oslo kommune
 class BicycleRouteRemoteDataSource {
 
     suspend fun fetchRoutes(): List<Features>? {
@@ -14,18 +13,17 @@ class BicycleRouteRemoteDataSource {
         val path = "/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=bym%3Abyruter&outputFormat=application/json"
         val gson = Gson()
 
-         try {
+        return try {
             val response = gson.fromJson(Fuel.get(url + path).awaitString(), Base::class.java)
-            return response.features
+            response.features
         } catch (exception: Exception) {
-            Log.d("DATA FETCHING", "A network request exception was thrown: ${exception.message}")
-            return null
+            Log.d("DATA FETCHING", "A network request exception was thrown in BicycleRouteRemoteDataSource: ${exception.message}")
+            null
         }
     }
 }
 
-// result generated from /json
-
+// data classes used to deserialize the response, based on the json-response
 data class Base(val type: String?, val features: List<Features>?, val totalFeatures: Number?, val numberMatched: Number?, val numberReturned: Number?, val timeStamp: String?, val crs: CRS?)
 
 data class CRS(val type: String?, val properties: Properties?)

@@ -7,7 +7,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.in2000team5.data_layer.Timeseries
+import com.example.in2000team5.data_layer.datasource.Timeseries
 import com.example.in2000team5.data_layer.repository.WeatherDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

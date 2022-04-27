@@ -28,18 +28,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.in2000team5.data_layer.repository.BigBikeRoute
+import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.ui_layer.viewmodels.BicycleViewModel
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.ui_layer.cardViewActivity.InfoRow
 import com.example.in2000team5.ui_layer.cardViewActivity.SupportBox
-import com.example.in2000team5.utils.routeUtils.Companion.routeColor
+import com.example.in2000team5.utils.RouteUtils.Companion.routeColor
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 //TODO flytte dette inn i BicycleViewModel, sende ViewModel med til de ulike compose-elementene
-var bicycleRouteList = SnapshotStateList<SnapshotMutableState<BigBikeRoute>>()
+var bicycleRouteList = SnapshotStateList<SnapshotMutableState<BicycleRoute>>()
 
 
 class MainActivity : ComponentActivity() {
