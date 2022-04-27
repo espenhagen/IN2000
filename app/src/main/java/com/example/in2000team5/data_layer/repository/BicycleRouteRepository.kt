@@ -2,10 +2,8 @@ package com.example.in2000team5.data_layer.repository
 
 
 import android.content.Context
-import android.location.Address
 import android.location.Geocoder
 import android.location.Location
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -13,66 +11,53 @@ import androidx.compose.runtime.snapshots.SnapshotMutableState
 import com.example.in2000team5.data_layer.datasource.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.datasource.Features
 import com.example.in2000team5.ui_layer.viewmodels.BicycleViewModel
-import com.example.in2000team5.utils.RouteUtils
+import com.example.in2000team5.utils.RouteUtils.Companion.routeNames
 import com.google.android.gms.maps.model.LatLng
 import org.locationtech.proj4j.CRSFactory
 import org.locationtech.proj4j.CoordinateTransformFactory
 import org.locationtech.proj4j.ProjCoordinate
 
+/* This repository offers a methods to create the bigger routes, consisting of the smaller routes
+   received from the API-request from the datasource. It also has functionality to parse coordinates
+   and create routes, based on user input.
+ */
 class BicycleRouteRepository {
 
-    private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
+    private val bicycleRouteRemoteDataSource = BicycleRouteRemoteDataSource()
     private val bigRouteMap: HashMap<Int, MutableList<List<LatLng>?>> = HashMap()
-    private var antallRuter = 50 // TODO: hør med gruppa ang. dette
+    private var routeCount = routeNames().size
 
-    suspend fun makeBigRoutes(bicycleViewModel: BicycleViewModel, context: Context) {
-        bikeRoutedatasrc.fetchRoutes()?.forEach {
+    // Maps the smaller routes to larger routes, with the route-number being the joining variable.
+    suspend fun makeBigRoutes(bicycleViewModel: BicycleViewModel) {
+        bicycleRouteRemoteDataSource.fetchRoutes()?.forEach {
             addCords(it)
         }
 
-        //Naa har jeg et hashmap med en liste med alle smaaturene
-        val routeNames = RouteUtils.routeNames()
+        // Naa har jeg et hashmap med en liste med alle smaaturene
+        val routeNames = routeNames()
         bigRouteMap.forEach {
 
-            // TODO: Sjekk ut dette når jeg skal legge til nye ruter
             val bigBikeRoute = mutableStateOf(
-                BigBikeRoute(
+                BicycleRoute(
                 it.key,
                 it.value,
                 routeNames[it.key]?.get(0)!!,
                 routeNames[it.key]?.get(1)!!,
                 calculateRouteLength(it.value), mutableStateOf(null)
-
-            )
+                )
             )
             bicycleViewModel.getAirQualAvgForRoute(bigBikeRoute)
 
-            bicycleViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BigBikeRoute>)
-            //Log.d("start", bigBikeRoute.start)
-            //Log.d("slutt", bigBikeRoute.slutt)
-            //Log.e("big Route", bigBikeRoute.toString())
+            bicycleViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BicycleRoute>)
         }
-
-
-        //logging og testing
-        val stringBuilder = StringBuilder()
-        var antNoder = 0
-        stringBuilder.append("map->").append("\n")
-        for (i in 0 until bigRouteMap.size) {
-            stringBuilder.append("$i: ", bigRouteMap[i]?.size).append("\n")
-            antNoder += bigRouteMap[i]?.size!!
-        }
-        stringBuilder.append("antNoder: ").append(antNoder)
-        Log.d("RouteCordMap", stringBuilder.toString())
     }
 
     private fun addCords(bicycleFeature: Features) {
         val latLngList = constructLatLngList(bicycleFeature.geometry?.coordinates)
-        val id: Int
-        if (bicycleFeature.properties?.rute == null) {
-            id = 0
+        val id: Int = if (bicycleFeature.properties?.rute == null) {
+            0
         } else {
-            id = bicycleFeature.properties.rute.toInt()
+            bicycleFeature.properties.rute.toInt()
         }
 
         if (!bigRouteMap.containsKey(id)) {
@@ -82,8 +67,7 @@ class BicycleRouteRepository {
         }
     }
 
-
-
+    // Calculates the length of the route fragments
     private fun latLngListLength(latLngList: List<LatLng>): Double {
         var total = 0.0
         for (i in 1 until latLngList.size) {
@@ -100,35 +84,12 @@ class BicycleRouteRepository {
         return total
     }
 
-    private fun calculateRouteLength(ruteliste: MutableList<List<LatLng>?>) : Double {
-        return ruteliste.fold(0.0) { total, next -> total + latLngListLength(next!!) }
+    // Aggregates length of route fragments
+    private fun calculateRouteLength(routeList: MutableList<List<LatLng>?>) : Double {
+        return routeList.fold(0.0) { total, next -> total + latLngListLength(next!!) }
     }
 
-    private fun getAddress(geocoder: Geocoder, latLng: LatLng?): Address? {
-        if (latLng != null) {
-            val address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-            return address[0]
-        }
-        return null
-    }
-
-    private fun constructAddress(address: Address?): String? {
-        if (address != null) {
-            if (address.thoroughfare == null) {
-                return address.getAddressLine(0)
-            }
-            return address.thoroughfare
-        }
-        return null
-    }
-
-    private fun constructDistrict(address: Address?): String? {
-        if (address != null) {
-            return address.subLocality
-        }
-        return null
-    }
-
+    // Creates the LatLng-list based on the utmList
     private fun constructLatLngList(utmList: List<List<Number>>?): List<LatLng>? {
         if (utmList == null) return null
 
@@ -141,7 +102,7 @@ class BicycleRouteRepository {
         val csName2 = "EPSG:4326"   // WSG84
         val crs1 = csFactory.createFromName(csName1)
         val crs2 = csFactory.createFromName(csName2)
-        val trans = ctFactory.createTransform(crs1, crs2)   // Creating transform from UTM to WSG84
+        val trans = ctFactory.createTransform(crs1, crs2) // Creating transform from UTM to WSG84
 
         // Input and output points.
         // Constructed once per thread and then reused.
@@ -168,7 +129,8 @@ class BicycleRouteRepository {
         return null
     }
 
-    // Denne snur om på latitude og longtitude grunnet formatet som returneres av geocoder-en
+    // Reverses the order of the latitude and longitude based on the format from the geocoder
+    // TODO: Ruten regner dobbelte av faktisk lengde, FIKS
     private fun userInputRouteLength(latLngList: List<LatLng>): Double {
         var total = 0.0
         for (i in 1 until latLngList.size) {
@@ -185,54 +147,47 @@ class BicycleRouteRepository {
         return total
     }
 
-    fun addRouteFromUser(bicycleViewModel: BicycleViewModel, context: Context, start: String, slutt: String): Boolean {
+    /* Takes inn start and end, and creates a bicycleroutes based on these values, and posts it to
+       the viewmodel.
+     */
+    fun addRouteFromUser(bicycleViewModel: BicycleViewModel, context: Context, start: String, end: String): Boolean {
         val geocoder = Geocoder(context)
         val startLatLng = getCoordinatesFromName(geocoder, start)
-        val sluttLatLng = getCoordinatesFromName(geocoder, slutt)
+        val sluttLatLng = getCoordinatesFromName(geocoder, end)
         var text = "Oppgi gyldig start og slutt"
 
-        var latLngList: MutableList<List<LatLng>?> = mutableListOf(listOf(LatLng(59.911491, 10.757933)))
-        var lagtTil = false
+        val latLngList: MutableList<List<LatLng>?>
+        var isAdded = false
         if (startLatLng != null && sluttLatLng != null) {
             latLngList = mutableListOf(listOf(startLatLng, sluttLatLng))
-            val nyRute = mutableStateOf(BigBikeRoute(
-                antallRuter++,
+            val nyRute = mutableStateOf(BicycleRoute(
+                routeCount++,
                 latLngList,
                 start,
-                slutt,
+                end,
                 userInputRouteLength(latLngList[0]!!),
                 mutableStateOf(null)
             ))
 
             bicycleViewModel.getAirQualAvgForRoute(nyRute)
-            bicycleViewModel.postRoutes(nyRute as SnapshotMutableState<BigBikeRoute>)
-            lagtTil = true
+            bicycleViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
+            isAdded = true
             text = "Rute lagt til"
         }
 
         val duration = Toast.LENGTH_SHORT
         val toast = Toast.makeText(context, text, duration)
         toast.show()
-        return lagtTil
+        return isAdded
     }
 }
 
+// Model-class for the bicycle routes.
 data class BicycleRoute(
-    val routeNr: Number?,
-    val coordinates: List<LatLng>?,
-    val startDistrict: String?,
-    val endDistrict: String?,
-    val start: String?,
-    val end: String?,
-    val distance: Double,
-)
-
-data class BigBikeRoute(
     val id: Int,
     val fragmentList: MutableList<List<LatLng>?>,
     val start: String,
-    val slutt: String,
+    val end: String,
     val length: Double,
     var AQI: MutableState<Double?>
 )
-

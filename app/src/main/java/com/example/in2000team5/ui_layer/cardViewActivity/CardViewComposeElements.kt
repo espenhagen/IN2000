@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
-import com.example.in2000team5.data_layer.repository.BigBikeRoute
+import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.utils.MetUtils
 import com.example.in2000team5.utils.MetUtils.Companion.getWeatherIcon
@@ -204,7 +204,7 @@ fun InfoRow(model: WeatherDataViewModel) {
 
 
 @Composable
-fun SykkelRuteCard(rute: SnapshotMutableState<BigBikeRoute>) {
+fun SykkelRuteCard(rute: SnapshotMutableState<BicycleRoute>) {
     Surface(
         shape = MaterialTheme.shapes.medium,
         elevation = 4.dp,
@@ -220,7 +220,7 @@ fun SykkelRuteCard(rute: SnapshotMutableState<BigBikeRoute>) {
         ) {
 
             Text(
-                text = "${rute.value.start} - ${rute.value.slutt}",
+                text = "${rute.value.start} - ${rute.value.end}",
                 color = MaterialTheme.colors.secondaryVariant,
                 style = MaterialTheme.typography.h5
             )
@@ -313,7 +313,7 @@ fun SykkelRuteCard(rute: SnapshotMutableState<BigBikeRoute>) {
 
 
 @Composable
-fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BigBikeRoute>>) {
+fun VisAlleRuter(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) {
     val choices = mutableListOf("ID", "Luftkvalitet", "Lengde")
 
 //SPINNER:

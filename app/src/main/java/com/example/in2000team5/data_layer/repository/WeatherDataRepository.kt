@@ -7,41 +7,44 @@ import com.example.in2000team5.data_layer.datasource.Timeseries
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.utils.MetUtils
 
+/* Fetches weather data from the datasource. Processes the data and makes it ready for the
+   viewmodel.
+ */
+// TODO: endre til å lage objekter av klassene
 class WeatherDataRepository {
 
-    val source = WeatherForecastRemoteDataSource()
+    private val weatherForecastRemoteDataSource = WeatherForecastRemoteDataSource()
     suspend fun processWeatherData(
         lat: String,
         lon: String,
         weatherDataViewModel: WeatherDataViewModel
     ) {
-            val weatherData = source.fetchWeatherNow(lat, lon) ?: return
-            getTimeseries(weatherData).also {
-                weatherDataViewModel.postWetherObj(it)
-            }
-
-
-            getTemperature(weatherData).also {
-                weatherDataViewModel.postTemperature(it)
-            }
-
-            getWeatherSymbol(weatherData).also {
-                weatherDataViewModel.postSymbol(it)
-            }
-
-            getWindSpeed(weatherData).also {
-                weatherDataViewModel.postWindSpeed(it)
-            }
-
-            getWindDirection(weatherData).also {
-                weatherDataViewModel.postWindDirection(it)
-            }
+        val weatherData = weatherForecastRemoteDataSource.fetchWeatherNow(lat, lon) ?: return
+        getTimeSeries(weatherData).also {
+            weatherDataViewModel.postWetherObj(it)
         }
 
-    fun getTimeseries(forecast: LocationForecast): List<Timeseries>? {
+        getTemperature(weatherData).also {
+            weatherDataViewModel.postTemperature(it)
+        }
+
+        getWeatherSymbol(weatherData).also {
+            weatherDataViewModel.postSymbol(it)
+        }
+
+        getWindSpeed(weatherData).also {
+            weatherDataViewModel.postWindSpeed(it)
+        }
+
+        getWindDirection(weatherData).also {
+            weatherDataViewModel.postWindDirection(it)
+        }
+    }
+
+    private fun getTimeSeries(forecast: LocationForecast): List<Timeseries>? {
 
         val details = forecast.properties?.timeseries
-        var startIndex = 0;
+        var startIndex = 0
         if (details != null) {
             details.forEachIndexed { index, elm ->
                 if(MetUtils.isNowTime(elm.time.toString())){
@@ -53,27 +56,27 @@ class WeatherDataRepository {
         return null
     }
 
-    fun getDetails(forecast: LocationForecast): Details? {
-
-        val details = forecast.properties?.timeseries?.find {it.time == MetUtils.getCurrentTimeAsString()}?.data?.instant?.details
-        return details
+    private fun getDetails(forecast: LocationForecast): Details? {
+        return forecast.properties?.timeseries?.find {
+            it.time == MetUtils.getCurrentTimeAsString()
+        }?.data?.instant?.details
     }
 
-    fun getTemperature(forecast: LocationForecast): Double? {
+    private fun getTemperature(forecast: LocationForecast): Double? {
         return getDetails(forecast)?.air_temperature?.toDouble()
     }
 
-    fun getWindSpeed(forecast: LocationForecast): Double? {
+    private fun getWindSpeed(forecast: LocationForecast): Double? {
         return getDetails(forecast)?.wind_speed?.toDouble()
     }
 
-    fun getWindDirection(forecast: LocationForecast): Double? {
+    private fun getWindDirection(forecast: LocationForecast): Double? {
         return getDetails(forecast)?.wind_from_direction?.toDouble()
     }
 
-    fun getWeatherSymbol(forecast: LocationForecast): String? {
-        return forecast.properties?.timeseries?.find {it.time == MetUtils.getCurrentTimeAsString()}?.data?.next_1_hours?.summary?.symbol_code
+    private fun getWeatherSymbol(forecast: LocationForecast): String? {
+        return forecast.properties?.timeseries?.find {
+            it.time == MetUtils.getCurrentTimeAsString()
+        }?.data?.next_1_hours?.summary?.symbol_code
     }
-
-
 }
