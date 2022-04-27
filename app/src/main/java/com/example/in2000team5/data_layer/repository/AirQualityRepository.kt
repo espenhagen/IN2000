@@ -10,16 +10,16 @@ import com.example.in2000team5.utils.GeneralUtils.Companion.round
 class AirQualityRepository(
     private val airQualityDataSource: AirQualityRemoteDataSource
 ) {
-
     private fun getRealtimeAQI(aqiDataObject: AirQualData?): Double? {
-
         val data = aqiDataObject?.data?.time?.find {
             it.from.equals(MetUtils.getCurrentTimeAsString())
         }
         return data?.variables?.AQI?.value?.toDouble()
     }
 
-    /* Calculates an average from the routes in the routelist and return average AQI for the route.
+    /**
+     * Calculates an average from the routes in the [routeList] and return an average air quality
+     * index for the route.
      * The average is calculated on selected routes, which the method itself selects.
      */
     suspend fun fetchAvgAirQualityAtRoute(routeList: MutableList<List<LatLng>?>): Double {
@@ -61,7 +61,7 @@ class AirQualityRepository(
                     }
                 } else {
                     for (x in 0..frag.size - 2 step frag.size / perFrag) {
-                        val point = frag.get(x) //henter ut første punkt i fragmentet
+                        val point = frag[x] //henter ut første punkt i fragmentet
                         val data = airQualityDataSource.fetchAirQualityAtPointDataSource(
                             point.latitude.toString(),
                             point.longitude.toString()

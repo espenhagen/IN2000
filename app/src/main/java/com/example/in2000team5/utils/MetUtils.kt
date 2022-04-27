@@ -4,6 +4,11 @@ import com.example.in2000team5.R
 import java.util.*
 
 class MetUtils {
+
+    object AirQualityConstants {
+       const val MIN_NUM_SAMPLE_POINTS = 10
+    }
+
     companion object {
         fun getCurrentTimeAsString() : String{
 
