@@ -12,38 +12,32 @@ import com.example.in2000team5.data_layer.repository.WeatherDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+// Viewmodel for weather data. Offers getters and methods to post values.
 class WeatherDataViewModel: ViewModel() {
 
-    val liveTemperature = MutableLiveData<Double?>()
-    val liveSymbol = MutableLiveData<String?>()
-    val liveWindSpeed = MutableLiveData<Double?>()
-    val liveWindDirection = MutableLiveData<Double?>()
+    private val liveTemperature = MutableLiveData<Double?>()
+    private val liveSymbol = MutableLiveData<String?>()
+    private val liveWindSpeed = MutableLiveData<Double?>()
+    private val liveWindDirection = MutableLiveData<Double?>()
+    private val weatherRepository = WeatherDataRepository()
+    var weatherTimes = mutableStateListOf<Timeseries>()
 
-    var weaterTimes = mutableStateListOf<Timeseries>()
+    init {
+        // Hardkodet til midt i oslo
+        fetchWeather("59.91370670", "10.7526291")
+    }
 
-
-
-    val weatherRepository = WeatherDataRepository()
-
+    // Pattern to encapsulate the mutable state of the variable
     private val _isLoading: MutableState<Boolean> = mutableStateOf(true) // Used to decide when to close splash screen
     val isLoading: State<Boolean> = _isLoading
 
-    fun postWetherObj(data: List<Timeseries>?){
-        weaterTimes.addAll(data as Collection<Timeseries>)
-    }
-
+    // TODO: ikke private ennå siden vi potensielt tar inn brukerens lokasjon
     fun fetchWeather(lat: String, lon: String) {
         viewModelScope.launch(Dispatchers.IO) {
             weatherRepository.processWeatherData(lat, lon, this@WeatherDataViewModel)
             _isLoading.value = false
         }
     }
-
-
-    fun getTemperatureLiveData() : MutableLiveData<Double?> {
-        return liveTemperature
-    }
-
 
     fun getTemperature(): Double? {
         return liveTemperature.value
@@ -62,6 +56,10 @@ class WeatherDataViewModel: ViewModel() {
     }
 
     // metoder under blir kalt fra WeatherDataRepository for å oppdatere liveDataobjekter
+    fun postWeatherObj(data: List<Timeseries>?){
+        weatherTimes.addAll(data as Collection<Timeseries>)
+        _isLoading.value = false
+    }
     fun postTemperature(temp: Double?) {
         liveTemperature.postValue(temp)
     }
@@ -77,7 +75,5 @@ class WeatherDataViewModel: ViewModel() {
     fun postWindDirection(dir: Double?) {
         liveWindDirection.postValue(dir)
     }
-
-
 
 }

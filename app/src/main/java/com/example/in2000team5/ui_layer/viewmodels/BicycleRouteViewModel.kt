@@ -7,39 +7,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.*
-import com.example.in2000team5.data_layer.datasource.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.repository.BicycleRouteRepository
 import com.example.in2000team5.data_layer.repository.BicycleRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.in2000team5.data_layer.repository.AirQualityRepository
 
-class BicycleViewModel: ViewModel() {
-    private val airQualRepo = AirQualityRepository()
-    private val repositoryRoutes = BicycleRouteRepository()
-    private val bikeRoutedatasrc = BicycleRouteRemoteDataSource()
+// Viewmodel for bicycle route data. Offers getters and methods to post values.
+class BicycleRouteViewModel: ViewModel() {
+    private val airQualityRepository = AirQualityRepository()
+    private val bicycleRouteRepository = BicycleRouteRepository()
     private val bicycleRoutes = SnapshotStateList<SnapshotMutableState<BicycleRoute>>()
     private val _isLoading: MutableState<Boolean> = mutableStateOf(true) // Used to decide when to close splash screen
     val isLoading: State<Boolean> = _isLoading
 
-//    private val _bicycleRoutesSharedFlow = MutableSharedFlow<List<BicycleRoute>>()
-//    val bicycleRoutesSharedFlow = _bicycleRoutesSharedFlow.asSharedFlow()
-
-    fun getAirQualAvgForRoute(route: MutableState<BicycleRoute>) {
-        // Do an asynchronous operation to fetch users.
-        viewModelScope.launch(Dispatchers.IO){
-
-            route.value.AQI.value = airQualRepo.fetchAvgAirQualityAtRoute(route.value.fragmentList)
-        }
-        //if (avgAQI == null) Log.d("Response", "Error getting avg. AQI")
+    init {
+        makeApiRequest()
     }
 
-    fun makeApiRequest(context: Context) {
+    // Uses thread to calculate AQI-index for bicycle route asynchronously
+    fun getAirQualityAvgForRoute(route: MutableState<BicycleRoute>) {
+        viewModelScope.launch(Dispatchers.IO){
+            route.value.AQI.value = airQualityRepository.fetchAvgAirQualityAtRoute(route.value.fragmentList)
+        }
+    }
+
+    private fun makeApiRequest() {
         viewModelScope.launch(Dispatchers.IO) {
-            //repositoryRoutes.constructRoutesThreads(this@BicycleViewModel, context)
-            //Log.e("constructRoutesThreads Ferdig", "tommel opp")
-            repositoryRoutes.makeBigRoutes(this@BicycleViewModel)
-            //Log.d("myConstructRoutes Ferdig", "tommel sidelengs")
+            bicycleRouteRepository.makeBigRoutes(this@BicycleRouteViewModel)
             _isLoading.value = false
         }
     }
@@ -54,6 +49,6 @@ class BicycleViewModel: ViewModel() {
     }
 
     fun addRouteFromUser(context: Context, start: String, slutt: String): Boolean {
-        return repositoryRoutes.addRouteFromUser(this@BicycleViewModel, context, start, slutt)
+        return bicycleRouteRepository.addRouteFromUser(this@BicycleRouteViewModel, context, start, slutt)
     }
 }

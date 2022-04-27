@@ -21,7 +21,7 @@ class WeatherDataRepository {
     ) {
         val weatherData = weatherForecastRemoteDataSource.fetchWeatherNow(lat, lon) ?: return
         getTimeSeries(weatherData).also {
-            weatherDataViewModel.postWetherObj(it)
+            weatherDataViewModel.postWeatherObj(it)
         }
 
         getTemperature(weatherData).also {
