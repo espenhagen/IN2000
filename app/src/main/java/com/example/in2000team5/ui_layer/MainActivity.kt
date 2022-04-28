@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun BottomNavigation(model: WeatherDataViewModel, bicycleRouteViewModel: BicycleRouteViewModel) {
+fun BottomNavigation(weatherDataViewModel: WeatherDataViewModel, bicycleRouteViewModel: BicycleRouteViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -68,7 +68,7 @@ fun BottomNavigation(model: WeatherDataViewModel, bicycleRouteViewModel: Bicycle
             )
         }
     ) {
-        Navigation(navController = navController, model, bicycleRouteViewModel)
+        Navigation(navController = navController, weatherDataViewModel, bicycleRouteViewModel)
     }
 }
 
@@ -85,7 +85,7 @@ fun Navigation(navController: NavHostController,
         composable("ruter") {
             Column {
                 InfoRow(weatherDataViewModel)
-                ShowNewRouteButton(bicycleRouteViewModel = bicycleRouteViewModel)
+                ShowNewRouteButton(bicycleRouteViewModel)
             }
         }
         composable("om") {
