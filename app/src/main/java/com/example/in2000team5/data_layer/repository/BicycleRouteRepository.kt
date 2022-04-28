@@ -46,7 +46,7 @@ class BicycleRouteRepository {
                 calculateRouteLength(it.value), mutableStateOf(null)
                 )
             )
-            bicycleRouteViewModel.getAirQualityAvgForRoute(bigBikeRoute)
+
 
             bicycleRouteViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BicycleRoute>)
         }

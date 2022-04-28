@@ -42,6 +42,7 @@ class BicycleRouteViewModel: ViewModel() {
 
     fun postRoutes(route: SnapshotMutableState<BicycleRoute>){
         bicycleRoutes.add(route)
+        getAirQualityAvgForRoute(route)
         //bicycleRoutes.add(routes)
     }
 
@@ -53,3 +54,4 @@ class BicycleRouteViewModel: ViewModel() {
         return bicycleRouteRepository.addRouteFromUser(this@BicycleRouteViewModel, context, start, slutt)
     }
 }
+
