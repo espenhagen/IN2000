@@ -1,16 +1,75 @@
 package com.example.in2000team5.utils
 
+import com.example.in2000team5.data_layer.datasource.Timeseries
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
+import com.example.in2000team5.utils.GeneralUtils.Companion.round
 
 // TODO: refaktorering etter ferdig implementert
 class SupportInfo {
     companion object {
 
-        fun getWeatherDetailsInfo(model: WeatherDataViewModel, start: Int, end: Int): String? {
-            var str = model.weatherTimes[start].data?.next_1_hours?.details?.precipitation_amount.toString() + " mm regn neste time \r\n"
-            str += model.weatherTimes[start].data?.instant?.details?.wind_speed.toString() + "m/s "
-            return str
+        fun getWeatherDetailsInfo(subList: MutableList<Timeseries>): String? {
+
+            val startObj = subList.first()
+            val endObj = subList.last()
+
+            val maxTemp = getMaxTemperature(subList)
+            val minTemp = getMinTemperature(subList)
+
+            //var str = model.weatherTimes[start].data?.next_1_hours?.details?.precipitation_amount.toString() + " mm regn neste time \r\n"
+            //str += model.weatherTimes[start].data?.instant?.details?.wind_speed.toString() + "m/s "
+
+            var isSlippery = "";
+            if(getMinTemperature(subList)!=null){
+                if(getMinTemperature(subList)!!<=4){
+                    isSlippery = "!Det kan være glatt!"
+                }
+            }
+
+
+            return "Max temp: " + maxTemp.toString() +
+                    "\r\nMin temp: " + minTemp.toString() +
+                    "\r\nGjen temp: " + getAverageTemperature(subList).toString() +
+                    "\r\nMax nedbør pr time: " + getMaxRain(subList).toString() +
+                    "\r\nTotal nedbør: " + getTotalRain(subList).toString() +
+                    "\r\nVind fart max: " + getMaxWind(subList).toString() +
+                    "\r\nVind fart gjen: " + getAverageWind(subList).toString() +
+                    "\r\nVind retning: " + getWindDirection(subList).toString() +
+                    isSlippery
         }
+
+        fun getMaxTemperature(subList: MutableList<Timeseries>): Double? {
+            return subList.maxOf { it.data?.instant?.details?.air_temperature?.toDouble() ?: return null}
+        }
+        fun getMinTemperature(subList: MutableList<Timeseries>): Double? {
+            return subList.minOf { it.data?.instant?.details?.air_temperature?.toDouble() ?: return null}
+        }
+
+        fun getAverageTemperature(subList: MutableList<Timeseries>): Double? {
+            return subList.sumOf { it.data?.instant?.details?.air_temperature?.toDouble()  ?: return null}.div(subList.size).round(1)
+        }
+
+        fun getMaxRain(subList: MutableList<Timeseries>): Double? {
+            return subList.maxOf { it.data?.next_1_hours?.details?.precipitation_amount?.toDouble() ?: return null}.round(1)
+        }
+
+        fun getTotalRain(subList: MutableList<Timeseries>): Double? {
+            return subList.sumOf { it.data?.next_1_hours?.details?.precipitation_amount?.toDouble() ?: return null}.round(1)
+        }
+
+        fun getMaxWind(subList: MutableList<Timeseries>): Double? {
+            return subList.maxOf { it.data?.instant?.details?.wind_speed?.toDouble() ?: return null}.round(1)
+        }
+
+        fun getAverageWind(subList: MutableList<Timeseries>): Double? {
+            return subList.sumOf { it.data?.instant?.details?.wind_speed?.toDouble() ?: return null}.div(subList.size).round(1)
+        }
+
+        fun getWindDirection(subList: MutableList<Timeseries>): Double? {
+            return subList.sumOf { it.data?.instant?.details?.wind_from_direction?.toDouble() ?: return null}.div(subList.size).round(2)
+        }
+
+
 
         fun getRecommendedClothing(model: WeatherDataViewModel, start: Int, end: Int): String? {
             var str = "Hjelm!";
