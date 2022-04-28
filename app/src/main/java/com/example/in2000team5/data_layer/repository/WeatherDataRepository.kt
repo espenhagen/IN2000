@@ -51,7 +51,7 @@ class WeatherDataRepository {
                     startIndex = index
                 }
             }
-            return details.subList(startIndex, startIndex+24)
+            return details.subList(startIndex, startIndex+12)
         }
         return null
     }
