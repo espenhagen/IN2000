@@ -1,6 +1,7 @@
 package com.example.in2000team5.ui_layer.viewmodels
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +35,7 @@ class BicycleRouteViewModel: ViewModel() {
     }
 
     private fun makeApiRequest() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {s
             bicycleRouteRepository.makeBigRoutes(this@BicycleRouteViewModel)
             _isLoading.value = false
         }
@@ -50,6 +51,14 @@ class BicycleRouteViewModel: ViewModel() {
     }
 
     fun addRouteFromUser(context: Context, start: String, slutt: String): Boolean {
-        return bicycleRouteRepository.addRouteFromUser(this@BicycleRouteViewModel, context, start, slutt)
+        val result = bicycleRouteRepository.addRouteFromUser(
+            this@BicycleRouteViewModel, context, start, slutt)
+
+        val text = if (result) "Oppgi gyldig start og slutt" else "Rute lagt til"
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(context, text, duration)
+        toast.show()
+
+        return result
     }
 }

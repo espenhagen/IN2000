@@ -24,8 +24,6 @@ import com.example.in2000team5.ui_layer.compose_screen_elements.*
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 
-//TODO flytte dette inn i BicycleViewModel, sende ViewModel med til de ulike compose-elementene
-var bicycleRouteList = SnapshotStateList<SnapshotMutableState<BicycleRoute>>()
 
 class MainActivity : ComponentActivity() {
     private val bicycleRouteViewModel: BicycleRouteViewModel by viewModels()
@@ -49,16 +47,11 @@ class MainActivity : ComponentActivity() {
                 BottomNavigation(weatherDataViewModel, bicycleRouteViewModel)
             }
         }
-        bicycleRouteList = bicycleRouteViewModel.getRoutes()
-/*        viewModel.getRoutes().observe(this) {
-            bicycleRouteList = it as mutableStateListOf<BigBikeRoute>
-
-        }*/
     }
 }
 
 @Composable
-fun BottomNavigation(model: WeatherDataViewModel, bicycleRouteViewModel: BicycleRouteViewModel) {
+fun BottomNavigation(weatherDataViewModel: WeatherDataViewModel, bicycleRouteViewModel: BicycleRouteViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -75,29 +68,28 @@ fun BottomNavigation(model: WeatherDataViewModel, bicycleRouteViewModel: Bicycle
             )
         }
     ) {
-        Navigation(navController = navController, model, bicycleRouteViewModel)
+        Navigation(navController = navController, weatherDataViewModel, bicycleRouteViewModel)
     }
 }
 
 @Composable
 fun Navigation(navController: NavHostController,
-               model: WeatherDataViewModel,
+               weatherDataViewModel: WeatherDataViewModel,
                bicycleRouteViewModel: BicycleRouteViewModel
 ) {
     NavHost(navController = navController, startDestination = "om" ) {
         composable("kart") {
-            MapScreen()
+            MapScreen(bicycleRouteViewModel)
             //MapProperties()
         }
         composable("ruter") {
             Column {
-                InfoRow(model)
-                ShowNewRouteButton(bicycleRouteViewModel = bicycleRouteViewModel)
+                InfoRow(weatherDataViewModel)
+                ShowNewRouteButton(bicycleRouteViewModel)
             }
         }
         composable("om") {
-            //InfoRow(model)
-            SupportBox(model)
+            SupportBox(weatherDataViewModel)
         }
     }
 }
