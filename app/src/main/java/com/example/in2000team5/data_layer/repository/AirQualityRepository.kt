@@ -1,5 +1,6 @@
 package com.example.in2000team5.data_layer.repository
 
+import android.util.Log
 import com.example.in2000team5.data_layer.datasource.AirQualData
 import com.example.in2000team5.data_layer.datasource.AirQualityRemoteDataSource
 import com.example.in2000team5.utils.MetUtils
@@ -14,9 +15,6 @@ const val MIN_NUM_OF_SAMPLE_POINTS = 10
 class AirQualityRepository(
     private val airQualityDataSource: AirQualityRemoteDataSource
 ) {
-    private var totalAirQualityIndex = 0.0
-    private var sampledPoints = 0
-
 
     /**
      * Calculates an average from the routes in the [routeList] and return an average air quality
@@ -26,11 +24,16 @@ class AirQualityRepository(
     suspend fun fetchAvgAirQualityAtRoute(routeList: MutableList<List<LatLng>?>): Double {
         val numberOfFragments = routeList.size
 
+        var globalTotalAirQualityIndex = 0.0
+        var globalSampledPoints = 0.0
+
         if (numberOfFragments >= MIN_NUM_OF_SAMPLE_POINTS) {
             for (fragment in routeList) {
                 val point = fragment?.get(0) // Returns the first point of the fragment
                 if (point != null) {
-                    incrementTotalIndexFromPoint(point)
+                    val rawCounts = incrementTotalIndexFromPoint(point)
+                    globalTotalAirQualityIndex += rawCounts.component1()
+                    globalSampledPoints += rawCounts.component2()
                 }
             }
         } else {
@@ -38,21 +41,28 @@ class AirQualityRepository(
             for (fragment in routeList) {
                 if (fragment!!.size <= perFrag) {
                     for (point in fragment) {
-                        incrementTotalIndexFromPoint(point)
+                        val rawCounts = incrementTotalIndexFromPoint(point)
+                        globalTotalAirQualityIndex += rawCounts.component1()
+                        globalSampledPoints += rawCounts.component2()
                     }
                 } else {
                     for (x in 0..fragment.size - 2 step fragment.size / perFrag) {
                         val point = fragment[x]
-                        incrementTotalIndexFromPoint(point)
+                        val rawCounts = incrementTotalIndexFromPoint(point)
+                        globalTotalAirQualityIndex += rawCounts.component1()
+                        globalSampledPoints += rawCounts.component2()
                     }
                 }
             }
         }
-        return totalAirQualityIndex.div(sampledPoints).round(3)
+        return globalTotalAirQualityIndex.div(globalSampledPoints).round(3)
     }
 
     /* Helper method adds point air quality to total air quality */
-    private suspend fun incrementTotalIndexFromPoint(point: LatLng) {
+    private suspend fun incrementTotalIndexFromPoint(point: LatLng): List<Double> {
+        var totalAirQualityIndex = 0.0
+        var sampledPoints = 0.0
+
         val data = airQualityDataSource.fetchAirQualityAtPointDataSource(
             point.latitude.toString(),
             point.longitude.toString()
@@ -62,6 +72,7 @@ class AirQualityRepository(
             totalAirQualityIndex += airQualityAtPoint
             sampledPoints++
         }
+        return listOf(totalAirQualityIndex, sampledPoints)
 
     }
 
