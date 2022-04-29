@@ -121,6 +121,7 @@ class BicycleRouteRepository {
     }
 
     private fun getCoordinatesFromName(geocoder: Geocoder, name: String): LatLng? {
+        if (name.isEmpty()) return null
         val response = geocoder.getFromLocationName(name, 1)
         if (response.size < 1) return null
         if (response[0].hasLatitude() && response[0].hasLongitude()) {
