@@ -4,14 +4,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.in2000team5.ui_layer.bicycleRouteList
+import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 @Composable
-fun MapScreen() {
+fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
 
     val oslo = LatLng(59.9139, 10.7522)
     val cameraPositionState = rememberCameraPositionState {
@@ -28,7 +28,7 @@ fun MapScreen() {
             snippet = "Marker in Oslo"
         )
 
-        for (storRute in bicycleRouteList) {
+        for (storRute in bicycleRouteViewModel.getRoutes()) {
 
             for (liste in storRute.value.fragmentList) {
                 liste.let {
