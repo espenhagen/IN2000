@@ -35,7 +35,7 @@ class BicycleRouteViewModel: ViewModel() {
     }
 
     private fun makeApiRequest() {
-        viewModelScope.launch(Dispatchers.IO) {s
+        viewModelScope.launch(Dispatchers.IO) {
             bicycleRouteRepository.makeBigRoutes(this@BicycleRouteViewModel)
             _isLoading.value = false
         }
