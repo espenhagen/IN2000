@@ -48,7 +48,7 @@ class AirQualityRepository(
                 }
             }
         }
-        return totalAirQualityIndex.div(sampledPoints).round(3)
+        return totalAirQualityIndex.div(sampledPoints).round(-1)
     }
 
     /* Helper method adds point air quality to total air quality */
