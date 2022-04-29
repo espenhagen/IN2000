@@ -4,7 +4,6 @@ package com.example.in2000team5.data_layer.repository
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
-import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
@@ -155,7 +154,6 @@ class BicycleRouteRepository {
         val geocoder = Geocoder(context)
         val startLatLng = getCoordinatesFromName(geocoder, start)
         val sluttLatLng = getCoordinatesFromName(geocoder, end)
-        var text = "Oppgi gyldig start og slutt"
 
         val latLngList: MutableList<List<LatLng>?>
         var isAdded = false
@@ -173,12 +171,8 @@ class BicycleRouteRepository {
             bicycleRouteViewModel.getAirQualityAvgForRoute(nyRute)
             bicycleRouteViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
             isAdded = true
-            text = "Rute lagt til"
         }
 
-        val duration = Toast.LENGTH_SHORT
-        val toast = Toast.makeText(context, text, duration)
-        toast.show()
         return isAdded
     }
 }
