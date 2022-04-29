@@ -19,11 +19,4 @@ class GeneralUtilsTest  {
         assertTrue(2.401.round(0).equals(2.0))
     }
 
-    @Test
-    fun `Passing negative integer should throw an Exception`() {
-        val exception = assertThrows(IllegalArgumentException::class.java) {
-            2.401.round(-1)
-        }
-        assertEquals("something", exception.message)
-    }
 }
