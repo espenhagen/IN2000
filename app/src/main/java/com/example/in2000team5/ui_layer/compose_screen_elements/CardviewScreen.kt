@@ -23,6 +23,10 @@ import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -143,7 +147,7 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
 
 @Composable
 fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) {
-    val choices = mutableListOf("ID", "Luftkvalitet", "Lengde")
+    val choices = mutableListOf("ID", "Luftkvalitet", "Lengde", "Alfabetisk")
 
     //SPINNER:
     //Kode hentet fra: https://intensecoder.com/spinner-in-jetpack-compose-dropdown/
@@ -158,14 +162,18 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
                 .clickable {
                     expanded = !expanded
                 }
-                .padding(8.dp),
+                .padding(8.dp)
+                .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = valg,
-                    fontSize = 18.sp,
-                    modifier =
+                    buildAnnotatedString {
+                        append("Sorter eller:  ")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append(valg)
+                        }
+                    },
                     Modifier
                         .padding(end = 8.dp))
                 Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
@@ -196,6 +204,7 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
             modifier = Modifier.padding(bottom = 55.dp)
         ) {
             when (valg) {
+
                 "ID" -> {
                     items(ruter.sortedBy { it.value.id }) { rute ->
                         BicycleRouteCard(rute)
@@ -210,6 +219,12 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
                 }
                 "Lengde" -> {
                     items(ruter.sortedBy { it.value.length }) { rute ->
+                        BicycleRouteCard(rute)
+
+                    }
+                }
+                "Alfabetisk" -> {
+                    items(ruter.sortedBy { it.value.start }) { rute ->
                         BicycleRouteCard(rute)
 
                     }
