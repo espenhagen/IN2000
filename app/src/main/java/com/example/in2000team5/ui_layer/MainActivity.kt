@@ -96,8 +96,7 @@ fun Navigation(navController: NavHostController,
             }
         }
         composable("om") {
-            //InfoRow(model)
-            SupportBox(model)
+            SupportScreen(model)
         }
     }
 }
