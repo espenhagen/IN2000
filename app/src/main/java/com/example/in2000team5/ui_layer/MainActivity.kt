@@ -89,7 +89,7 @@ fun Navigation(navController: NavHostController,
             }
         }
         composable("om") {
-            SupportBox(weatherDataViewModel)
+            SupportScreen(weatherDataViewModel)
         }
     }
 }
