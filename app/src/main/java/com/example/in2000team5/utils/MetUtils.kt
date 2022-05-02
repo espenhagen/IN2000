@@ -4,6 +4,7 @@ import com.example.in2000team5.R
 import java.util.*
 
 class MetUtils {
+
     companion object {
         fun getCurrentTimeAsString() : String{
 
