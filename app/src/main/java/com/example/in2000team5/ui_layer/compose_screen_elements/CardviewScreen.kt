@@ -1,5 +1,9 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
+import android.graphics.Color.RGBToHSV
+import android.graphics.Color.rgb
+import android.graphics.ColorSpace
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,6 +19,9 @@ import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Color
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.Rgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,6 +95,7 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                                     )
                             }
                             Column {
+/*
                                 Image(
                                     painter = painterResource(getAirIcon(rute.value.AQI.value)),
                                     contentDescription = "Weather",
@@ -98,7 +106,9 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                                             MaterialTheme.colors.secondary,
                                             CircleShape
                                         )
-                                )
+                                )*/
+
+                                AirQualIcon(aqi = rute.value.AQI.value)
                                 Text(
                                     text = rute.value.AQI.value.toString(),
                                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
@@ -131,6 +141,21 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
         }
     }
     Spacer(modifier = Modifier.width(10.dp))
+}
+
+@Composable
+fun AirQualIcon(aqi:Double?){
+    var color = rgb(1,1,1)
+    Canvas(modifier = Modifier.size(100.dp), onDraw = {
+        drawCircle(color = Color(color))
+    })
+}
+
+@Composable
+fun MyCircle(){
+    Canvas(modifier = Modifier.size(100.dp), onDraw = {
+        drawCircle(color = androidx.compose.ui.graphics.Color.Red)
+    })
 }
 
 @Composable
