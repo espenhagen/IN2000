@@ -4,6 +4,7 @@ package com.example.in2000team5.data_layer.repository
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
@@ -111,6 +112,7 @@ class BicycleRouteRepository {
         for (i in utmList.indices) {
             point1.x = utmList[i].component1().toDouble()
             point1.y = utmList[i].component2().toDouble()
+
             // Transform point
             trans.transform(point1, point2)
             // Adding list of transformed coordinates to the route

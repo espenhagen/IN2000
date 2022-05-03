@@ -14,11 +14,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.ui_layer.compose_screen_elements.*
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
@@ -31,13 +32,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        bicycleRouteViewModel.readServiceStations(this.resources.openRawResource(R.raw.stasjoner))
 
         // Display splash until viewModel init is not loading anymore
         // Splash screen shows only when app is started from launcher or phone, not from AS
-        installSplashScreen().setKeepOnScreenCondition {
-            //TODO: bestemme hvilken betingelse som skal settes (bicycle eller weather-viewmodel?)
-            !bicycleRouteViewModel.isLoading.value
-        }
 
         // TODO: sjekk om dette kan dyttes i en init-blokk i viewmodel-klassen, og om det må endres etter posisjon hentes
         // weatherDataViewModel.fetchWeather("59.91370670", "10.7526291")
