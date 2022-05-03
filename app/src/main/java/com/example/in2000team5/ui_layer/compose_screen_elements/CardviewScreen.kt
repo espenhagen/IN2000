@@ -108,7 +108,7 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                                         )
                                 )*/
 
-                                AirQualIcon(aqi = rute.value.AQI.value)
+                                AirQualColor(aqi = rute.value.AQI.value)
                                 Text(
                                     text = rute.value.AQI.value.toString(),
                                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
@@ -144,19 +144,20 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
 }
 
 @Composable
-fun AirQualIcon(aqi:Double?){
+fun AirQualColor(aqi:Double?){
     var color : Color
     if (aqi != null) {
-        if (aqi > 2){
+        if (aqi > 2.5){ //red
             color = Color(red = 1f, green = 0f, blue = 0f, alpha = 1f)
         }
-        else if (aqi <1.5){
+        else if (aqi <2){ //green
             color = Color(red = 0f, green = 1f, blue = 0f, alpha = 1f)
         }
-        else {
+        else { //yellow
             color = Color(red = 1f, green = 1f, blue = 0f, alpha = 1f)
 
-            //color = Color(red = 1f*((aqi.toFloat()-1.5)*2).toFloat(), green = 1f*((2-aqi.toFloat())*2), blue = 0f, alpha = 1f)
+            //To fade between colors one could implement a function based on aqi-value e.g.:
+            //color = Color(red = 1f*aqi.toFloat(), green = 1f*((2-aqi.toFloat())*2), blue = 0f, alpha = 1f)
 
 
         }
