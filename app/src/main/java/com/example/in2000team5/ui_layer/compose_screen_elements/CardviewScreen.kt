@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.utils.RouteUtils
+import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Polyline
@@ -119,6 +120,9 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                     GoogleMap(
                         modifier = Modifier.height(200.dp),
                         cameraPositionState = cameraPositionState,
+                        googleMapOptionsFactory = {
+                           GoogleMapOptions().liteMode(true)
+                        }
 
                         ) {
 //

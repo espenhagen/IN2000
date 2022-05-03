@@ -47,25 +47,26 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.6.0-alpha01'
+    implementation 'androidx.appcompat:appcompat:1.6.0-alpha03'
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-    implementation 'androidx.activity:activity-compose:1.3.1'
-    implementation 'androidx.navigation:navigation-runtime-ktx:2.3.5'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    implementation 'androidx.activity:activity-compose:1.4.0'
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.4.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+    // Kotlin Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
 
     //core
     implementation 'com.github.kittinunf.fuel:fuel:2.3.1'
@@ -73,8 +74,7 @@ dependencies {
     implementation 'com.github.kittinunf.fuel:fuel-coroutines:2.3.1'
 
 
-    def lifecycle_version = "2.5.0-alpha04"
-    def arch_version = "2.1.0"
+    def lifecycle_version = "2.5.0-beta01"
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -89,7 +89,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
 
     // Kotlin
-    implementation "androidx.activity:activity-ktx:1.5.0-alpha03"
+    implementation "androidx.activity:activity-ktx:1.6.0-alpha03"
 
     // Compose Maps
     implementation "com.google.maps.android:maps-compose:2.1.0"
@@ -100,7 +100,7 @@ dependencies {
     implementation 'org.locationtech.proj4j:proj4j:1.1.3'
 
     // Compose navigation functionality
-    implementation "androidx.navigation:navigation-compose:2.5.0-alpha03"
+    implementation "androidx.navigation:navigation-compose:2.5.0-beta01"
 
     // Splash Screen API
     implementation "androidx.core:core-splashscreen:1.0.0-beta02"
