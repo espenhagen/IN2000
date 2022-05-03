@@ -37,21 +37,23 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
         )
 
         for (storRute in bicycleRouteViewModel.getRoutes()) {
-
-            for (liste in storRute.value.fragmentList) {
-                liste.let {
-                    Polyline(
-                        points = it!!,
-                        color = RouteUtils.routeColor(storRute.value.id),
-                        clickable = true,
-                        onClick = {
-                            info = ("RuteID: ${storRute.value.id} \n${storRute.value.start} - ${storRute.value.end}\n\nSe mer informasjon i listen av ruter.")
-                            openDialog = true
-                        }
-                    )
+            if (storRute.value.id != 0 && storRute.value.id < 9) {
+                for (liste in storRute.value.fragmentList) {
+                    liste.let {
+                        Polyline(
+                            points = it!!,
+                            color = RouteUtils.routeColor(storRute.value.id),
+                            clickable = true,
+                            onClick = {
+                                info = ("RuteID: ${storRute.value.id} \n${storRute.value.start} - ${storRute.value.end}\n\nSe mer informasjon i listen av ruter.")
+                                openDialog = true
+                            }
+                        )
+                    }
                 }
-            }
 //
+            }
+
         }
     }
     if (openDialog) {
