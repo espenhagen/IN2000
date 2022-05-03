@@ -27,14 +27,13 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
     }
     GoogleMap(
         modifier = Modifier.padding(bottom = 50.dp),
-        cameraPositionState = cameraPositionState,
-        uiSettings = MapUiSettings(compassEnabled = true, myLocationButtonEnabled = true)
+        cameraPositionState = cameraPositionState
     ) {
-//        Marker(     // Adds marker to the map
-//
-//            title = "Oslo",
-//            snippet = "Marker in Oslo"
-//        )
+        Marker(     // Adds marker to the map
+            state = MarkerState(position = oslo),
+            title = "Oslo",
+            snippet = "Marker in Oslo"
+        )
 
         for (storRute in bicycleRouteViewModel.getRoutes()) {
             if (storRute.value.id != 0 && storRute.value.id < 9) {
