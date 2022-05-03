@@ -1,7 +1,6 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
-import android.graphics.Color.RGBToHSV
-import android.graphics.Color.rgb
+import android.graphics.Color.*
 import android.graphics.ColorSpace
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -21,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.ColorSpaces
 import androidx.compose.ui.graphics.colorspace.Rgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -145,18 +145,32 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
 
 @Composable
 fun AirQualIcon(aqi:Double?){
-    var color = rgb(1,1,1)
-    Canvas(modifier = Modifier.size(100.dp), onDraw = {
-        drawCircle(color = Color(color))
-    })
-}
+    var color : Color
+    if (aqi != null) {
+        if (aqi > 2){
+            color = Color(red = 1f, green = 0f, blue = 0f, alpha = 1f)
+        }
+        else if (aqi <1.5){
+            color = Color(red = 0f, green = 1f, blue = 0f, alpha = 1f)
+        }
+        else {
+            color = Color(red = 1f, green = 1f, blue = 0f, alpha = 1f)
 
-@Composable
-fun MyCircle(){
-    Canvas(modifier = Modifier.size(100.dp), onDraw = {
-        drawCircle(color = androidx.compose.ui.graphics.Color.Red)
-    })
-}
+            //color = Color(red = 1f*((aqi.toFloat()-1.5)*2).toFloat(), green = 1f*((2-aqi.toFloat())*2), blue = 0f, alpha = 1f)
+
+
+        }
+    } else {
+        color = androidx.compose.ui.graphics.Color.White
+    }
+        Canvas(modifier = Modifier.size(40.dp), onDraw = {
+            drawCircle(color = color)
+        })
+    }
+
+
+
+
 
 @Composable
 fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) {
