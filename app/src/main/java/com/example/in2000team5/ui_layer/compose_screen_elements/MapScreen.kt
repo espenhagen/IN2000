@@ -30,7 +30,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
         cameraPositionState = cameraPositionState
     ) {
         Marker(     // Adds marker to the map
-            position = oslo,
+            state = MarkerState(position = oslo),
             title = "Oslo",
             snippet = "Marker in Oslo"
         )
