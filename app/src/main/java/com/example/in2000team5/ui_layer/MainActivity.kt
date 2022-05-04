@@ -79,8 +79,12 @@ fun Navigation(navController: NavHostController,
 ) {
     NavHost(navController = navController, startDestination = "om" ) {
         composable("kart") {
-            MapScreen(bicycleRouteViewModel)
-            //MapProperties()
+            Column() {
+                InfoRow(weatherDataViewModel)
+                MapScreen(bicycleRouteViewModel)
+                //MapProperties()
+            }
+
         }
         composable("ruter") {
             Column {

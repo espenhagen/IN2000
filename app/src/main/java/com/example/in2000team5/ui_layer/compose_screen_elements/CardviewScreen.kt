@@ -1,5 +1,8 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
+import android.graphics.Color.*
+import android.graphics.ColorSpace
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,6 +18,10 @@ import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Color
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.ColorSpaces
+import androidx.compose.ui.graphics.colorspace.Rgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -89,6 +96,7 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                                     )
                             }
                             Column {
+/*
                                 Image(
                                     painter = painterResource(getAirIcon(rute.value.AQI.value)),
                                     contentDescription = "Weather",
@@ -99,7 +107,9 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                                             MaterialTheme.colors.secondary,
                                             CircleShape
                                         )
-                                )
+                                )*/
+
+                                AirQualColor(aqi = rute.value.AQI.value)
                                 Text(
                                     text = rute.value.AQI.value.toString(),
                                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
@@ -137,6 +147,36 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
     }
     Spacer(modifier = Modifier.width(10.dp))
 }
+
+@Composable
+fun AirQualColor(aqi:Double?){
+    var color : Color
+    if (aqi != null) {
+        if (aqi > 2.5){ //red
+            color = Color(red = 1f, green = 0f, blue = 0f, alpha = 1f)
+        }
+        else if (aqi <2){ //green
+            color = Color(red = 0f, green = 1f, blue = 0f, alpha = 1f)
+        }
+        else { //yellow
+            color = Color(red = 1f, green = 1f, blue = 0f, alpha = 1f)
+
+            //To fade between colors one could implement a function based on aqi-value e.g.:
+            //color = Color(red = 1f*aqi.toFloat(), green = 1f*((2-aqi.toFloat())*2), blue = 0f, alpha = 1f)
+
+
+        }
+    } else {
+        color = androidx.compose.ui.graphics.Color.White
+    }
+        Canvas(modifier = Modifier.size(40.dp), onDraw = {
+            drawCircle(color = color)
+        })
+    }
+
+
+
+
 
 @Composable
 fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) {
