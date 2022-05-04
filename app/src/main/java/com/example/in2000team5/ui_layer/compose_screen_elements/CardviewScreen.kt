@@ -114,14 +114,12 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                 if (isExpanded) {
                     val plass = rute.value.fragmentList[0]?.get(0)
 
-                    val cameraPositionState = rememberCameraPositionState {
-                        position = CameraPosition.fromLatLngZoom(plass!!, 10f)
-                    }
+                    val position = CameraPosition.fromLatLngZoom(plass!!, 12f)
+
                     GoogleMap(
                         modifier = Modifier.height(200.dp),
-                        cameraPositionState = cameraPositionState,
                         googleMapOptionsFactory = {
-                           GoogleMapOptions().liteMode(true)
+                           GoogleMapOptions().liteMode(true).camera(position)
                         }
 
                         ) {
