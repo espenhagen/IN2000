@@ -2,6 +2,7 @@ package com.example.in2000team5.ui_layer.viewmodels
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -15,6 +16,7 @@ import com.example.in2000team5.data_layer.repository.BicycleRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.in2000team5.data_layer.repository.AirQualityRepository
+import com.example.in2000team5.data_layer.repository.SimplifiedBicycleRoute
 
 // Viewmodel for bicycle route data. Offers getters and methods to post values.
 class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
@@ -63,7 +65,8 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
         return result
     }
 
-    fun insertBicycleRoute(bicycleRoute: BicycleRoute) {
+    fun insertBicycleRoute(bicycleRoute: SimplifiedBicycleRoute) {
+        Log.d("DATABASE:", "Lagt til rute")
         viewModelScope.launch {
             bicycleRouteRepository.insertBicycleRoute(bicycleRoute)
         }

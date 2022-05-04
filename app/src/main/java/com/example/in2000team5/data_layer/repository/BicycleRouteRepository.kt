@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
@@ -36,8 +37,9 @@ class BicycleRouteRepository(application: Application) {
     }
 
     //TODO: fikse dette: val getAllBicycleRoutes = bicycleRouteDao.getAll()
-    suspend fun insertBicycleRoute(bicycleRoute: BicycleRoute) {
+    suspend fun insertBicycleRoute(bicycleRoute: SimplifiedBicycleRoute) {
         bicycleRouteDao.insertBicycleRoute(bicycleRoute)
+        Log.d("DATABASE:", "Henter alle rutene ${bicycleRouteDao.getAll()}")
     }
 
     // Maps the smaller routes to larger routes, with the route-number being the joining variable.
@@ -173,18 +175,19 @@ class BicycleRouteRepository(application: Application) {
         var isAdded = false
         if (startLatLng != null && sluttLatLng != null) {
             latLngList = mutableListOf(listOf(startLatLng, sluttLatLng))
+            val length = userInputRouteLength(latLngList[0]!!)
             val nyRute = mutableStateOf(BicycleRoute(
                 routeCount++,
                 latLngList,
                 start,
                 end,
-                userInputRouteLength(latLngList[0]!!),
+                length,
                 mutableStateOf(null)
             ))
 
             bicycleRouteViewModel.getAirQualityAvgForRoute(nyRute)
             bicycleRouteViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
-            bicycleRouteViewModel.insertBicycleRoute(nyRute.value)
+            bicycleRouteViewModel.insertBicycleRoute(SimplifiedBicycleRoute(routeCount, start, end, length))
             isAdded = true
         }
 
@@ -193,12 +196,20 @@ class BicycleRouteRepository(application: Application) {
 }
 
 // Model-class for the bicycle routes.
-@Entity
 data class BicycleRoute (
-    @PrimaryKey val id: Int,
+    val id: Int,
     val fragmentList: MutableList<List<LatLng>?>,
     val start: String,
     val end: String,
     val length: Double,
     var AQI: MutableState<Double?>
 )
+
+@Entity
+data class SimplifiedBicycleRoute (
+    @PrimaryKey val id: Int,
+    val start: String,
+    val end: String,
+    val length: Double,
+)
+

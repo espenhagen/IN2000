@@ -8,8 +8,8 @@ import androidx.room.Query
 @Dao
 interface BicycleRouteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBicycleRoute(bicycleRoute: BicycleRoute)
+    suspend fun insertBicycleRoute(bicycleRoute: SimplifiedBicycleRoute)
 
-    @Query("SELECT * FROM bicycleroute")
-    suspend fun getAll(): List<BicycleRoute>
+    @Query("SELECT * FROM simplifiedbicycleroute")
+    suspend fun getAll(): List<SimplifiedBicycleRoute>
 }
