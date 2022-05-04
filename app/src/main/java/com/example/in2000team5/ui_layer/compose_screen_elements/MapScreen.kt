@@ -22,6 +22,7 @@ import com.google.maps.android.compose.*
 fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
     var openDialog by remember { mutableStateOf(false) }
     var info by remember { mutableStateOf("")}
+    var title by remember { mutableStateOf("")}
 
     val oslo = LatLng(59.9139, 10.7522)
     val cameraPositionState = rememberCameraPositionState {
@@ -55,6 +56,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                     0F,
                     onClick = {
                         info = ("Service-stasjon her:\n$name")
+                        title = ("Service-stasjon")
                         openDialog = true
                     }
                 )
@@ -71,6 +73,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                         color = RouteUtils.routeColor(storRute.value.id),
                         clickable = true,
                         onClick = {
+                            title = "Info om Rute"
                             info = ("RuteID: ${storRute.value.id} \n${storRute.value.start} - ${storRute.value.end}\n\nSe mer informasjon i listen av ruter.")
                             openDialog = true
                         }
@@ -89,7 +92,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                 openDialog = false
             },
             title = {
-                Text(text = "Info om ruten")
+                Text(text = title)
             },
             text = {
                 Text(text = info
