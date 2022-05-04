@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CustomSplashScreenTheme">
+
         <activity
             android:name=".ui_layer.MainActivity"
             android:exported="true"

@@ -12,26 +12,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.utils.RouteUtils
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 @Composable
-fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
+fun MapScreen(
+    bicycleRouteViewModel: BicycleRouteViewModel,
+    latitude: Double,
+    longitude: Double,
+) {
     var openDialog by remember { mutableStateOf(false) }
     var info by remember { mutableStateOf("")}
 
     val oslo = LatLng(59.9139, 10.7522)
+    val startpos = LatLng(latitude, longitude)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(oslo, 12f)
+        position = CameraPosition.fromLatLngZoom(oslo, 15f)
     }
+
     GoogleMap(
         modifier = Modifier.padding(bottom = 50.dp),
         cameraPositionState = cameraPositionState,
         uiSettings = MapUiSettings(compassEnabled = true, myLocationButtonEnabled = true)
     ) {
         Marker(     // Adds marker to the map
-            position = oslo,
+            position = startpos,
             title = "Oslo",
             snippet = "Marker in Oslo"
         )

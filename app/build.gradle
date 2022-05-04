@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.in2000team5"
-        minSdk 23
-        targetSdk 32
+        minSdk 31
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -102,5 +102,8 @@ dependencies {
 
     // Splash API
     implementation "androidx.core:core-splashscreen:1.0.0-beta02"
+
+    //play service
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
 }
 
