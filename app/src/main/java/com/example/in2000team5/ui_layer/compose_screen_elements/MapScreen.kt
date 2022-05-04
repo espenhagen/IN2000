@@ -9,6 +9,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.utils.RouteUtils
@@ -53,6 +54,13 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
             }
 //
         }
+
+        for (station in bicycleRouteViewModel.getServiceStations()) {
+            station.value.let {
+                Circle(it,false, Color(0,0,255), 100.0)
+            }
+        }
+
     }
     if (openDialog) {
         AlertDialog(

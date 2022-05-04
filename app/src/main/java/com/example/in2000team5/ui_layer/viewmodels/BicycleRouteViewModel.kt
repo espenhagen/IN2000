@@ -79,4 +79,8 @@ class BicycleRouteViewModel(): ViewModel() {
     fun postServiceStations(station: SnapshotMutableState<LatLng>) {
         serviceStations.add(station)
     }
+
+    fun getServiceStations(): SnapshotStateList<SnapshotMutableState<LatLng>> {
+        return serviceStations
+    }
 }

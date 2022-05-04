@@ -19,7 +19,7 @@ class BicycleServiceRepository {
             val stationPoint = mutableStateOf(LatLng(it[1].toDouble(), it[2].toDouble()))
             Log.d("stationPoint", stationPoint.toString())
             Log.d("station", station.toString())
-            context.postServiceStations(stationPoint as SnapshotMutableState<String>)
+            context.postServiceStations(stationPoint as SnapshotMutableState<LatLng>)
         }
 
         Log.d("stasjoner", stations.toString())
