@@ -1,15 +1,19 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
+
+import android.graphics.Paint
 import android.graphics.Color.*
 import android.graphics.ColorSpace
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -18,11 +22,19 @@ import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.colorspace.ColorSpaces
 import androidx.compose.ui.graphics.colorspace.Rgb
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
@@ -180,7 +192,7 @@ fun AirQualColor(aqi:Double?){
 
 @Composable
 fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) {
-    val choices = mutableListOf("ID", "Luftkvalitet", "Lengde")
+    val choices = mutableListOf("ID", "Luftkvalitet", "Lengde", "Alfabetisk")
 
     //SPINNER:
     //Kode hentet fra: https://intensecoder.com/spinner-in-jetpack-compose-dropdown/
@@ -195,16 +207,31 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
                 .clickable {
                     expanded = !expanded
                 }
-                .padding(8.dp),
+                .padding(8.dp)
+                .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = valg,fontSize = 18.sp,modifier = Modifier.padding(end = 8.dp))
+                Text(
+                    buildAnnotatedString {
+                        append("Sorter eller:  ")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append(valg)
+                        }
+                    },
+                    Modifier
+                        .padding(end = 8.dp))
                 Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
             }
-            DropdownMenu(expanded = expanded, onDismissRequest = {
+            DropdownMenu(
+                expanded = expanded,
+                modifier =
+                Modifier
+                    .fillMaxWidth(),
+                onDismissRequest = {
                 expanded = false
-            }) {
+            }
+            ) {
                 choices.forEach{ choice->
                     DropdownMenuItem(onClick = {
                         expanded = false
@@ -222,6 +249,7 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
             modifier = Modifier.padding(bottom = 55.dp)
         ) {
             when (valg) {
+
                 "ID" -> {
                     items(ruter.sortedBy { it.value.id }) { rute ->
                         BicycleRouteCard(rute)
@@ -236,6 +264,12 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
                 }
                 "Lengde" -> {
                     items(ruter.sortedBy { it.value.length }) { rute ->
+                        BicycleRouteCard(rute)
+
+                    }
+                }
+                "Alfabetisk" -> {
+                    items(ruter.sortedBy { it.value.start }) { rute ->
                         BicycleRouteCard(rute)
 
                     }
