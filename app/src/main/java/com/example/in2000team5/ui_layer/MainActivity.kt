@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,12 +27,13 @@ import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 
 
 class MainActivity : ComponentActivity() {
-    private val bicycleRouteViewModel: BicycleRouteViewModel by viewModels()
+    private lateinit var bicycleRouteViewModel: BicycleRouteViewModel
     private val weatherDataViewModel: WeatherDataViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        bicycleRouteViewModel = ViewModelProvider(this)[BicycleRouteViewModel::class.java]
         // Display splash until viewModel init is not loading anymore
         // Splash screen shows only when app is started from launcher or phone, not from AS
         installSplashScreen().setKeepOnScreenCondition {

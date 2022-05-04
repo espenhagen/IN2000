@@ -1,6 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 android {
@@ -104,5 +109,10 @@ dependencies {
 
     // Splash Screen API
     implementation "androidx.core:core-splashscreen:1.0.0-beta02"
+
+    // room version
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }
 

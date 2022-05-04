@@ -1,5 +1,6 @@
 package com.example.in2000team5.ui_layer.viewmodels
 
+import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
@@ -16,9 +17,9 @@ import kotlinx.coroutines.launch
 import com.example.in2000team5.data_layer.repository.AirQualityRepository
 
 // Viewmodel for bicycle route data. Offers getters and methods to post values.
-class BicycleRouteViewModel: ViewModel() {
+class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
     private val airQualityRepository = AirQualityRepository(airQualityDataSource = AirQualityRemoteDataSource())
-    private val bicycleRouteRepository = BicycleRouteRepository()
+    private val bicycleRouteRepository = BicycleRouteRepository(appObj)
     private val bicycleRoutes = SnapshotStateList<SnapshotMutableState<BicycleRoute>>()
     private val _isLoading: MutableState<Boolean> = mutableStateOf(true) // Used to decide when to close splash screen
     val isLoading: State<Boolean> = _isLoading
@@ -60,5 +61,11 @@ class BicycleRouteViewModel: ViewModel() {
         toast.show()
 
         return result
+    }
+
+    fun insertBicycleRoute(bicycleRoute: BicycleRoute) {
+        viewModelScope.launch {
+            bicycleRouteRepository.insertBicycleRoute(bicycleRoute)
+        }
     }
 }

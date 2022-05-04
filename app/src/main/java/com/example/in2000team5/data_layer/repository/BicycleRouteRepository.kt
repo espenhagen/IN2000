@@ -1,12 +1,15 @@
 package com.example.in2000team5.data_layer.repository
 
 
+import android.app.Application
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.in2000team5.data_layer.datasource.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.datasource.Features
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
@@ -20,11 +23,22 @@ import org.locationtech.proj4j.ProjCoordinate
    received from the API-request from the datasource. It also has functionality to parse coordinates
    and create routes, based on user input.
  */
-class BicycleRouteRepository {
+class BicycleRouteRepository(application: Application) {
 
     private val bicycleRouteRemoteDataSource = BicycleRouteRemoteDataSource()
     private val bigRouteMap: HashMap<Int, MutableList<List<LatLng>?>> = HashMap()
     private var routeCount = routeNames().size
+    private var bicycleRouteDao: BicycleRouteDao
+
+    init {
+        val database = AppDatabase.getDatabase(application)
+        bicycleRouteDao = database.bicycleRouteDao()
+    }
+
+    //TODO: fikse dette: val getAllBicycleRoutes = bicycleRouteDao.getAll()
+    suspend fun insertBicycleRoute(bicycleRoute: BicycleRoute) {
+        bicycleRouteDao.insertBicycleRoute(bicycleRoute)
+    }
 
     // Maps the smaller routes to larger routes, with the route-number being the joining variable.
     suspend fun makeBigRoutes(bicycleRouteViewModel: BicycleRouteViewModel) {
@@ -46,8 +60,8 @@ class BicycleRouteRepository {
                 )
             )
             bicycleRouteViewModel.getAirQualityAvgForRoute(bigBikeRoute)
-
             bicycleRouteViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BicycleRoute>)
+            //bicycleRouteViewModel.insertBicycleRoute(bigBikeRoute.value)
         }
     }
 
@@ -170,6 +184,7 @@ class BicycleRouteRepository {
 
             bicycleRouteViewModel.getAirQualityAvgForRoute(nyRute)
             bicycleRouteViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
+            bicycleRouteViewModel.insertBicycleRoute(nyRute.value)
             isAdded = true
         }
 
@@ -178,8 +193,9 @@ class BicycleRouteRepository {
 }
 
 // Model-class for the bicycle routes.
-data class BicycleRoute(
-    val id: Int,
+@Entity
+data class BicycleRoute (
+    @PrimaryKey val id: Int,
     val fragmentList: MutableList<List<LatLng>?>,
     val start: String,
     val end: String,
