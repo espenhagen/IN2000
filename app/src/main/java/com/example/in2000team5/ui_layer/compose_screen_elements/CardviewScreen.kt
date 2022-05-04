@@ -1,6 +1,10 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
+
 import android.graphics.Paint
+import android.graphics.Color.*
+import android.graphics.ColorSpace
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,6 +26,9 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.ColorSpaces
+import androidx.compose.ui.graphics.colorspace.Rgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -33,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.utils.RouteUtils
+import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Polyline
@@ -100,6 +108,7 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                                     )
                             }
                             Column {
+/*
                                 Image(
                                     painter = painterResource(getAirIcon(rute.value.AQI.value)),
                                     contentDescription = "Weather",
@@ -110,7 +119,9 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                                             MaterialTheme.colors.secondary,
                                             CircleShape
                                         )
-                                )
+                                )*/
+
+                                AirQualColor(aqi = rute.value.AQI.value)
                                 Text(
                                     text = rute.value.AQI.value.toString(),
                                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
@@ -126,13 +137,17 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                     val plass = rute.value.fragmentList[0]?.get(0)
 
                     val cameraPositionState = rememberCameraPositionState {
-                        position = CameraPosition.fromLatLngZoom(plass!!, 10f)
+                        position = CameraPosition.fromLatLngZoom(plass!!, 12f)
                     }
-                    GoogleMap(
-                        modifier = Modifier.height(200.dp),
-                        cameraPositionState = cameraPositionState,
 
-                        ) {
+                    GoogleMap(
+                        googleMapOptionsFactory = {
+                            GoogleMapOptions()
+                                .liteMode(true)
+                        },
+                        modifier = Modifier.height(200.dp),
+                        cameraPositionState = cameraPositionState
+                    ) {
 //
                         for (fragment in rute.value.fragmentList) {
                             Polyline(fragment!!, color = RouteUtils.routeColor(rute.value.id))
@@ -144,6 +159,36 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
     }
     Spacer(modifier = Modifier.width(10.dp))
 }
+
+@Composable
+fun AirQualColor(aqi:Double?){
+    var color : Color
+    if (aqi != null) {
+        if (aqi > 2.5){ //red
+            color = Color(red = 1f, green = 0f, blue = 0f, alpha = 1f)
+        }
+        else if (aqi <2){ //green
+            color = Color(red = 0f, green = 1f, blue = 0f, alpha = 1f)
+        }
+        else { //yellow
+            color = Color(red = 1f, green = 1f, blue = 0f, alpha = 1f)
+
+            //To fade between colors one could implement a function based on aqi-value e.g.:
+            //color = Color(red = 1f*aqi.toFloat(), green = 1f*((2-aqi.toFloat())*2), blue = 0f, alpha = 1f)
+
+
+        }
+    } else {
+        color = androidx.compose.ui.graphics.Color.White
+    }
+        Canvas(modifier = Modifier.size(40.dp), onDraw = {
+            drawCircle(color = color)
+        })
+    }
+
+
+
+
 
 @Composable
 fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) {
