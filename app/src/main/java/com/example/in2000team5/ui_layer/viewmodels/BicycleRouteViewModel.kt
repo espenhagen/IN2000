@@ -10,6 +10,7 @@ import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.*
 import com.example.in2000team5.data_layer.datasource.AirQualityRemoteDataSource
+import com.example.in2000team5.data_layer.datasource.ServiceStation
 import com.example.in2000team5.data_layer.repository.BicycleRouteRepository
 import com.example.in2000team5.data_layer.repository.BicycleRoute
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +26,7 @@ class BicycleRouteViewModel(): ViewModel() {
     private val bicycleRouteRepository = BicycleRouteRepository()
     private val bicycleServiceRepository = BicycleServiceRepository()
     private val bicycleRoutes = SnapshotStateList<SnapshotMutableState<BicycleRoute>>()
-    private val serviceStations = SnapshotStateList<SnapshotMutableState<LatLng>>()
+    private val serviceStations = SnapshotStateList<SnapshotMutableState<ServiceStation>>()
     private val _isLoading: MutableState<Boolean> = mutableStateOf(true) // Used to decide when to close splash screen
     val isLoading: State<Boolean> = _isLoading
 
@@ -76,11 +77,11 @@ class BicycleRouteViewModel(): ViewModel() {
 
     }
 
-    fun postServiceStations(station: SnapshotMutableState<LatLng>) {
+    fun postServiceStations(station: SnapshotMutableState<ServiceStation>) {
         serviceStations.add(station)
     }
 
-    fun getServiceStations(): SnapshotStateList<SnapshotMutableState<LatLng>> {
+    fun getServiceStations(): SnapshotStateList<SnapshotMutableState<ServiceStation>> {
         return serviceStations
     }
 }

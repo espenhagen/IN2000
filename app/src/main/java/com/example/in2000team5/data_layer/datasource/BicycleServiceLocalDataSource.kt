@@ -1,5 +1,6 @@
 package com.example.in2000team5.data_layer.datasource
 
+import com.google.android.gms.maps.model.LatLng
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -31,3 +32,5 @@ class BicycleServiceLocalDataSource {
         return lines
     }
 }
+
+data class ServiceStation(val name: String, val coordinates: LatLng)

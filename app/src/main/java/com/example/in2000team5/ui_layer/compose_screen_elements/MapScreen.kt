@@ -1,5 +1,6 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,6 +38,30 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
             snippet = "Marker in Oslo"
         )
 
+        for (station in bicycleRouteViewModel.getServiceStations()) {
+            station.value.let {
+                Log.d("latlng", it.toString())
+                val name = it.name
+                Circle(
+                    it.coordinates,
+                    true,
+                    Color(100,100,255),
+                    100.0,
+                    Color(0,0,0),
+                    null,
+                    0.0F,
+                    null,
+                    true,
+                    0F,
+                    onClick = {
+                        info = ("Service-stasjon her:\n$name")
+                        openDialog = true
+                    }
+                )
+
+            }
+        }
+
         for (storRute in bicycleRouteViewModel.getRoutes()) {
 
             for (liste in storRute.value.fragmentList) {
@@ -55,11 +80,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
 //
         }
 
-        for (station in bicycleRouteViewModel.getServiceStations()) {
-            station.value.let {
-                Circle(it,false, Color(0,0,255), 100.0)
-            }
-        }
+
 
     }
     if (openDialog) {
