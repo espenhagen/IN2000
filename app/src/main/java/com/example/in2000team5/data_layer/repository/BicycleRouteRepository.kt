@@ -16,6 +16,8 @@ import com.example.in2000team5.data_layer.datasource.Features
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.utils.RouteUtils.Companion.routeNames
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.locationtech.proj4j.CRSFactory
 import org.locationtech.proj4j.CoordinateTransformFactory
 import org.locationtech.proj4j.ProjCoordinate
@@ -28,12 +30,18 @@ class BicycleRouteRepository(application: Application) {
 
     private val bicycleRouteRemoteDataSource = BicycleRouteRemoteDataSource()
     private val bigRouteMap: HashMap<Int, MutableList<List<LatLng>?>> = HashMap()
-    private var routeCount = routeNames().size
+    private var existingRoutes = routeNames().size
+    private var numOfRoutesInDatabase = 0
     private var bicycleRouteDao: BicycleRouteDao
 
     init {
         val database = AppDatabase.getDatabase(application)
         bicycleRouteDao = database.bicycleRouteDao()
+        runBlocking {
+            launch {
+                numOfRoutesInDatabase = bicycleRouteDao.getCount()
+            }
+        }
     }
 
     //TODO: fikse dette: val getAllBicycleRoutes = bicycleRouteDao.getAll()
@@ -176,21 +184,24 @@ class BicycleRouteRepository(application: Application) {
         if (startLatLng != null && sluttLatLng != null) {
             latLngList = mutableListOf(listOf(startLatLng, sluttLatLng))
             val length = userInputRouteLength(latLngList[0]!!)
+            val totalRoutes = ++numOfRoutesInDatabase + existingRoutes
+            Log.d("antall i db etter innsetting:", (numOfRoutesInDatabase).toString())
             val nyRute = mutableStateOf(BicycleRoute(
-                routeCount++,
+                totalRoutes,
                 latLngList,
                 start,
                 end,
                 length,
                 mutableStateOf(null)
             ))
+            Log.d("id til ny: ", nyRute.value.id.toString())
 
             bicycleRouteViewModel.getAirQualityAvgForRoute(nyRute)
             bicycleRouteViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
-            bicycleRouteViewModel.insertBicycleRoute(SimplifiedBicycleRoute(routeCount, start, end, length))
+            bicycleRouteViewModel.insertBicycleRoute(SimplifiedBicycleRoute(nyRute.value.id, start, end, length))
+
             isAdded = true
         }
-
         return isAdded
     }
 }

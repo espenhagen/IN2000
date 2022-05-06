@@ -12,4 +12,7 @@ interface BicycleRouteDao {
 
     @Query("SELECT * FROM simplifiedbicycleroute")
     suspend fun getAll(): List<SimplifiedBicycleRoute>
+
+    @Query("SELECT COUNT(id) FROM simplifiedbicycleroute")
+    suspend fun getCount(): Int
 }
