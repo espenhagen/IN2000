@@ -29,8 +29,8 @@ class MetUtils {
             return false
         }
 
-        fun getDateAndHour(time: String) : String{
-
+        fun getDateAndHour(time: String?) : String{
+            if (time.isNullOrEmpty())return "ukjent";
             if(isNowTime(time)){
                 return "Nå"
             }

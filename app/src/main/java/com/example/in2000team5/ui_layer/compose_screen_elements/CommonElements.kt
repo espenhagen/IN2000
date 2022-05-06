@@ -67,7 +67,7 @@ fun InfoRow(model: WeatherDataViewModel) {
         color = MaterialTheme.colors.background
     ) {
         Row (Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceEvenly){
-            val id = MetUtils.getWeatherIcon(model.getSymbolName())
+            val id = MetUtils.getWeatherIcon(model.weatherTimes.value.currentWeatherSymbol.value)
 
             //Det skal gå an å hente id fra en streng - men får ikke til, så bruker "getWeatherIcon()"
             //val denne = android.content.res.Resources.getSystem()
@@ -81,7 +81,7 @@ fun InfoRow(model: WeatherDataViewModel) {
             )
 
             Text(
-                text = "${weatherDetailsObject.currentTemperature.value}°C",
+                text = "${model.weatherTimes.value.currentTemperature.value}°C",
                 style = MaterialTheme.typography.h4,
                 modifier = Modifier
                     .align(alignment = Alignment.CenterVertically)
@@ -99,7 +99,7 @@ fun InfoRow(model: WeatherDataViewModel) {
                         .align(alignment = Alignment.CenterHorizontally)
                 )
                 Text(
-                    text = "${weatherDetailsObject.currentTemperature.value} mm",
+                    text = "${model.weatherTimes.value.currentTemperature.value} mm",
                     style = MaterialTheme.typography.h5,
                     modifier = Modifier
                         .align(alignment = Alignment.CenterHorizontally)

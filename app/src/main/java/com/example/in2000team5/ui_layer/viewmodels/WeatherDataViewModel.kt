@@ -9,18 +9,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.in2000team5.data_layer.datasource.Timeseries
 import com.example.in2000team5.data_layer.repository.WeatherDataRepository
+import com.example.in2000team5.data_layer.repository.WeatherDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 // Viewmodel for weather data. Offers getters and methods to post values.
 class WeatherDataViewModel: ViewModel() {
-
+    /*
     private val liveTemperature = MutableLiveData<Double?>()
     private val liveSymbol = MutableLiveData<String?>()
     private val liveWindSpeed = MutableLiveData<Double?>()
     private val liveWindDirection = MutableLiveData<Double?>()
+    */
     private val weatherRepository = WeatherDataRepository()
-    var weatherTimes = mutableStateListOf<Timeseries>()
+    var weatherTimes = mutableStateOf(WeatherDetails(emptyList()))
 
     init {
         // Hardkodet til midt i oslo
@@ -39,13 +41,24 @@ class WeatherDataViewModel: ViewModel() {
         }
     }
 
+
+    // metoder under blir kalt fra WeatherDataRepository for å oppdatere liveDataobjekter
+    fun postWeatherObj(list : List<Timeseries>){
+        weatherTimes.value.addList(list)
+        _isLoading.value = false
+    }
+
+    /*
+    fun getSymbolName(): String? {
+        return liveSymbol.value
+    }
+
+
     fun getTemperature(): Double? {
         return liveTemperature.value
     }
 
-    fun getSymbolName(): String? {
-        return liveSymbol.value
-    }
+
 
     fun getWindSpeed(): Double?{
         return liveWindSpeed.value
@@ -55,11 +68,9 @@ class WeatherDataViewModel: ViewModel() {
         return liveWindDirection.value
     }
 
-    // metoder under blir kalt fra WeatherDataRepository for å oppdatere liveDataobjekter
-    fun postWeatherObj(data: List<Timeseries>?){
-        weatherTimes.addAll(data as Collection<Timeseries>)
-        _isLoading.value = false
-    }
+
+
+
     fun postTemperature(temp: Double?) {
         liveTemperature.postValue(temp)
     }
@@ -75,5 +86,7 @@ class WeatherDataViewModel: ViewModel() {
     fun postWindDirection(dir: Double?) {
         liveWindDirection.postValue(dir)
     }
+    */
+
 
 }
