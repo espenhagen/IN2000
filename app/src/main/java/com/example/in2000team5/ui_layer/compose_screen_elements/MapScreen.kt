@@ -34,10 +34,8 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
             title = "Oslo",
             snippet = "Marker in Oslo"
         )
-
         for (storRute in bicycleRouteViewModel.getRoutes()) {
             if (storRute.value.id in 1..8) {
-//
                 for (liste in storRute.value.fragmentList) {
                     liste.let {
                         Polyline(
@@ -52,7 +50,6 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                     }
                 }
             }
-
         }
     }
     if (openDialog) {
@@ -82,7 +79,6 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
             }
         )
     }
-
 }
 
 

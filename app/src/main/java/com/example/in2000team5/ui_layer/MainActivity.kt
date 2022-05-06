@@ -1,5 +1,6 @@
 package com.example.in2000team5.ui_layer
 
+import android.icu.text.IDNA
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
