@@ -11,6 +11,7 @@ class WeatherDetails{
     var maxTemperature: MutableState<Double?> = mutableStateOf(null)
     var minTemperature: MutableState<Double> = mutableStateOf(0.0)
     var averageTemperature: MutableState<Double?> = mutableStateOf(null)
+    var currentTemperature: MutableState<Double?> = mutableStateOf(null)
     var maxRain: MutableState<Double> = mutableStateOf(0.0)
     var totalRain: MutableState<Double> = mutableStateOf(0.0)
     var maxWind: MutableState<Double?> = mutableStateOf(null)
@@ -36,6 +37,7 @@ class WeatherDetails{
         isSlippery.value            = findOutIfSlippery(subList)
         isRaining.value             = findOutIfRaining(subList)
         numberOfHours.value         = findNumberOfHours(subList)
+        currentTemperature.value    = getCurrentTemperature(subList)
     }
 
     private fun findNumberOfHours(subList: MutableList<Timeseries>) : Int {
@@ -53,6 +55,14 @@ class WeatherDetails{
     private fun getMaxTemperature(subList: MutableList<Timeseries>): Double? {
         return subList.maxOf { it.data?.instant?.details?.air_temperature?.toDouble() ?: return null}
     }
+
+    private fun getCurrentTemperature(subList: MutableList<Timeseries>): Double? {
+        if(subList.size>0){
+            return subList.first().data?.next_1_hours?.details?.precipitation_amount?.toDouble()
+        }
+        return null;
+    }
+
     private fun getMinTemperature(subList: MutableList<Timeseries>): Double {
         return subList.minOf { it.data?.instant?.details?.air_temperature?.toDouble() ?: return 0.0}
     }

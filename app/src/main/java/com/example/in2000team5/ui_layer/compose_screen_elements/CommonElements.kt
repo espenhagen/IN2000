@@ -81,7 +81,7 @@ fun InfoRow(model: WeatherDataViewModel) {
             )
 
             Text(
-                text = "${model.getTemperature()}°C",
+                text = "${weatherDetailsObject.currentTemperature.value}°C",
                 style = MaterialTheme.typography.h4,
                 modifier = Modifier
                     .align(alignment = Alignment.CenterVertically)
@@ -99,7 +99,7 @@ fun InfoRow(model: WeatherDataViewModel) {
                         .align(alignment = Alignment.CenterHorizontally)
                 )
                 Text(
-                    text = model.weatherTimes.first().data?.next_1_hours?.details?.precipitation_amount.toString() + " mm",
+                    text = "${weatherDetailsObject.currentTemperature.value} mm",
                     style = MaterialTheme.typography.h5,
                     modifier = Modifier
                         .align(alignment = Alignment.CenterHorizontally)
