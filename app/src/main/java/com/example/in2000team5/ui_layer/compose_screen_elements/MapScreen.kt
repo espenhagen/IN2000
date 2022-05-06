@@ -36,7 +36,8 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
         )
 
         for (storRute in bicycleRouteViewModel.getRoutes()) {
-            if (storRute.value.id != 0 && storRute.value.id < 9) {
+            if (storRute.value.id in 1..8) {
+//
                 for (liste in storRute.value.fragmentList) {
                     liste.let {
                         Polyline(
@@ -50,7 +51,6 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                         )
                     }
                 }
-//
             }
 
         }
@@ -84,3 +84,5 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
     }
 
 }
+
+

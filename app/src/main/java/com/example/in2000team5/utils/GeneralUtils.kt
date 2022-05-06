@@ -20,22 +20,6 @@ class GeneralUtils {
         }
 
 
-        //a toast showing a message
-        //to include context as parameter:val context = LocalContext.current
-        @Composable
-        fun ShowToast(msg:String, context: Context) {
-            Column(
-                content = {
-                    Toast.makeText(
-                        context,
-                        msg,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }, modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            )
-        }
     }
 
 

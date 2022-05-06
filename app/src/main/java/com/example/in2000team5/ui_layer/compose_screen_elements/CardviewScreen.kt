@@ -1,6 +1,7 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
 
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -28,13 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.repository.BicycleRoute
-import com.example.in2000team5.utils.GeneralUtils.Companion.ShowToast
 import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Polyline
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.*
 
 @Composable
 fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
@@ -66,9 +64,7 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                         modifier = Modifier
                             .padding(all = 4.dp)
                             .width(160.dp),
-                        // If the rute is expanded, we display all its content
-                        // otherwise we only display the first two lines
-                        maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                        //maxLines = if (isExpanded) Int.MAX_VALUE else 2,
                         style = MaterialTheme.typography.body1,
                         lineHeight = 30.sp
                     )
@@ -80,46 +76,70 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
             }
             Row {
                 if (isExpanded) {
-                    if(rute.value.id in 1..8) LiteMap(rute = rute)
-                    else {
+                    if (rute.value.id in 1..8) LiteMap(rute = rute)
+                    else{
                         val context = LocalContext.current
-                        ShowToast("Kan ikke vise kart for egne ruter.", context)
-                        }
+                        Toast.makeText(context,"Kan ikke vise kart for egne ruter.",Toast.LENGTH_SHORT).show()
+
+
+                       // SpecialLiteMap(rute = rute)
                     }
                 }
-            }
-        }
-    }
-
-@Composable
-fun LiteMap(rute: SnapshotMutableState<BicycleRoute>){
-    val plass = rute.value.fragmentList[0]?.get(0)
-
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(plass!!, 12f)
-    }
-    if(rute.value.id in 1..8) {
-        GoogleMap(
-            googleMapOptionsFactory = {
-                GoogleMapOptions()
-                    .liteMode(true)
-            },
-            modifier = Modifier.height(200.dp),
-            cameraPositionState = cameraPositionState
-        ) {
-//
-            for (fragment in rute.value.fragmentList) {
-                Polyline(fragment!!, color = RouteUtils.routeColor(rute.value.id))
             }
         }
     }
 }
 
 
+/*@Composable
+fun SpecialLiteMap(rute: SnapshotMutableState<BicycleRoute>){
+
+    val end1 = rute.value.fragmentList[0]?.get(0)
+    val end2 = rute.value.fragmentList[0]?.get(1)
+
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(end1!!, 12f)
+    }
+    GoogleMap(
+        googleMapOptionsFactory = {
+            GoogleMapOptions()
+                .liteMode(true)
+        },
+        modifier = Modifier.height(200.dp),
+        cameraPositionState = cameraPositionState
+    ) {
+        Marker(
+            state = MarkerState(position = end1!!),
+        )
+        Marker(
+            state = MarkerState(position = end2!!),
+        )
+    }
+}*/
 
 
+@Composable
+fun LiteMap(rute: SnapshotMutableState<BicycleRoute>){
+    
+    val plass = rute.value.fragmentList[0]?.get(0)
 
-
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(plass!!, 12f)
+    }
+    GoogleMap(
+        googleMapOptionsFactory = {
+            GoogleMapOptions()
+                .liteMode(true)
+        },
+        modifier = Modifier.height(200.dp),
+        cameraPositionState = cameraPositionState
+    ) {
+//
+        for (fragment in rute.value.fragmentList) {
+            Polyline(fragment!!, color = RouteUtils.routeColor(rute.value.id))
+        }
+    }
+}
 
 @Composable
 fun AirQualIcon(aqi:Double?){
@@ -152,68 +172,18 @@ fun AirQualIcon(aqi:Double?){
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
             style = MaterialTheme.typography.body2
         )
-        }
     }
-
-
-
+}
 
 
 @Composable
 fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) {
     val choices = mutableListOf("ID", "Luftkvalitet", "Lengde", "Alfabetisk")
-
-    //SPINNER:
-    //Kode hentet fra: https://intensecoder.com/spinner-in-jetpack-compose-dropdown/
-    //variabler for å holde på state.
     var valg: String by remember { mutableStateOf(choices[0]) }
-    var expanded by remember { mutableStateOf(false)}
 
     Column {
-        Box(Modifier.fillMaxWidth(),contentAlignment = Alignment.Center) {
-            Row( modifier = Modifier
-                .padding(6.dp)
-                .clickable {
-                    expanded = !expanded
-                }
-                .padding(8.dp)
-                .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    buildAnnotatedString {
-                        append("Sorter eller:  ")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(valg)
-                        }
-                    },
-                    Modifier
-                        .padding(end = 8.dp))
-                Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
-            }
-            DropdownMenu(
-                expanded = expanded,
-                modifier =
-                Modifier
-                    .fillMaxWidth(),
-                onDismissRequest = {
-                expanded = false
-            }
-            ) {
-                choices.forEach{ choice->
-                    DropdownMenuItem(onClick = {
-                        expanded = false
-                        valg = choice
+        valg = customSpinner(choices) //collected from spinner composable object
 
-                    }) {
-                        Text(text = choice)
-                    }
-                }
-            }
-        }
-
-        //OPPRETTER KORTENE BASERT PÅ VALG I SPINNER (DEFAULT: ID)
         LazyColumn(
             modifier = Modifier.padding(bottom = 55.dp)
         ) {
@@ -249,4 +219,54 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
             }
         }
     }
+}
+
+@Composable
+fun customSpinner (choices: MutableList<String>):String{
+    var valg: String by remember { mutableStateOf(choices[0]) }
+    var expanded by remember { mutableStateOf(false)}
+
+    Box(Modifier.fillMaxWidth(),contentAlignment = Alignment.Center) {
+        Row( modifier = Modifier
+            .padding(6.dp)
+            .clickable {
+                expanded = !expanded
+            }
+            .padding(8.dp)
+            .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                buildAnnotatedString {
+                    append("Sorter etter:  ")
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append(valg)
+                    }
+                },
+                Modifier
+                    .padding(end = 8.dp))
+            Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            modifier =
+            Modifier
+                .fillMaxWidth(),
+            onDismissRequest = {
+                expanded = false
+            }
+        ) {
+            choices.forEach{ choice->
+                DropdownMenuItem(onClick = {
+                    expanded = false
+                    valg = choice
+
+                }) {
+                    Text(text = choice)
+                }
+            }
+        }
+    }
+    return valg
 }
