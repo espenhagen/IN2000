@@ -1,19 +1,14 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
 
-import android.graphics.Paint
-import android.graphics.Color.*
-import android.graphics.ColorSpace
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -22,23 +17,18 @@ import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.focusModifier
-import androidx.compose.ui.graphics.BlendMode.Companion.Color
-import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.colorspace.ColorSpaces
-import androidx.compose.ui.graphics.colorspace.Rgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.repository.BicycleRoute
+import com.example.in2000team5.utils.GeneralUtils.Companion.ShowToast
 import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
@@ -61,107 +51,78 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
         Column(modifier = Modifier
             .clickable { isExpanded = !isExpanded }
         ) {
-
+            //Header
             Text(
                 text = "${rute.value.start} - ${rute.value.end}",
                 color = MaterialTheme.colors.secondaryVariant,
                 style = MaterialTheme.typography.h5
             )
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            Spacer(modifier = Modifier.height(6.dp))
-            Column {
-                Row {
-                    Column {
-                        Text(
-                            text = "Lengde: ${rute.value.length.toInt()} meter",
-                            modifier = Modifier
-                                .padding(all = 4.dp)
-                                .width(160.dp),
-                            // If the rute is expanded, we display all its content
-                            // otherwise we only display the first line
-                            maxLines = if (isExpanded) Int.MAX_VALUE else 2,
-                            style = MaterialTheme.typography.body1,
-                            lineHeight = 30.sp
-                        )
-                    }
-                    Column {
-                        Row {
-                            Column {
-                                Image(
-                                    painter = painterResource(R.drawable.unknown),
-                                    contentDescription = "Weather",
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .border(
-                                            1.5.dp,
-                                            MaterialTheme.colors.secondary,
-                                            CircleShape
-                                        )
-
-                                )
-                                Text(
-                                    text = rute.value.id.toString(),
-                                    modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
-                                    style = MaterialTheme.typography.body2,
-
-                                    )
-                            }
-                            Column {
-/*
-                                Image(
-                                    painter = painterResource(getAirIcon(rute.value.AQI.value)),
-                                    contentDescription = "Weather",
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .border(
-                                            1.5.dp,
-                                            MaterialTheme.colors.secondary,
-                                            CircleShape
-                                        )
-                                )*/
-
-                                AirQualColor(aqi = rute.value.AQI.value)
-                                Text(
-                                    text = rute.value.AQI.value.toString(),
-                                    modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
-                                    style = MaterialTheme.typography.body2
-                                )
-                            }
-                        }
-                    }
+            Row {
+                Column {
+                    Text(
+                        text = "Lengde: ${rute.value.length.toInt()} meter\nRuteID: ${rute.value.id}",
+                        modifier = Modifier
+                            .padding(all = 4.dp)
+                            .width(160.dp),
+                        // If the rute is expanded, we display all its content
+                        // otherwise we only display the first two lines
+                        maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                        style = MaterialTheme.typography.body1,
+                        lineHeight = 30.sp
+                    )
+                }
+                Column {
+                    //AQI
+                    AirQualIcon(aqi = rute.value.AQI.value)
                 }
             }
             Row {
                 if (isExpanded) {
-                    val plass = rute.value.fragmentList[0]?.get(0)
-
-                    val cameraPositionState = rememberCameraPositionState {
-                        position = CameraPosition.fromLatLngZoom(plass!!, 12f)
-                    }
-
-                    GoogleMap(
-                        googleMapOptionsFactory = {
-                            GoogleMapOptions()
-                                .liteMode(true)
-                        },
-                        modifier = Modifier.height(200.dp),
-                        cameraPositionState = cameraPositionState
-                    ) {
-//
-                        for (fragment in rute.value.fragmentList) {
-                            Polyline(fragment!!, color = RouteUtils.routeColor(rute.value.id))
+                    if(rute.value.id in 1..8) LiteMap(rute = rute)
+                    else {
+                        val context = LocalContext.current
+                        ShowToast("Kan ikke vise kart for egne ruter.", context)
                         }
                     }
                 }
             }
         }
     }
-    Spacer(modifier = Modifier.width(10.dp))
-}
 
 @Composable
-fun AirQualColor(aqi:Double?){
+fun LiteMap(rute: SnapshotMutableState<BicycleRoute>){
+    val plass = rute.value.fragmentList[0]?.get(0)
+
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(plass!!, 12f)
+    }
+    if(rute.value.id in 1..8) {
+        GoogleMap(
+            googleMapOptionsFactory = {
+                GoogleMapOptions()
+                    .liteMode(true)
+            },
+            modifier = Modifier.height(200.dp),
+            cameraPositionState = cameraPositionState
+        ) {
+//
+            for (fragment in rute.value.fragmentList) {
+                Polyline(fragment!!, color = RouteUtils.routeColor(rute.value.id))
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+@Composable
+fun AirQualIcon(aqi:Double?){
     var color : Color
     if (aqi != null) {
         if (aqi > 2.5){ //red
@@ -181,9 +142,17 @@ fun AirQualColor(aqi:Double?){
     } else {
         color = androidx.compose.ui.graphics.Color.White
     }
+    Column() {
+
         Canvas(modifier = Modifier.size(40.dp), onDraw = {
             drawCircle(color = color)
         })
+        Text(
+            text = "${aqi}",
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+            style = MaterialTheme.typography.body2
+        )
+        }
     }
 
 
@@ -252,31 +221,29 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
 
                 "ID" -> {
                     items(ruter.sortedBy { it.value.id }) { rute ->
-                        BicycleRouteCard(rute)
+                        if(rute.value.id > 1) BicycleRouteCard(rute)
 
                     }
                 }
                 "Luftkvalitet" -> {
                     items(ruter.sortedBy { it.value.AQI.value }) { rute ->
-                        BicycleRouteCard(rute)
+                        if(rute.value.id > 1) BicycleRouteCard(rute)
 
                     }
                 }
                 "Lengde" -> {
                     items(ruter.sortedBy { it.value.length }) { rute ->
-                        BicycleRouteCard(rute)
-
+                        if(rute.value.id > 1) BicycleRouteCard(rute)
                     }
                 }
                 "Alfabetisk" -> {
                     items(ruter.sortedBy { it.value.start }) { rute ->
-                        BicycleRouteCard(rute)
-
+                        if(rute.value.id > 1) BicycleRouteCard(rute)
                     }
                 }
                 else -> {
                     items(ruter) { rute ->
-                        BicycleRouteCard(rute)
+                        if(rute.value.id > 1) BicycleRouteCard(rute)
                     }
                 }
             }
