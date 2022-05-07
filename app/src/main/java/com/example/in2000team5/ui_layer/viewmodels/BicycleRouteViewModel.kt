@@ -1,5 +1,6 @@
 package com.example.in2000team5.ui_layer.viewmodels
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -19,11 +20,12 @@ import com.example.in2000team5.data_layer.repository.AirQualityRepository
 import com.example.in2000team5.data_layer.repository.BicycleServiceRepository
 import com.google.android.gms.maps.model.LatLng
 import java.io.InputStream
+import com.example.in2000team5.data_layer.repository.SimplifiedBicycleRoute
 
 // Viewmodel for bicycle route data. Offers getters and methods to post values.
-class BicycleRouteViewModel(): ViewModel() {
+class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
     private val airQualityRepository = AirQualityRepository(airQualityDataSource = AirQualityRemoteDataSource())
-    private val bicycleRouteRepository = BicycleRouteRepository()
+    private val bicycleRouteRepository = BicycleRouteRepository(appObj)
     private val bicycleServiceRepository = BicycleServiceRepository()
     private val bicycleRoutes = SnapshotStateList<SnapshotMutableState<BicycleRoute>>()
     private val serviceStations = SnapshotStateList<SnapshotMutableState<ServiceStation>>()
@@ -61,7 +63,7 @@ class BicycleRouteViewModel(): ViewModel() {
         val result = bicycleRouteRepository.addRouteFromUser(
             this@BicycleRouteViewModel, context, start, slutt)
 
-        val text = if (result) "Oppgi gyldig start og slutt" else "Rute lagt til"
+        val text = if (result) "Rute lagt til" else "Oppgi gyldig start og slutt"
         val duration = Toast.LENGTH_SHORT
         val toast = Toast.makeText(context, text, duration)
         toast.show()
@@ -83,5 +85,12 @@ class BicycleRouteViewModel(): ViewModel() {
 
     fun getServiceStations(): SnapshotStateList<SnapshotMutableState<ServiceStation>> {
         return serviceStations
+    }
+
+    fun insertBicycleRoute(bicycleRoute: SimplifiedBicycleRoute) {
+        Log.d("DATABASE:", "Lagt til rute")
+        viewModelScope.launch {
+            bicycleRouteRepository.insertBicycleRoute(bicycleRoute)
+        }
     }
 }
