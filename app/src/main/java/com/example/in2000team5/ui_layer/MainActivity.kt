@@ -35,9 +35,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        bicycleRouteViewModel = ViewModelProvider(this)[BicycleRouteViewModel::class.java]
+
         bicycleRouteViewModel.readServiceStations(this.resources.openRawResource(R.raw.stasjoner))
 
-        bicycleRouteViewModel = ViewModelProvider(this)[BicycleRouteViewModel::class.java]
         // Display splash until viewModel init is not loading anymore
         // Splash screen shows only when app is started from launcher or phone, not from AS
         installSplashScreen().setKeepOnScreenCondition {

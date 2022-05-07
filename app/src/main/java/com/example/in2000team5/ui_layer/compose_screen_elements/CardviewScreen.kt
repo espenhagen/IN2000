@@ -1,9 +1,9 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +17,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -28,7 +29,9 @@ import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.maps.android.compose.*
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Polyline
+import com.google.maps.android.compose.rememberCameraPositionState
 
 
 @Composable
@@ -196,11 +199,11 @@ fun customSpinner (choices: MutableList<String>):String{
 
     Box(Modifier.fillMaxWidth(),contentAlignment = Alignment.Center) {
         Row( modifier = Modifier
-            .padding(6.dp)
             .clickable {
                 expanded = !expanded
             }
-            .padding(8.dp)
+            .padding(2.dp)
+            .border(1.dp, Color.LightGray, RectangleShape)
             .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
@@ -213,7 +216,7 @@ fun customSpinner (choices: MutableList<String>):String{
                     }
                 },
                 Modifier
-                    .padding(end = 8.dp))
+                    .padding(all =5.dp))
             Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
         }
         DropdownMenu(

@@ -1,7 +1,6 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,11 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -144,15 +139,14 @@ fun WeatherDetailsBox() {
                 Text(text = "${weatherDetailsObject.averageTemperature.value}°C snitt")
 
             }
-            weatherDetailsObject.averageTemperature.value?.let {Speedometer(it.toInt()) }
 
-            /*Image(
+            Image(
                 painter = painterResource(R.drawable.unknown),
                 contentDescription = "Bilde kommer",
                 Modifier
                     .padding(horizontal = 20.dp, vertical = 10.dp)
                     .size(40.dp)
-            )*/
+            )
         }
         Row (
             verticalAlignment = Alignment.Top,
@@ -374,105 +368,5 @@ fun CreditBox() {
     }
 }
 
-//https://github.com/nglauber/JetpackComposePlayground/blob/master/app/src/main/java/br/com/nglauber/jetpackcomposeplayground/screens/SpeedometerScreen.kt
-@Composable
-fun Speedometer(
-    progress: Int,
-) {
-    val arcDegrees = 275
-    val startArcAngle = 135f
-    val startStepAngle = -45
-    val numberOfMarkers = 55
-    val degreesMarkerStep = arcDegrees / numberOfMarkers
-
-    Canvas(
-        modifier = Modifier
-            .size(50.dp)
-            .aspectRatio(1f),
-        onDraw = {
-            drawIntoCanvas { canvas ->
-                val w = drawContext.size.width
-                val h = drawContext.size.height
-                val centerOffset = Offset(w / 2f, h / 2f)
-                val quarterOffset = Offset(w / 4f, h / 4f)
-
-                // Drawing Center Arc background
-                /*val (mainColor, secondaryColor) = when {
-                    progress < 20 -> // Red
-                        Color(0xFFD32F2F) to Color(0xFFFFCDD2)
-                    progress < 40 -> // Orange
-                        Color(0xFFF57C00) to Color(0xFFFFE0B2)
-                    else -> // Green
-                        Color(0xFF388E3C) to Color(0xFFC8E6C9)
-                }*/
-                val mainColor = Color.Gray
-                val secondaryColor = Color.Gray
-                val paint = Paint().apply {
-                    color = mainColor
-                }
-                val centerArcSize = Size(w / 2f, h / 2f)
-                val centerArcStroke = Stroke(10f, 0f, StrokeCap.Round)
-                drawArc(
-                    secondaryColor,
-                    startArcAngle,
-                    arcDegrees.toFloat(),
-                    false,
-                    topLeft = quarterOffset,
-                    size = centerArcSize,
-                    style = centerArcStroke
-                )
-                // Drawing Center Arc progress
-                drawArc(
-                    mainColor,
-                    startArcAngle,
-                    (degreesMarkerStep * progress).toFloat(),
-                    false,
-                    topLeft = quarterOffset,
-                    size = centerArcSize,
-                    style = centerArcStroke
-                )
-                // Drawing the pointer circle
-                drawCircle(mainColor, 10f, centerOffset)
-                drawCircle(Color.White, 20f, centerOffset)
-                drawCircle(Color.Black, 15f, centerOffset)
-
-                // Drawing Line Markers
-                for ((counter, degrees) in (startStepAngle..(startStepAngle + arcDegrees) step degreesMarkerStep).withIndex()) {
-                    val lineEndX = 10f
-                    paint.color = mainColor
-                    val lineStartX = if (counter % 5 == 0) {
-                        paint.strokeWidth = 3f
-                        0f
-                    } else {
-                        paint.strokeWidth = 1f
-                        lineEndX * .2f
-                    }
-                    canvas.save()
-                    canvas.rotate(degrees.toFloat(), w / 2f, h / 2f)
-                    canvas.drawLine(
-                        Offset(lineStartX, h / 2f),
-                        Offset(lineEndX, h / 2f),
-                        paint
-                    )
-                    // Drawing Pointer
-                    if (counter == progress) {
-                        paint.color = Color.Black
-                        canvas.drawPath(
-                            Path().apply {
-                                moveTo(w / 2, (h / 2) - 5)
-                                lineTo(w / 2, (h / 2) + 5)
-                                lineTo(w / 4f, h / 2)
-                                lineTo(w / 2, (h / 2) - 5)
-                                close()
-                            },
-                            paint
-                        )
-                    }
-                    canvas.restore()
-                }
-            }
-        }
-    )
-}
 
 

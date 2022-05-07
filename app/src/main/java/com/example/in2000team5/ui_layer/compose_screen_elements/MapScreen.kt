@@ -1,7 +1,6 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
@@ -10,10 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
-import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.model.CameraPosition
@@ -25,7 +21,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
     var openDialog by remember { mutableStateOf(false) }
     var info by remember { mutableStateOf("")}
     var title by remember { mutableStateOf("")}
-    var vis by remember { mutableStateOf(false) }
+    var showStations by remember { mutableStateOf(false) }
 
 
     val oslo = LatLng(59.9139, 10.7522)
@@ -44,31 +40,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                 title = "Oslo",
                 snippet = "Marker in Oslo"
             )
-            if(vis){
-            for (station in bicycleRouteViewModel.getServiceStations()) {
-                station.value.let {
-                    Log.d("latlng", it.toString())
-                    val name = it.name
-                    Circle(
-                        it.coordinates,
-                        true,
-                        Color(100, 100, 255),
-                        100.0,
-                        Color(0, 0, 0),
-                        null,
-                        0.0F,
-                        null,
-                        true,
-                        0F,
-                        onClick = {
-                            info = ("Service-stasjon her:\n$name")
-                            title = ("Service-stasjon")
-                            openDialog = true
-                        }
-                    )
 
-                }
-            }}
 
             for (storRute in bicycleRouteViewModel.getRoutes()) {
 
@@ -89,7 +61,32 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                 }
 //
             }
+            if(showStations){
+                for (station in bicycleRouteViewModel.getServiceStations()) {
+                    station.value.let {
+                        Log.d("latlng", it.toString())
+                        val name = it.name
+                        Circle(
+                            it.coordinates,
+                            true,
+                            Color(100, 100, 255),
+                            100.0,
+                            Color(0, 0, 0),
+                            null,
+                            0.0F,
+                            null,
+                            true,
+                            1F,
+                            onClick = {
+                                info = ("Service-stasjon her:\n$name")
+                                title = ("Service-stasjon")
+                                openDialog = true
+                            }
+                        )
 
+                    }
+                }
+            }
 
         }
         if (openDialog) {
@@ -120,25 +117,27 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                 }
             )
         }
+
+
         Button(
             modifier = Modifier
 
                 .align(Alignment.TopEnd)
-                .offset(),
+                .offset(x = -5.dp),
             onClick = {
-                vis = !vis
-                Log.d("hei", vis.toString())
+                showStations = !showStations
             }
         ) {
 
-            Image(
+            /*Image(
                 painterResource(id = R.drawable.unknown),
                 contentDescription = "Cart button icon",
                 modifier = Modifier.size(40.dp)
-            )
+            )*/
 
-            Text(text = "Vis sykkelrep", Modifier.padding(start = 10.dp))
+            Text(text = "Vis sykkelrep", Modifier.padding(start = 0.dp))
         }
+
     }
 }
 
