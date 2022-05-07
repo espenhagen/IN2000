@@ -57,7 +57,7 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
         val result = bicycleRouteRepository.addRouteFromUser(
             this@BicycleRouteViewModel, context, start, slutt)
 
-        val text = if (result) "Oppgi gyldig start og slutt" else "Rute lagt til"
+        val text = if (result) "Rute lagt til" else "Oppgi gyldig start og slutt"
         val duration = Toast.LENGTH_SHORT
         val toast = Toast.makeText(context, text, duration)
         toast.show()

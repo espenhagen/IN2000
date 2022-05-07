@@ -15,4 +15,7 @@ interface BicycleRouteDao {
 
     @Query("SELECT COUNT(id) FROM simplifiedbicycleroute")
     suspend fun getCount(): Int
+
+    @Query("DELETE FROM simplifiedbicycleroute")
+    suspend fun nukeTable()
 }

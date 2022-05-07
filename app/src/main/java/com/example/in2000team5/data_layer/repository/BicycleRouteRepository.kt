@@ -24,7 +24,9 @@ import org.locationtech.proj4j.ProjCoordinate
 
 /* This repository offers a methods to create the bigger routes, consisting of the smaller routes
    received from the API-request from the datasource. It also has functionality to parse coordinates
-   and create routes, based on user input.
+   and create routes, based on user input. The repository also connects with the database.
+   The database stores the routes created from the users, in the entity being a simplified
+   bicycle route.
  */
 class BicycleRouteRepository(application: Application) {
 
@@ -44,9 +46,9 @@ class BicycleRouteRepository(application: Application) {
         }
     }
 
-    //TODO: fikse dette: val getAllBicycleRoutes = bicycleRouteDao.getAll()
     suspend fun insertBicycleRoute(bicycleRoute: SimplifiedBicycleRoute) {
         bicycleRouteDao.insertBicycleRoute(bicycleRoute)
+        // brukes for nuke databasen: bicycleRouteDao.nukeTable()
         Log.d("DATABASE:", "Henter alle rutene ${bicycleRouteDao.getAll()}")
     }
 
@@ -71,7 +73,6 @@ class BicycleRouteRepository(application: Application) {
             )
             bicycleRouteViewModel.getAirQualityAvgForRoute(bigBikeRoute)
             bicycleRouteViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BicycleRoute>)
-            //bicycleRouteViewModel.insertBicycleRoute(bigBikeRoute.value)
         }
     }
 
@@ -154,7 +155,6 @@ class BicycleRouteRepository(application: Application) {
     }
 
     // Reverses the order of the latitude and longitude based on the format from the geocoder
-    // TODO: Ruten regner dobbelte av faktisk lengde, FIKS
     private fun userInputRouteLength(latLngList: List<LatLng>): Double {
         var total = 0.0
         for (i in 1 until latLngList.size) {
@@ -181,11 +181,11 @@ class BicycleRouteRepository(application: Application) {
 
         val latLngList: MutableList<List<LatLng>?>
         var isAdded = false
+
         if (startLatLng != null && sluttLatLng != null) {
             latLngList = mutableListOf(listOf(startLatLng, sluttLatLng))
             val length = userInputRouteLength(latLngList[0]!!)
             val totalRoutes = ++numOfRoutesInDatabase + existingRoutes
-            Log.d("antall i db etter innsetting:", (numOfRoutesInDatabase).toString())
             val nyRute = mutableStateOf(BicycleRoute(
                 totalRoutes,
                 latLngList,
@@ -194,7 +194,6 @@ class BicycleRouteRepository(application: Application) {
                 length,
                 mutableStateOf(null)
             ))
-            Log.d("id til ny: ", nyRute.value.id.toString())
 
             bicycleRouteViewModel.getAirQualityAvgForRoute(nyRute)
             bicycleRouteViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
