@@ -181,10 +181,10 @@ fun AirQualColor(aqi:Double?){
     } else {
         color = androidx.compose.ui.graphics.Color.White
     }
-        Canvas(modifier = Modifier.size(40.dp), onDraw = {
-            drawCircle(color = color)
-        })
-    }
+    Canvas(modifier = Modifier.size(40.dp), onDraw = {
+        drawCircle(color = color)
+    })
+}
 
 
 

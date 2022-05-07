@@ -16,7 +16,6 @@ import com.example.in2000team5.data_layer.repository.BicycleRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.in2000team5.data_layer.repository.AirQualityRepository
-import com.example.in2000team5.data_layer.repository.SimplifiedBicycleRoute
 
 // Viewmodel for bicycle route data. Offers getters and methods to post values.
 class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
@@ -28,12 +27,14 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
 
     init {
         makeApiRequest()
+        bicycleRouteRepository.addRoutesFromDatabase(bicycleRoutes)
     }
 
     // Uses thread to calculate AQI-index for bicycle route asynchronously
     fun getAirQualityAvgForRoute(route: MutableState<BicycleRoute>) {
         viewModelScope.launch(Dispatchers.IO){
             route.value.AQI.value = airQualityRepository.fetchAvgAirQualityAtRoute(route.value.fragmentList)
+            bicycleRouteRepository.updateAQI(route.value.id, route.value.AQI.value?:-1.0)
         }
     }
 
@@ -65,10 +66,9 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
         return result
     }
 
-    fun insertBicycleRoute(bicycleRoute: SimplifiedBicycleRoute) {
-        Log.d("DATABASE:", "Lagt til rute")
+    fun insertBicycleRoute(bicycleRoute: MutableState<BicycleRoute>) {
         viewModelScope.launch {
-            bicycleRouteRepository.insertBicycleRoute(bicycleRoute)
+            bicycleRouteRepository.insertBicycleRoute(bicycleRoute.value)
         }
     }
 }
