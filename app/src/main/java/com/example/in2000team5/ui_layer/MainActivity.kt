@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         bicycleRouteViewModel = ViewModelProvider(this)[BicycleRouteViewModel::class.java]
 
+        //TODO flytte inn i init i bicycleRouteViewModel
         bicycleRouteViewModel.readServiceStations(this.resources.openRawResource(R.raw.stasjoner))
 
         // Display splash until viewModel init is not loading anymore

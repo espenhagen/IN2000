@@ -43,11 +43,10 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
 
 
             for (storRute in bicycleRouteViewModel.getRoutes()) {
-
-                for (liste in storRute.value.fragmentList) {
-                    liste.let {
+                if (storRute.value.id in 1..8) {
+                    for (liste in storRute.value.fragmentList) {
                         Polyline(
-                            points = it!!,
+                            points = liste!!,
                             color = RouteUtils.routeColor(storRute.value.id),
                             clickable = true,
                             onClick = {
@@ -59,9 +58,10 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                         )
                     }
                 }
+
 //
             }
-            if(showStations){
+            if (showStations) {
                 for (station in bicycleRouteViewModel.getServiceStations()) {
                     station.value.let {
                         Log.d("latlng", it.toString())
@@ -137,6 +137,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
 
             Text(text = "Vis sykkelrep", Modifier.padding(start = 0.dp))
         }
+
 
     }
 }

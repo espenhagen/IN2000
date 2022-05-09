@@ -72,8 +72,11 @@ fun InfoRow(model: WeatherDataViewModel) {
         Row (Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceEvenly){
 
             val context = LocalContext.current
-
-            val id = context.resources.getIdentifier(model.getSymbolName(), "drawable",context.packageName )
+            val id = if (model.getSymbolName() == null){
+                R.drawable.unknown
+            } else{
+                context.resources.getIdentifier(model.getSymbolName(), "drawable",context.packageName )
+            }
 
 
             Image(
