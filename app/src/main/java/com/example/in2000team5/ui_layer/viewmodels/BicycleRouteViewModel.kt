@@ -18,9 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.in2000team5.data_layer.repository.AirQualityRepository
 import com.example.in2000team5.data_layer.repository.BicycleServiceRepository
-import com.google.android.gms.maps.model.LatLng
 import java.io.InputStream
-import com.example.in2000team5.data_layer.repository.SimplifiedBicycleRoute
 import com.example.in2000team5.utils.Timer.Companion.countDown
 
 
