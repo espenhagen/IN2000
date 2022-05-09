@@ -1,5 +1,6 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,7 +23,7 @@ import com.example.in2000team5.utils.SupportInfo
 import com.example.in2000team5.utils.WeatherDetails
 
 val weatherDetailsObject = WeatherDetails()
-val cloatingSupportList = mutableStateListOf<String>()
+val cloathingSupportList = mutableStateListOf<String>()
 val itemSupportList = mutableStateListOf<String>()
 val checkList = SupportInfo.getChecklist()
 
@@ -50,7 +51,7 @@ fun SupportScreen(model: WeatherDataViewModel) {
                     WeatherDetailsBox()
                 }
                 item{
-                    CloatingSupportBox()
+                    CloathingSupportBox()
                 }
                 item{
                     ChecklistBox()
@@ -71,7 +72,7 @@ fun updateSupportData(
     val start = sliderPosition.start.toInt()
     val end = sliderPosition.endInclusive.toInt() +1
     weatherDetailsObject.update(model.weatherTimes.subList(start,end))
-    SupportInfo.getRecommendedClothing2(weatherDetailsObject, cloatingSupportList)
+    SupportInfo.getRecommendedClothing2(weatherDetailsObject, cloathingSupportList)
     SupportInfo.getRecommendedItems(weatherDetailsObject, itemSupportList)
 }
 
@@ -97,11 +98,8 @@ fun TimeSlide(model: WeatherDataViewModel) {
     }
 }
 
-
-
 @Composable
 fun WeatherDetailsBox() {
-
     Column(
         Modifier
             .padding(6.dp)
@@ -109,7 +107,6 @@ fun WeatherDetailsBox() {
             .border(5.dp, Color.DarkGray, shape = RoundedCornerShape(10.dp))
             .padding(5.dp)
             .background(MaterialTheme.colors.surface)
-
     ){
         Text(
             text = "Vær og føre",
@@ -118,7 +115,6 @@ fun WeatherDetailsBox() {
             modifier = Modifier
                 .padding(4.dp)
                 .align(alignment = Alignment.CenterHorizontally)
-
         )
         Row (
             verticalAlignment = Alignment.Top,
@@ -128,7 +124,7 @@ fun WeatherDetailsBox() {
                 .background(Color.LightGray)
                 ){
             Text(
-                text = "Tempratur: ",
+                text = "Temperatur: ",
                 style = MaterialTheme.typography.h5,
                 modifier = Modifier
                     .align(alignment = Alignment.CenterVertically)
@@ -142,8 +138,8 @@ fun WeatherDetailsBox() {
                 Text(text = "${weatherDetailsObject.maxTemperature.value}°C max")
                 Text(text = "${weatherDetailsObject.averageTemperature.value}°C snitt")
 
-
             }
+
             Image(
                 painter = painterResource(R.drawable.unknown),
                 contentDescription = "Bilde kommer",
@@ -258,7 +254,7 @@ fun WeatherDetailsBox() {
 }
 
 @Composable
-fun CloatingSupportBox() {
+fun CloathingSupportBox() {
     Column(
         Modifier
             .padding(6.dp)
@@ -289,7 +285,7 @@ fun CloatingSupportBox() {
                 .padding(20.dp)
             ){
                 Text(text = "Klær:", textDecoration = TextDecoration.Underline)
-                cloatingSupportList.forEach {
+                cloathingSupportList.forEach {
                     Text(text = it)
                 }
 
@@ -371,7 +367,6 @@ fun CreditBox() {
         }
     }
 }
-
 
 
 

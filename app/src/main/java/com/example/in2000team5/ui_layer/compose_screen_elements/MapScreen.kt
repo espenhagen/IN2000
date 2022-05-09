@@ -1,14 +1,14 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import android.util.Log
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.utils.RouteUtils
@@ -20,23 +20,30 @@ import com.google.maps.android.compose.*
 fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
     var openDialog by remember { mutableStateOf(false) }
     var info by remember { mutableStateOf("")}
+    var title by remember { mutableStateOf("")}
+    var showStations by remember { mutableStateOf(false) }
+
 
     val oslo = LatLng(59.9139, 10.7522)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(oslo, 12f)
     }
-    GoogleMap(
-        modifier = Modifier.padding(bottom = 50.dp),
-        cameraPositionState = cameraPositionState
-    ) {
-        Marker(     // Adds marker to the map
-            state = MarkerState(position = oslo),
-            title = "Oslo",
-            snippet = "Marker in Oslo"
-        )
+    Box {
 
-        for (storRute in bicycleRouteViewModel.getRoutes()) {
-            if (storRute.value.id != 0 && storRute.value.id < 9) {
+        GoogleMap(
+            modifier = Modifier.padding(bottom = 50.dp),
+            cameraPositionState = cameraPositionState,
+            uiSettings = MapUiSettings(compassEnabled = true, myLocationButtonEnabled = true)
+        ) {
+            Marker(     // Adds marker to the map
+                state = MarkerState(position = oslo),
+                title = "Oslo",
+                snippet = "Marker in Oslo"
+            )
+
+
+            for (storRute in bicycleRouteViewModel.getRoutes()) {
+
                 for (liste in storRute.value.fragmentList) {
                     liste.let {
                         Polyline(
@@ -44,7 +51,9 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                             color = RouteUtils.routeColor(storRute.value.id),
                             clickable = true,
                             onClick = {
-                                info = ("RuteID: ${storRute.value.id} \n${storRute.value.start} - ${storRute.value.end}\n\nSe mer informasjon i listen av ruter.")
+                                title = "Info om Rute"
+                                info =
+                                    ("RuteID: ${storRute.value.id} \n${storRute.value.start} - ${storRute.value.end}\n\nSe mer informasjon i listen av ruter.")
                                 openDialog = true
                             }
                         )
@@ -52,35 +61,83 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                 }
 //
             }
+            if(showStations){
+                for (station in bicycleRouteViewModel.getServiceStations()) {
+                    station.value.let {
+                        Log.d("latlng", it.toString())
+                        val name = it.name
+                        Circle(
+                            it.coordinates,
+                            true,
+                            Color(100, 100, 255),
+                            100.0,
+                            Color(0, 0, 0),
+                            null,
+                            0.0F,
+                            null,
+                            true,
+                            1F,
+                            onClick = {
+                                info = ("Service-stasjon her:\n$name")
+                                title = ("Service-stasjon")
+                                openDialog = true
+                            }
+                        )
 
-        }
-    }
-    if (openDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                openDialog = false
-            },
-            title = {
-                Text(text = "Info om ruten")
-            },
-            text = {
-                Text(text = info
-                )
-            },
-            buttons = {
-                Row(
-                    modifier = Modifier.padding(all = 8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { openDialog = false }
-                    ) {
-                        Text("Ok")
                     }
                 }
             }
-        )
-    }
 
+        }
+        if (openDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    openDialog = false
+                },
+                title = {
+                    Text(text = title)
+                },
+                text = {
+                    Text(
+                        text = info
+                    )
+                },
+                buttons = {
+                    Row(
+                        modifier = Modifier.padding(all = 8.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = { openDialog = false }
+                        ) {
+                            Text("Ok")
+                        }
+                    }
+                }
+            )
+        }
+
+
+        Button(
+            modifier = Modifier
+
+                .align(Alignment.TopEnd)
+                .offset(x = -5.dp),
+            onClick = {
+                showStations = !showStations
+            }
+        ) {
+
+            /*Image(
+                painterResource(id = R.drawable.unknown),
+                contentDescription = "Cart button icon",
+                modifier = Modifier.size(40.dp)
+            )*/
+
+            Text(text = "Vis sykkelrep", Modifier.padding(start = 0.dp))
+        }
+
+    }
 }
+
