@@ -8,14 +8,17 @@ import androidx.room.Query
 @Dao
 interface BicycleRouteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBicycleRoute(bicycleRoute: SimplifiedBicycleRoute)
+    suspend fun insertBicycleRoute(bicycleRoute: BicycleRoute)
 
-    @Query("SELECT * FROM simplifiedbicycleroute")
-    suspend fun getAll(): List<SimplifiedBicycleRoute>
+    @Query("SELECT * FROM bicycleroute")
+    suspend fun getAll(): List<BicycleRoute>
 
-    @Query("SELECT COUNT(id) FROM simplifiedbicycleroute")
+    @Query("SELECT COUNT(id) FROM bicycleroute")
     suspend fun getCount(): Int
 
-    @Query("DELETE FROM simplifiedbicycleroute")
+    @Query("DELETE FROM bicycleroute")
     suspend fun nukeTable()
+
+    @Query("UPDATE bicycleroute SET AQI=:AQI WHERE id=:id")
+    suspend fun updateAQI(id: Int, AQI: Double)
 }

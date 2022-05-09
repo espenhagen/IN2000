@@ -39,12 +39,14 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
     init {
         countDown(_isLoading)
         makeApiRequest()
+        bicycleRouteRepository.addRoutesFromDatabase(bicycleRoutes)
     }
 
     // Uses thread to calculate AQI-index for bicycle route asynchronously
     fun getAirQualityAvgForRoute(route: MutableState<BicycleRoute>) {
         viewModelScope.launch(Dispatchers.IO){
             route.value.AQI.value = airQualityRepository.fetchAvgAirQualityAtRoute(route.value.fragmentList)
+            bicycleRouteRepository.updateAQI(route.value.id, route.value.AQI.value?:-1.0)
         }
     }
 
@@ -92,10 +94,9 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
         return serviceStations
     }
 
-    fun insertBicycleRoute(bicycleRoute: SimplifiedBicycleRoute) {
-        Log.d("DATABASE:", "Lagt til rute")
+    fun insertBicycleRoute(bicycleRoute: MutableState<BicycleRoute>) {
         viewModelScope.launch {
-            bicycleRouteRepository.insertBicycleRoute(bicycleRoute)
+            bicycleRouteRepository.insertBicycleRoute(bicycleRoute.value)
         }
     }
 }

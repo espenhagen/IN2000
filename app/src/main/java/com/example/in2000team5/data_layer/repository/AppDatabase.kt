@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
-@Database(entities = [SimplifiedBicycleRoute::class], version = 1)
+@Database(entities = [BicycleRoute::class], version = 3)
+@TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun bicycleRouteDao(): BicycleRouteDao
 
@@ -21,6 +23,7 @@ abstract class AppDatabase: RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext,
                     AppDatabase::class.java, "jetpack")
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 return instance
