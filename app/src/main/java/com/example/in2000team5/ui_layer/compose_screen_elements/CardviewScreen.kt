@@ -59,7 +59,9 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
         var isExpanded by remember { mutableStateOf(false) }
 
         Column(modifier = Modifier
-            .clickable { isExpanded = !isExpanded }
+            .clickable(
+                onClickLabel = (if (isExpanded) R.string.minimize_card else R.string.expand_card).toString()
+            ) { isExpanded = !isExpanded }
         ) {
 
             Text(
