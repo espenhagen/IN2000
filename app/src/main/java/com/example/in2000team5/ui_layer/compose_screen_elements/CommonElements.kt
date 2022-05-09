@@ -19,6 +19,8 @@ import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.BottomNavItem
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.utils.MetUtils
+import java.lang.Exception
+import java.util.NoSuchElementException
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

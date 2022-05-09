@@ -1,6 +1,8 @@
 package com.example.in2000team5.ui_layer
 
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.*
@@ -23,6 +25,7 @@ import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.ui_layer.compose_screen_elements.*
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
+import java.util.*
 
 
 class MainActivity : ComponentActivity() {
@@ -35,8 +38,7 @@ class MainActivity : ComponentActivity() {
         // Display splash until viewModel init is not loading anymore
         // Splash screen shows only when app is started from launcher or phone, not from AS
         installSplashScreen().setKeepOnScreenCondition {
-            //TODO: bestemme hvilken betingelse som skal settes (bicycle eller weather-viewmodel?)
-            !bicycleRouteViewModel.isLoading.value
+            bicycleRouteViewModel.isLoading.value
         }
 
         // TODO: sjekk om dette kan dyttes i en init-blokk i viewmodel-klassen, og om det må endres etter posisjon hentes
@@ -49,6 +51,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 fun BottomNavigation(weatherDataViewModel: WeatherDataViewModel, bicycleRouteViewModel: BicycleRouteViewModel) {
