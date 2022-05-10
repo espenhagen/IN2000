@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -19,6 +20,8 @@ import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.BottomNavItem
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.utils.MetUtils
+import java.lang.Exception
+import java.util.NoSuchElementException
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -59,19 +62,23 @@ fun BottomNavigationBar(
 
 @Composable
 fun InfoRow(model: WeatherDataViewModel) {
-    Surface(
+    TopAppBar(
         elevation = 4.dp,
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp),
-        color = MaterialTheme.colors.background
-    ) {
-        Row (Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceEvenly){
-            val id = MetUtils.getWeatherIcon(model.weatherTimes.value.currentWeatherSymbol.value)
+        backgroundColor = MaterialTheme.colors.background) {
 
-            //Det skal gå an å hente id fra en streng - men får ikke til, så bruker "getWeatherIcon()"
-            //val denne = android.content.res.Resources.getSystem()
-            //val id= denne.getIdentifier("bike","drawable","com.example.in2000team5")
+        Row (Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceEvenly){
+
+            val context = LocalContext.current
+            val id = if (model.weatherTimes.value.currentWeatherSymbol.value == null){
+                R.drawable.unknown
+            } else{
+                context.resources.getIdentifier(model.weatherTimes.value.currentWeatherSymbol.value, "drawable",context.packageName )
+            }
+
+
             Image(
                 painter = painterResource(id = id),
                 contentDescription = "en sol",
@@ -105,16 +112,6 @@ fun InfoRow(model: WeatherDataViewModel) {
                         .align(alignment = Alignment.CenterHorizontally)
                 )
             }
-
         }
     }
-}
-
-fun getAirIcon(index: Double?): Int {
-    if (index == null) {
-        return R.drawable.unknown
-    } else if (index < 2) {
-        return R.drawable.goodair
-    }
-    return R.drawable.badair
 }

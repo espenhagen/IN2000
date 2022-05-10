@@ -41,7 +41,7 @@ class MetUtils {
             //return "kl: " + hour + " den " + date
             return "kl: $hour"
         }
-
+/*
         fun getWeatherIcon(description: String?): Int {
             return when (description) {
                 "clearsky", "clearsky_day"-> R.drawable.clearsky_day
@@ -111,6 +111,8 @@ class MetUtils {
                 }
             }
         }
+
+ */
     }
 }
 

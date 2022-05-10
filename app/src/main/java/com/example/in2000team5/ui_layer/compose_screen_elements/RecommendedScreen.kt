@@ -96,8 +96,6 @@ fun TimeSlide(model: WeatherDataViewModel) {
     }
 }
 
-
-
 @Composable
 fun WeatherDetailsBox(model: WeatherDataViewModel) {
 
@@ -108,7 +106,6 @@ fun WeatherDetailsBox(model: WeatherDataViewModel) {
             .border(5.dp, Color.DarkGray, shape = RoundedCornerShape(10.dp))
             .padding(5.dp)
             .background(MaterialTheme.colors.surface)
-
     ){
         Text(
             text = "Vær og føre",

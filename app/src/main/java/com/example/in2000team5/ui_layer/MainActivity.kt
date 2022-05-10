@@ -1,6 +1,10 @@
 package com.example.in2000team5.ui_layer
 
+import android.annotation.SuppressLint
+import android.icu.text.IDNA
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.*
@@ -15,28 +19,34 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.ui_layer.compose_screen_elements.*
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
+import java.util.*
 
 
 class MainActivity : ComponentActivity() {
-    private val bicycleRouteViewModel: BicycleRouteViewModel by viewModels()
+    private lateinit var bicycleRouteViewModel: BicycleRouteViewModel
     private val weatherDataViewModel: WeatherDataViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        bicycleRouteViewModel = ViewModelProvider(this)[BicycleRouteViewModel::class.java]
+
+        //TODO flytte inn i init i bicycleRouteViewModel
+        bicycleRouteViewModel.readServiceStations(this.resources.openRawResource(R.raw.stasjoner))
 
         // Display splash until viewModel init is not loading anymore
         // Splash screen shows only when app is started from launcher or phone, not from AS
         installSplashScreen().setKeepOnScreenCondition {
-            //TODO: bestemme hvilken betingelse som skal settes (bicycle eller weather-viewmodel?)
-            !bicycleRouteViewModel.isLoading.value
+            bicycleRouteViewModel.isLoading.value
         }
 
         // TODO: sjekk om dette kan dyttes i en init-blokk i viewmodel-klassen, og om det må endres etter posisjon hentes
@@ -49,6 +59,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 fun BottomNavigation(weatherDataViewModel: WeatherDataViewModel, bicycleRouteViewModel: BicycleRouteViewModel) {

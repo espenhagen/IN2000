@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- Include only if your app benefits from precise location access. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -30,7 +29,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAUrIgHuWwx-z1fPhoA-fXZiTpdGnP2O-o" />
+            android:value="AIzaSyD1cZtph9I5I7nIH_iF4KupRIcPg-kcO7M" /> <!--Ny nøkkel-->
 
     </application>
 
