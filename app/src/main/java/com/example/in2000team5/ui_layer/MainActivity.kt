@@ -40,18 +40,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         bicycleRouteViewModel = ViewModelProvider(this)[BicycleRouteViewModel::class.java]
 
-        //TODO flytte inn i init i bicycleRouteViewModel
-        bicycleRouteViewModel.readServiceStations(this.resources.openRawResource(R.raw.stasjoner))
-
         // Display splash until viewModel init is not loading anymore
         // Splash screen shows only when app is started from launcher or phone, not from AS
         installSplashScreen().setKeepOnScreenCondition {
             bicycleRouteViewModel.isLoading.value
         }
-
-        // TODO: sjekk om dette kan dyttes i en init-blokk i viewmodel-klassen, og om det må endres etter posisjon hentes
-        // weatherDataViewModel.fetchWeather("59.91370670", "10.7526291")
-
         setContent {
             IN2000Team5Theme {
                 BottomNavigation(weatherDataViewModel, bicycleRouteViewModel)
