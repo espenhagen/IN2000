@@ -3,11 +3,13 @@ package com.example.in2000team5.ui_layer.compose_screen_elements
 
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -18,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -36,7 +39,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) {
-    val choices = mutableListOf("ID", "Luftkvalitet", "Lengde", "Alfabetisk")
+    val choices = mutableListOf("ID (lav-høy)", "Luftkvalitet (lav-høy)", "Lengde (kortest-lengst)", "Alfabetisk (a-å)")
     var valg: String by remember { mutableStateOf(choices[0]) }
 
     Column {
@@ -96,20 +99,36 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
             .clickable { isExpanded = !isExpanded }
         ) {
             //Headline
-            Text(
-                text = "${rute.value.start} - ${rute.value.end}",
-                color = MaterialTheme.colors.secondaryVariant,
-                style = MaterialTheme.typography.h5,
-                modifier = Modifier
-                    .padding(10.dp)
-            )
+            Row(modifier = Modifier.fillMaxWidth()){
+                Text(
+                    text = "${rute.value.start} - ${rute.value.end}",
+                    color = MaterialTheme.colors.secondaryVariant,
+                    style = MaterialTheme.typography.h5,
+                    modifier = Modifier
+                        .padding(10.dp)
+                )
+
+                if(!(rute.value.id in 1..8)){
+                    Text(
+                        text = "Egen rute",
+                        modifier = Modifier
+                            .background(Color.LightGray, RoundedCornerShape(4.dp))
+                            .padding(horizontal = 4.dp, vertical = 2.dp)
+                            .align(
+                                Alignment.CenterVertically
+                            )
+
+                    )
+                }
+            }
+
+
             Spacer(modifier = Modifier.height(10.dp))
 
                     Text(
                         text = "Lengde: ${rute.value.length.toInt()} meter\nRuteID: ${rute.value.id}",
                         modifier = Modifier
-                            .padding(horizontal = 12.dp)
-                            .width(160.dp),
+                            .padding(horizontal = 12.dp),
                         //maxLines = if (isExpanded) Int.MAX_VALUE else 2,
                         style = MaterialTheme.typography.body1,
                         lineHeight = 30.sp
