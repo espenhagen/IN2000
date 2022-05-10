@@ -10,8 +10,8 @@ import com.example.in2000team5.utils.GeneralUtils.Companion.round
 
 class SupportInfo {
     companion object {
-
-        fun getRecommendedClothing2(timeSliderData: TimeSliderData, cloatingList: SnapshotStateList<String>){
+        //Analyse weather data for period and returns a suggestion on clothing
+        fun getRecommendedClothing(timeSliderData: TimeSliderData, cloatingList: SnapshotStateList<String>){
             cloatingList.clear()
 
             if(timeSliderData.isRaining.value){
@@ -47,6 +47,7 @@ class SupportInfo {
             }
         }
 
+        //Analyse weather data for period and returns a suggestion on bike equipment
         fun getRecommendedItems(timeSliderData: TimeSliderData, itemList: SnapshotStateList<String>){
             itemList.clear()
             itemList.add("Hjelm!")
@@ -70,7 +71,7 @@ class SupportInfo {
         }
 
 
-
+        //Returns a simple checklist for bike preparation
         fun getChecklist(): List<String> {
             return listOf(
                 "Luft i dekkene",
@@ -88,7 +89,7 @@ class SupportInfo {
 
         var timeList = listOf<WeatherTimeDetails>()
 
-        //Timeintervall values
+        //Values used for support in slider feature
         val maxTemperature: MutableState<Double?> = mutableStateOf(null)
         val minTemperature: MutableState<Double> = mutableStateOf(0.0)
         val averageTemperature: MutableState<Double?> = mutableStateOf(null)
@@ -103,6 +104,7 @@ class SupportInfo {
         val isRaining: MutableState<Boolean> = mutableStateOf(false)
         val numberOfHours: MutableState<Int> = mutableStateOf(0)
 
+        //Makes an update on all values, is usually updated when slider is changing
         fun update(start : Int, end : Int){
             if(timeList.isEmpty())return
             if(timeList.size < end)return

@@ -51,7 +51,8 @@ class WeatherDataRepository {
     }
 }
 
-// TODO: refaktorering etter ferdig implementert
+//Class that contains useful data for specific time, is based on Timeseries
+// from Api but is simplified and optimised for current usage
 class WeatherTimeDetails(timeData: Timeseries?){
 
     val currentTemperature: MutableState<Double?> = mutableStateOf(getCurrentTemperature(timeData))

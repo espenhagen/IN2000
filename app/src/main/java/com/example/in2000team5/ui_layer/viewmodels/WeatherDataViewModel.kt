@@ -12,12 +12,7 @@ import kotlinx.coroutines.launch
 
 // Viewmodel for weather data. Offers getters and methods to post values.
 class WeatherDataViewModel: ViewModel() {
-    /*
-    private val liveTemperature = MutableLiveData<Double?>()
-    private val liveSymbol = MutableLiveData<String?>()
-    private val liveWindSpeed = MutableLiveData<Double?>()
-    private val liveWindDirection = MutableLiveData<Double?>()
-    */
+
     private val weatherRepository = WeatherDataRepository()
     val currentWeatherData = mutableStateOf(WeatherTimeDetails(null))
     var weatherTimes = mutableListOf<WeatherTimeDetails>()
@@ -39,13 +34,13 @@ class WeatherDataViewModel: ViewModel() {
     }
 
 
-    // metoder under blir kalt fra WeatherDataRepository for å oppdatere liveDataobjekter
+    //Method called from weatherRepository to post list of WeatherTimeDetails used in Slider feature
     fun postWeatherTimeDetailsList(list : List<WeatherTimeDetails>){
         weatherTimes.addAll(list as Collection<WeatherTimeDetails>)
         _isLoading.value = false
     }
 
-    // metoder under blir kalt fra WeatherDataRepository for å oppdatere liveDataobjekter
+    //Method called from weatherRepository to post current weather-data
     fun postCurrentWeatherDetails(weatherTimeDetails : WeatherTimeDetails){
         currentWeatherData.value = weatherTimeDetails
     }

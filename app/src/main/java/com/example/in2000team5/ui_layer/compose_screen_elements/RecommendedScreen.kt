@@ -72,7 +72,7 @@ fun updateSupportData(
     val end = sliderPosition.endInclusive.toInt() +2
 
     timeSliderData.update(start,end)
-    SupportInfo.getRecommendedClothing2(timeSliderData, cloatingSupportList)
+    SupportInfo.getRecommendedClothing(timeSliderData, cloatingSupportList)
     SupportInfo.getRecommendedItems(timeSliderData, itemSupportList)
 }
 
