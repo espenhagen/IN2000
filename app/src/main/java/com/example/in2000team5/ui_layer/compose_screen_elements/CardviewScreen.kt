@@ -49,29 +49,29 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
 
                 "ID" -> {
                     items(ruter.sortedBy { it.value.id }) { rute ->
-                        if(rute.value.id > 1) BicycleRouteCard(rute)
+                        if(rute.value.id > 0) BicycleRouteCard(rute)
 
                     }
                 }
                 "Luftkvalitet" -> {
                     items(ruter.sortedBy { it.value.AQI.value }) { rute ->
-                        if(rute.value.id > 1) BicycleRouteCard(rute)
+                        if(rute.value.id > 0) BicycleRouteCard(rute)
 
                     }
                 }
                 "Lengde" -> {
                     items(ruter.sortedBy { it.value.length }) { rute ->
-                        if(rute.value.id > 1) BicycleRouteCard(rute)
+                        if(rute.value.id > 0) BicycleRouteCard(rute)
                     }
                 }
                 "Alfabetisk" -> {
                     items(ruter.sortedBy { it.value.start }) { rute ->
-                        if(rute.value.id > 1) BicycleRouteCard(rute)
+                        if(rute.value.id > 0) BicycleRouteCard(rute)
                     }
                 }
                 else -> {
                     items(ruter) { rute ->
-                        if(rute.value.id > 1) BicycleRouteCard(rute)
+                        if(rute.value.id > 0) BicycleRouteCard(rute)
                     }
                 }
             }
