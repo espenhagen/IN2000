@@ -51,24 +51,24 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
         ) {
             when (valg) {
 
-                "ID" -> {
+                "ID (lav-høy)" -> {
                     items(ruter.sortedBy { it.value.id }) { rute ->
                         if(rute.value.id > 0) BicycleRouteCard(rute)
 
                     }
                 }
-                "Luftkvalitet" -> {
+                "Luftkvalitet (lav-høy)" -> {
                     items(ruter.sortedBy { it.value.AQI.value }) { rute ->
                         if(rute.value.id > 0) BicycleRouteCard(rute)
 
                     }
                 }
-                "Lengde" -> {
+                "Lengde (kortest-lengst)" -> {
                     items(ruter.sortedBy { it.value.length }) { rute ->
                         if(rute.value.id > 0) BicycleRouteCard(rute)
                     }
                 }
-                "Alfabetisk" -> {
+                "Alfabetisk (a-å)" -> {
                     items(ruter.sortedBy { it.value.start }) { rute ->
                         if(rute.value.id > 0) BicycleRouteCard(rute)
                     }
