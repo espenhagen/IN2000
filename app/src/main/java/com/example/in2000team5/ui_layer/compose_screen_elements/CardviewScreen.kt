@@ -29,6 +29,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.in2000team5.data_layer.repository.BicycleRoute
+import com.example.in2000team5.utils.GeneralUtils.Companion.round
 import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
@@ -124,9 +125,14 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
 
 
             Spacer(modifier = Modifier.height(10.dp))
+                    val lengthDescription = if(rute.value.length < 1000){
+                        "Lengde: ${(rute.value.length.toInt())} meter\nRuteID: ${rute.value.id}"
+
+                    }else{
+                        "Lengde: ${(rute.value.length/1000).round(1)} km\nRuteID: ${rute.value.id}"}
 
                     Text(
-                        text = "Lengde: ${rute.value.length.toInt()} meter\nRuteID: ${rute.value.id}",
+                        lengthDescription,
                         modifier = Modifier
                             .padding(horizontal = 12.dp),
                         //maxLines = if (isExpanded) Int.MAX_VALUE else 2,
