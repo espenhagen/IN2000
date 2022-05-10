@@ -140,7 +140,7 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                         lineHeight = 30.sp
                     )
                     //AQI
-                    AirQualIcon(aqi = rute.value.AQI.value)
+                    AirQualInfo(aqi = rute.value.AQI.value)
             Row {
                 if (isExpanded) {
                     if (rute.value.id in 1..8) LiteMap(rute = rute)
@@ -179,38 +179,55 @@ fun LiteMap(rute: SnapshotMutableState<BicycleRoute>){
 }
 
 @Composable
-fun AirQualIcon(aqi:Double?){
-    var color : Color
+fun AirQualInfo(aqi:Double?){
+    val color : Color
+    val description : String
     if (aqi != null) {
         if (aqi > 2.5){ //red
-            color = Color(red = 1f, green = 0f, blue = 0f, alpha = 1f)
+            color = Color(red = 1f, green = 0f, blue = 0f, alpha = 0.4f)
+            description = "dårlig"
         }
         else if (aqi <2){ //green
-            color = Color(red = 0f, green = 1f, blue = 0f, alpha = 1f)
+            color = Color(red = 0f, green = 1f, blue = 0f, alpha = 0.4f)
+            description = "god"
         }
         else { //yellow
-            color = Color(red = 1f, green = 1f, blue = 0f, alpha = 1f)
-
+            color = Color(red = 1f, green = 1f, blue = 0f, alpha = 0.4f)
+            description = "middels"
             //To fade between colors one could implement a function based on aqi-value e.g.:
             //color = Color(red = 1f*aqi.toFloat(), green = 1f*((2-aqi.toFloat())*2), blue = 0f, alpha = 1f)
 
 
         }
     } else {
+        description = "n/a"
         color = Color(red = 0f, green = 0f, blue = 0f, alpha = 0f)
 
     }
     Row(){
         Text(
-            text = "Luftkvalitet: $aqi ",
+            text = "Luftkvalitet:",
             modifier = Modifier
                 .padding(vertical = 10.dp, horizontal = 12.dp),
             style = MaterialTheme.typography.body1
         )
-        Canvas(modifier = Modifier.size(10.dp) .align(Alignment.CenterVertically), onDraw = {
-            drawCircle(color = color)
-        })
-
+        Text(
+            text = description,
+            modifier = Modifier
+                .background(color, RoundedCornerShape(4.dp))
+                .padding(horizontal = 12.dp, vertical = 3.dp)
+                .align(Alignment.CenterVertically),
+            style = MaterialTheme.typography.body1
+        )
+        Row() {
+            Text(
+                text = "($aqi)",
+                modifier = Modifier
+                    .padding(vertical = 10.dp, horizontal = 6.dp),
+                style = MaterialTheme.typography.body2,
+                color=Color.DarkGray
+            )
+        }
     }
 
 }
