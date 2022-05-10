@@ -11,21 +11,31 @@ import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.*
 import com.example.in2000team5.data_layer.datasource.AirQualityRemoteDataSource
+import com.example.in2000team5.data_layer.datasource.ServiceStation
 import com.example.in2000team5.data_layer.repository.BicycleRouteRepository
 import com.example.in2000team5.data_layer.repository.BicycleRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.in2000team5.data_layer.repository.AirQualityRepository
+import com.example.in2000team5.data_layer.repository.BicycleServiceRepository
+import java.io.InputStream
+import com.example.in2000team5.utils.Timer.Companion.countDown
+
 
 // Viewmodel for bicycle route data. Offers getters and methods to post values.
 class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
     private val airQualityRepository = AirQualityRepository(airQualityDataSource = AirQualityRemoteDataSource())
     private val bicycleRouteRepository = BicycleRouteRepository(appObj)
+    private val bicycleServiceRepository = BicycleServiceRepository()
     private val bicycleRoutes = SnapshotStateList<SnapshotMutableState<BicycleRoute>>()
+
+    // Pattern that encapsulates mutable state, only exposing state to the UI-layer
+    private val serviceStations = SnapshotStateList<SnapshotMutableState<ServiceStation>>()
     private val _isLoading: MutableState<Boolean> = mutableStateOf(true) // Used to decide when to close splash screen
     val isLoading: State<Boolean> = _isLoading
 
     init {
+        countDown(_isLoading)
         makeApiRequest()
         bicycleRouteRepository.addRoutesFromDatabase(bicycleRoutes)
     }
@@ -64,6 +74,22 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
         toast.show()
 
         return result
+    }
+
+    fun readServiceStations(inputStream: InputStream) {
+        viewModelScope.launch(Dispatchers.IO) {
+            bicycleServiceRepository.readServiceStations(inputStream, this@BicycleRouteViewModel)
+            Log.d("bicycleServiceStation", serviceStations.toString())
+        }
+
+    }
+
+    fun postServiceStations(station: SnapshotMutableState<ServiceStation>) {
+        serviceStations.add(station)
+    }
+
+    fun getServiceStations(): SnapshotStateList<SnapshotMutableState<ServiceStation>> {
+        return serviceStations
     }
 
     fun insertBicycleRoute(bicycleRoute: MutableState<BicycleRoute>) {

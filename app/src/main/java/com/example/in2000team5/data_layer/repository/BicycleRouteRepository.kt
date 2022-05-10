@@ -137,6 +137,7 @@ class BicycleRouteRepository(application: Application) {
         for (i in utmList.indices) {
             point1.x = utmList[i].component1().toDouble()
             point1.y = utmList[i].component2().toDouble()
+
             // Transform point
             trans.transform(point1, point2)
             // Adding list of transformed coordinates to the route
