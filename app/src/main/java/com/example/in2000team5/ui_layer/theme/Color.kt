@@ -9,3 +9,6 @@ val Teal200 = Color(0xFF03DAC5)
 
 
 val ServiceStationColor = Color(255,132,0)
+
+//SpinnerColor
+//RecyclerHeadLine

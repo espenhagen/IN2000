@@ -228,7 +228,7 @@ fun customSpinner (choices: MutableList<String>):String{
                 expanded = !expanded
             }
             .padding(2.dp)
-            .border(1.dp, Color.LightGray, RectangleShape)
+            .border(2.dp, Color.LightGray, RoundedCornerShape(3.dp))
             .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
