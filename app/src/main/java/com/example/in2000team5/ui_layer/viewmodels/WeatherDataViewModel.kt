@@ -3,13 +3,10 @@ package com.example.in2000team5.ui_layer.viewmodels
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.*
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.in2000team5.data_layer.datasource.Timeseries
+import com.example.in2000team5.data_layer.repository.WeatherTimeDetails
 import com.example.in2000team5.data_layer.repository.WeatherDataRepository
-import com.example.in2000team5.data_layer.repository.WeatherDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -22,7 +19,8 @@ class WeatherDataViewModel: ViewModel() {
     private val liveWindDirection = MutableLiveData<Double?>()
     */
     private val weatherRepository = WeatherDataRepository()
-    var weatherTimes = mutableStateOf(WeatherDetails(emptyList()))
+    val currentWeatherData = mutableStateOf(WeatherTimeDetails(null))
+    var weatherTimes = mutableListOf<WeatherTimeDetails>()
 
     init {
         // Hardkodet til midt i oslo
@@ -37,56 +35,19 @@ class WeatherDataViewModel: ViewModel() {
     fun fetchWeather(lat: String, lon: String) {
         viewModelScope.launch(Dispatchers.IO) {
             weatherRepository.processWeatherData(lat, lon, this@WeatherDataViewModel)
-            _isLoading.value = false
         }
     }
 
 
     // metoder under blir kalt fra WeatherDataRepository for å oppdatere liveDataobjekter
-    fun postWeatherObj(list : List<Timeseries>){
-        weatherTimes.value.addList(list)
+    fun postWeatherTimeDetailsList(list : List<WeatherTimeDetails>){
+        weatherTimes.addAll(list as Collection<WeatherTimeDetails>)
         _isLoading.value = false
     }
 
-    /*
-    fun getSymbolName(): String? {
-        return liveSymbol.value
+    // metoder under blir kalt fra WeatherDataRepository for å oppdatere liveDataobjekter
+    fun postCurrentWeatherDetails(weatherTimeDetails : WeatherTimeDetails){
+        currentWeatherData.value = weatherTimeDetails
     }
-
-
-    fun getTemperature(): Double? {
-        return liveTemperature.value
-    }
-
-
-
-    fun getWindSpeed(): Double?{
-        return liveWindSpeed.value
-    }
-
-    fun getWindDirection(): Double? {
-        return liveWindDirection.value
-    }
-
-
-
-
-    fun postTemperature(temp: Double?) {
-        liveTemperature.postValue(temp)
-    }
-
-    fun postSymbol(symbol: String?) {
-        liveSymbol.postValue(symbol)
-    }
-
-    fun postWindSpeed(speed: Double?) {
-        liveWindSpeed.postValue(speed)
-    }
-
-    fun postWindDirection(dir: Double?) {
-        liveWindDirection.postValue(dir)
-    }
-    */
-
 
 }

@@ -1,13 +1,11 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -19,11 +17,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.BottomNavItem
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
-import com.example.in2000team5.utils.MetUtils
-import java.lang.Exception
-import java.util.NoSuchElementException
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomNavigationBar(
     items: List<BottomNavItem>,
@@ -72,10 +66,10 @@ fun InfoRow(model: WeatherDataViewModel) {
         Row (Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceEvenly){
 
             val context = LocalContext.current
-            val id = if (model.weatherTimes.value.currentWeatherSymbol.value == null){
+            val id = if (model.currentWeatherData.value.currentWeatherSymbol.value == null){
                 R.drawable.unknown
             } else{
-                context.resources.getIdentifier(model.weatherTimes.value.currentWeatherSymbol.value, "drawable",context.packageName )
+                context.resources.getIdentifier(model.currentWeatherData.value.currentWeatherSymbol.value, "drawable",context.packageName )
             }
 
 
@@ -88,12 +82,11 @@ fun InfoRow(model: WeatherDataViewModel) {
             )
 
             Text(
-                text = "${model.weatherTimes.value.currentTemperature.value}°C",
+                text = "${model.currentWeatherData.value.currentTemperature.value}°C",
                 style = MaterialTheme.typography.h4,
                 modifier = Modifier
                     .align(alignment = Alignment.CenterVertically)
                     .padding(horizontal = 6.dp)
-
             )
 
             Column(
@@ -106,7 +99,7 @@ fun InfoRow(model: WeatherDataViewModel) {
                         .align(alignment = Alignment.CenterHorizontally)
                 )
                 Text(
-                    text = "${model.weatherTimes.value.currentTemperature.value} mm",
+                    text = "${model.currentWeatherData.value.rainNextHour.value} mm",
                     style = MaterialTheme.typography.h5,
                     modifier = Modifier
                         .align(alignment = Alignment.CenterHorizontally)
