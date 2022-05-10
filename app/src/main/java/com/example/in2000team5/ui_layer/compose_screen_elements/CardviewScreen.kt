@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.GoogleMapOptions
