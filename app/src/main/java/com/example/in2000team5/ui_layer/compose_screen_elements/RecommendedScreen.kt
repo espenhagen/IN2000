@@ -14,19 +14,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.utils.MetUtils
+import com.example.in2000team5.utils.MetUtils.Companion.getWindDirectionDescription
 import com.example.in2000team5.utils.SupportInfo
-import com.example.in2000team5.utils.WeatherDetails
 
-val weatherDetailsObject = WeatherDetails()
-val cloathingSupportList = mutableStateListOf<String>()
+
+//val weatherDetailsObject = WeatherDetails()
+val cloatingSupportList = mutableStateListOf<String>()
 val itemSupportList = mutableStateListOf<String>()
 val checkList = SupportInfo.getChecklist()
 
+val timeSliderData = SupportInfo.TimeSliderData()
 
 @Composable
 fun SupportScreen(model: WeatherDataViewModel) {
@@ -41,9 +47,8 @@ fun SupportScreen(model: WeatherDataViewModel) {
         color = MaterialTheme.colors.background
     ) {
         Column {
-            if(model.weatherTimes.size!=0){
-                TimeSlide(model)
-            }
+
+            TimeSlide(model)
 
             LazyColumn{
 
@@ -51,7 +56,7 @@ fun SupportScreen(model: WeatherDataViewModel) {
                     WeatherDetailsBox()
                 }
                 item{
-                    CloathingSupportBox()
+                    CloatingSupportBox()
                 }
                 item{
                     ChecklistBox()
@@ -68,12 +73,13 @@ fun updateSupportData(
     model: WeatherDataViewModel,
     sliderPosition: ClosedFloatingPointRange<Float>
 ) {
-
+    timeSliderData.updateList(model.weatherTimes)
     val start = sliderPosition.start.toInt()
-    val end = sliderPosition.endInclusive.toInt() +1
-    weatherDetailsObject.update(model.weatherTimes.subList(start,end))
-    SupportInfo.getRecommendedClothing2(weatherDetailsObject, cloathingSupportList)
-    SupportInfo.getRecommendedItems(weatherDetailsObject, itemSupportList)
+    val end = sliderPosition.endInclusive.toInt() +2
+
+    timeSliderData.update(start,end)
+    SupportInfo.getRecommendedClothing(timeSliderData, cloatingSupportList)
+    SupportInfo.getRecommendedItems(timeSliderData, itemSupportList)
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -83,14 +89,14 @@ fun TimeSlide(model: WeatherDataViewModel) {
     updateSupportData(model, sliderPosition)
     Column(modifier = Modifier.padding(20.dp)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceEvenly) {
-            Text(text = "Fra " + MetUtils.getDateAndHour(model.weatherTimes[sliderPosition.start.toInt()].time.toString()))
-            Text(text = "Til " + MetUtils.getDateAndHour(model.weatherTimes[sliderPosition.endInclusive.toInt()].time.toString()))
+            Text(text = "Fra " + MetUtils.getDateAndHour(timeSliderData.getTimeOfIndex(sliderPosition.start.toInt())))
+            Text(text = "Til " + MetUtils.getDateAndHour(timeSliderData.getTimeOfIndex(sliderPosition.endInclusive.toInt()+1)))
         }
 
         RangeSlider(
             values = sliderPosition,
             onValueChange = { sliderPosition = it },
-            valueRange = 0f..model.weatherTimes.lastIndex.toFloat(),
+            valueRange = 0f..(timeSliderData.getSizeOfList()).toFloat(),
             onValueChangeFinished = {
                 updateSupportData(model, sliderPosition)
             }
@@ -134,11 +140,12 @@ fun WeatherDetailsBox() {
             Column(modifier = Modifier
                 .align(alignment = Alignment.CenterVertically)
             ) {
-                Text(text = "${weatherDetailsObject.minTemperature.value}°C min")
-                Text(text = "${weatherDetailsObject.maxTemperature.value}°C max")
-                Text(text = "${weatherDetailsObject.averageTemperature.value}°C snitt")
+                Text(text = "${timeSliderData.minTemperature.value}°C min")
+                Text(text = "${timeSliderData.maxTemperature.value}°C max")
+                Text(text = "${timeSliderData.averageTemperature.value}°C snitt")
 
             }
+
 
             Image(
                 painter = painterResource(R.drawable.unknown),
@@ -165,8 +172,8 @@ fun WeatherDetailsBox() {
             Column(modifier = Modifier
                     .align(alignment = Alignment.CenterVertically)
             ) {
-                Text(text = "${weatherDetailsObject.totalRain.value} mm totalt")
-                Text(text = "${weatherDetailsObject.maxRain.value} mm/h max")
+                Text(text = "${timeSliderData.totalRain.value} mm totalt")
+                Text(text = "${timeSliderData.maxRain.value} mm/h max")
             }
             Image(
                 painter = painterResource(R.drawable.unknown),
@@ -195,24 +202,36 @@ fun WeatherDetailsBox() {
             Column(modifier = Modifier
                 .align(alignment = Alignment.CenterVertically)
             ) {
-                Text(text = "${weatherDetailsObject.maxWind.value} m/s max")
-                Text(text = "${weatherDetailsObject.averageWind.value} m/s snitt")
+                Text(text = "${timeSliderData.maxWind.value} m/s max")
+                Text(text = "${timeSliderData.averageWind.value} m/s snitt")
+            }
+            Column(){
+                Image(
+                    painter = painterResource(R.drawable.wind_arrow),
+                    contentDescription = "Vindretning",
+                    Modifier
+                        .rotate(timeSliderData.windDirection.value)
+                        .padding(horizontal = 20.dp, vertical = 10.dp)
+                        .size(40.dp)
+                )
+                Text(
+                    buildAnnotatedString {
+                        append("Retning:  ")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append(getWindDirectionDescription(timeSliderData.windDirection.value))
+                        }
+                    },
+                    Modifier
+                        .align(Alignment.CenterHorizontally)
+                )
             }
 
-            Image(
-                painter = painterResource(R.drawable.wind_arrow),
-                contentDescription = "Vindretning",
-                Modifier
-                    .rotate(weatherDetailsObject.windDirection.value)
-                    .padding(horizontal = 20.dp, vertical = 10.dp)
-                    .size(40.dp)
-            )
         }
 
 
             Column {
-                if (weatherDetailsObject.isDark.value || weatherDetailsObject.isSuncremRecomended.value || weatherDetailsObject.isSlippery.value) {
-                    if (weatherDetailsObject.isDark.value) {
+                if (timeSliderData.isDark.value || timeSliderData.isSuncremRecomended.value || timeSliderData.isSlippery.value) {
+                    if (timeSliderData.isDark.value) {
                         Text(
                             text = "Det kan være mørkt i løpet av turen!",
                             modifier = Modifier
@@ -221,7 +240,7 @@ fun WeatherDetailsBox() {
                                 .padding(4.dp)
                         )
                     }
-                    if (weatherDetailsObject.isSuncremRecomended.value) {
+                    if (timeSliderData.isSuncremRecomended.value) {
                         Text(
                             text = "Anbefaler solkrem!",
                             modifier = Modifier
@@ -231,7 +250,7 @@ fun WeatherDetailsBox() {
                         )
 
                     }
-                    if (weatherDetailsObject.isSlippery.value) {
+                    if (timeSliderData.isSlippery.value) {
                         Text(
                             text = "Det kan være glatt!",
                             modifier = Modifier
@@ -254,7 +273,7 @@ fun WeatherDetailsBox() {
 }
 
 @Composable
-fun CloathingSupportBox() {
+fun CloatingSupportBox() {
     Column(
         Modifier
             .padding(6.dp)
@@ -285,7 +304,7 @@ fun CloathingSupportBox() {
                 .padding(20.dp)
             ){
                 Text(text = "Klær:", textDecoration = TextDecoration.Underline)
-                cloathingSupportList.forEach {
+                cloatingSupportList.forEach {
                     Text(text = it)
                 }
 
@@ -367,6 +386,7 @@ fun CreditBox() {
         }
     }
 }
+
 
 
 

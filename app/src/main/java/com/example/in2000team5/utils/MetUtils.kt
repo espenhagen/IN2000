@@ -29,8 +29,8 @@ class MetUtils {
             return false
         }
 
-        fun getDateAndHour(time: String) : String{
-
+        fun getDateAndHour(time: String?) : String{
+            if (time.isNullOrEmpty())return "ukjent";
             if(isNowTime(time)){
                 return "Nå"
             }
@@ -113,6 +113,29 @@ class MetUtils {
         }
 
  */
+        fun getWindDirectionDescription(deg:Float) : String {
+            val deg = deg.toLong()
+            return when {
+                LongRange(12,33).contains(deg) -> "NNE"
+                LongRange(34,56).contains(deg) -> "NE"
+                LongRange(57,78).contains(deg) -> "ENE"
+                LongRange(79,101).contains(deg) -> "E"
+                LongRange(102,123).contains(deg) -> "ESE"
+                LongRange(124,146).contains(deg) -> "SE"
+                LongRange(147,168).contains(deg) -> "SSE"
+                LongRange(169,191).contains(deg) -> "S"
+                LongRange(192,213).contains(deg) -> "SSW"
+                LongRange(214,236).contains(deg) -> "SW"
+                LongRange(237,258).contains(deg) -> "WSW"
+                LongRange(259,281).contains(deg) -> "W"
+                LongRange(282,303).contains(deg) -> "WNW"
+                LongRange(304,326).contains(deg) -> "NW"
+                LongRange(327,348).contains(deg) -> "NNW"
+                else -> {
+                    "N"
+                }
+            }
+        }
     }
 }
 

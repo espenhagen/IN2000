@@ -1,32 +1,28 @@
 package com.example.in2000team5.ui_layer
 
-import android.annotation.SuppressLint
-import android.icu.text.IDNA
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
+import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Place
-import com.example.in2000team5.ui_layer.theme.IN2000Team5Theme
-import androidx.activity.ComponentActivity
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotMutableState
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.in2000team5.R
-import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.ui_layer.compose_screen_elements.*
+import com.example.in2000team5.ui_layer.theme.IN2000Team5Theme
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import java.util.*
@@ -36,27 +32,28 @@ class MainActivity : ComponentActivity() {
     private lateinit var bicycleRouteViewModel: BicycleRouteViewModel
     private val weatherDataViewModel: WeatherDataViewModel by viewModels()
 
+    //Kan brukes til å vise om man har internett eller ikke.
+    /*private fun isNetworkConnected(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnected
+    }*/
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bicycleRouteViewModel = ViewModelProvider(this)[BicycleRouteViewModel::class.java]
 
-        //TODO flytte inn i init i bicycleRouteViewModel
-        bicycleRouteViewModel.readServiceStations(this.resources.openRawResource(R.raw.stasjoner))
+            bicycleRouteViewModel = ViewModelProvider(this)[BicycleRouteViewModel::class.java]
 
-        // Display splash until viewModel init is not loading anymore
-        // Splash screen shows only when app is started from launcher or phone, not from AS
-        installSplashScreen().setKeepOnScreenCondition {
-            bicycleRouteViewModel.isLoading.value
-        }
-
-        // TODO: sjekk om dette kan dyttes i en init-blokk i viewmodel-klassen, og om det må endres etter posisjon hentes
-        // weatherDataViewModel.fetchWeather("59.91370670", "10.7526291")
-
-        setContent {
-            IN2000Team5Theme {
-                BottomNavigation(weatherDataViewModel, bicycleRouteViewModel)
+            // Display splash until viewModel init is not loading anymore
+            // Splash screen shows only when app is started from launcher or phone, not from AS
+            installSplashScreen().setKeepOnScreenCondition {
+                bicycleRouteViewModel.isLoading.value
             }
-        }
+            setContent {
+                IN2000Team5Theme {
+                    BottomNavigation(weatherDataViewModel, bicycleRouteViewModel)
+                }
+            }
+
     }
 }
 
