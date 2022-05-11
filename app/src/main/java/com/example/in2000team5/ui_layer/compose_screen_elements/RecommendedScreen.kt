@@ -146,7 +146,7 @@ fun WeatherDetailsBox() {
 
             }
 
-            }
+
             Image(
                 painter = painterResource(R.drawable.unknown),
                 contentDescription = "Bilde kommer",
