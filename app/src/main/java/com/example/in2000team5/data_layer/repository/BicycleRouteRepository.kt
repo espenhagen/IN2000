@@ -179,20 +179,22 @@ class BicycleRouteRepository(application: Application) {
     fun addRouteFromUser(bicycleRouteViewModel: BicycleRouteViewModel, context: Context, start: String, end: String): Boolean {
         val geocoder = Geocoder(context)
         val startLatLng = getCoordinatesFromName(geocoder, start)
-        val sluttLatLng = getCoordinatesFromName(geocoder, end)
+        val endLatLng = getCoordinatesFromName(geocoder, end)
 
         val latLngList: MutableList<List<LatLng>?>
         var isAdded = false
+        val startUpper = start[0].uppercase() + start.subSequence(1, start.length)
+        val endUpper = end[0].uppercase() + end.subSequence(1, end.length)
 
-        if (startLatLng != null && sluttLatLng != null) {
-            latLngList = mutableListOf(listOf(startLatLng, sluttLatLng))
+        if (startLatLng != null && endLatLng != null) {
+            latLngList = mutableListOf(listOf(startLatLng, endLatLng))
             val length = userInputRouteLength(latLngList[0]!!)
             val totalRoutes = ++numOfRoutesInDatabase + existingRoutes
             val nyRute = mutableStateOf(BicycleRoute(
                 totalRoutes,
                 latLngList,
-                start,
-                end,
+                startUpper,
+                endUpper,
                 length,
                 mutableStateOf(null)
             ))
