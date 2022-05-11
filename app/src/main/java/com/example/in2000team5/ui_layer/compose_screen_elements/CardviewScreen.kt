@@ -40,7 +40,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) {
-    val choices = mutableListOf("ID (lav-høy)", "Luftkvalitet (lav-høy)", "Lengde (kortest-lengst)", "Alfabetisk (a-å)")
+    val choices = mutableListOf("ID (lav-høy)", "Luftkvalitet (bra-dårlig)", "Lengde (kortest-lengst)", "Alfabetisk (a-å)")
     var valg: String by remember { mutableStateOf(choices[0]) }
 
     Column {
