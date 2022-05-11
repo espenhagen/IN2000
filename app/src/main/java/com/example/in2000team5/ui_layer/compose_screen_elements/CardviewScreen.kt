@@ -57,7 +57,7 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
 
                     }
                 }
-                "Luftkvalitet (lav-høy)" -> {
+                "Luftkvalitet (bra-dårlig)" -> {
                     items(ruter.sortedBy { it.value.AQI.value }) { rute ->
                         if(rute.value.id > 0) BicycleRouteCard(rute)
 
