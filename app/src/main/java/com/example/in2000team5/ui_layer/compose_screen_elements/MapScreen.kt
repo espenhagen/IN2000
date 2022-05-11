@@ -1,15 +1,23 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
+import android.graphics.Paint
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
+import com.example.in2000team5.R
+import com.example.in2000team5.ui_layer.theme.ServiceStationColor
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.model.CameraPosition
@@ -21,7 +29,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
     var openDialog by remember { mutableStateOf(false) }
     var info by remember { mutableStateOf("")}
     var title by remember { mutableStateOf("")}
-    var showStations by remember { mutableStateOf(false) }
+    var showStations by remember { mutableStateOf(true) }
 
 
     val oslo = LatLng(59.9139, 10.7522)
@@ -69,9 +77,9 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
                         Circle(
                             it.coordinates,
                             true,
-                            Color(100, 100, 255),
+                            ServiceStationColor,
                             100.0,
-                            Color(0, 0, 0),
+                            ServiceStationColor,
                             null,
                             0.0F,
                             null,
@@ -123,21 +131,32 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
             modifier = Modifier
 
                 .align(Alignment.TopEnd)
-                .offset(x = -5.dp),
+                .offset(x=-10.dp, y=5.dp),
+
             onClick = {
                 showStations = !showStations
-            }
+            },
+            colors = buttonColors(ServiceStationColor, Color.Black)
         ) {
+            Column() {
+                Image(
+                    painterResource(id = R.drawable.servicestations),
+                    contentDescription = "Service Station Button Icon",
+                    modifier = Modifier.size(40.dp)
+                )
+                val buttonText = if (showStations) {
+                    "Skjul"
+                } else {
+                    "Vis"
+                }
+                Text(text = buttonText,
+                    Modifier
+                        .padding(start = 0.dp)
+                        .align(alignment = Alignment.CenterHorizontally)
+                )
 
-            /*Image(
-                painterResource(id = R.drawable.unknown),
-                contentDescription = "Cart button icon",
-                modifier = Modifier.size(40.dp)
-            )*/
-
-            Text(text = "Vis sykkelrep", Modifier.padding(start = 0.dp))
+            }
         }
-
 
     }
 }

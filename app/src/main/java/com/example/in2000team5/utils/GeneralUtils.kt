@@ -1,6 +1,7 @@
 package com.example.in2000team5.utils
 
 import android.content.Context
+import android.net.ConnectivityManager
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ class GeneralUtils {
 
 
     }
+
 
 
 }

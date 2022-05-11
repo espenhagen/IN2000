@@ -1,5 +1,6 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,11 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.utils.MetUtils
+import com.example.in2000team5.utils.MetUtils.Companion.getWindDirectionDescription
 import com.example.in2000team5.utils.SupportInfo
 
 
@@ -100,7 +106,6 @@ fun TimeSlide(model: WeatherDataViewModel) {
 
 @Composable
 fun WeatherDetailsBox() {
-
     Column(
         Modifier
             .padding(6.dp)
@@ -116,7 +121,6 @@ fun WeatherDetailsBox() {
             modifier = Modifier
                 .padding(4.dp)
                 .align(alignment = Alignment.CenterHorizontally)
-
         )
         Row (
             verticalAlignment = Alignment.Top,
@@ -140,6 +144,7 @@ fun WeatherDetailsBox() {
                 Text(text = "${timeSliderData.maxTemperature.value}°C max")
                 Text(text = "${timeSliderData.averageTemperature.value}°C snitt")
 
+            }
 
             }
             Image(
@@ -200,16 +205,29 @@ fun WeatherDetailsBox() {
                 Text(text = "${timeSliderData.maxWind.value} m/s max")
                 Text(text = "${timeSliderData.averageWind.value} m/s snitt")
             }
+            Column(){
+                Image(
+                    painter = painterResource(R.drawable.wind_arrow),
+                    contentDescription = "Vindretning",
+                    Modifier
+                        .rotate(timeSliderData.windDirection.value)
+                        .padding(horizontal = 20.dp, vertical = 10.dp)
+                        .size(40.dp)
+                )
+                Text(
+                    buildAnnotatedString {
+                        append("Retning:  ")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append(getWindDirectionDescription(timeSliderData.windDirection.value))
+                        }
+                    },
+                    Modifier
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
 
-            Image(
-                painter = painterResource(R.drawable.wind_arrow),
-                contentDescription = "Vindretning",
-                Modifier
-                    .rotate(timeSliderData.windDirection.value)
-                    .padding(horizontal = 20.dp, vertical = 10.dp)
-                    .size(40.dp)
-            )
         }
+
 
             Column {
                 if (timeSliderData.isDark.value || timeSliderData.isSuncremRecomended.value || timeSliderData.isSlippery.value) {

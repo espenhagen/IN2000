@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.*
+import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.datasource.AirQualityRemoteDataSource
 import com.example.in2000team5.data_layer.datasource.ServiceStation
 import com.example.in2000team5.data_layer.repository.BicycleRouteRepository
@@ -38,6 +39,7 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
         countDown(_isLoading)
         makeApiRequest()
         bicycleRouteRepository.addRoutesFromDatabase(bicycleRoutes)
+        readServiceStations(appObj.resources.openRawResource(R.raw.stasjoner))
     }
 
     // Uses thread to calculate AQI-index for bicycle route asynchronously
