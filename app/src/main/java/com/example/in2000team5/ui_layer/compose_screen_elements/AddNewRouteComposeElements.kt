@@ -87,7 +87,6 @@ fun CreateDialog(showForm: MutableState<Boolean>,
         text = content,
         confirmButton = {
             TextButton(onClick = {
-                Log.d("TEST LEGG TIL", start.value + " - " + end.value)
                 if (bicycleRouteViewModel.addRouteFromUser(context, start.value, end.value))
                     showForm.value = false
             })
@@ -122,7 +121,7 @@ fun StartAndEndInput(
             modifier = Modifier.fillMaxWidth(),
             value = start.value,
             onValueChange = { start.value = it },
-            label = { Text("Start") },
+            label = { Text("Start: (Eks. Forskningsparken) ") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
@@ -137,7 +136,7 @@ fun StartAndEndInput(
             modifier = Modifier.fillMaxWidth(),
             value = end.value,
             onValueChange = { end.value = it },
-            label = { Text("Slutt") },
+            label = { Text("Slutt: (Eks. Nydalen)") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
