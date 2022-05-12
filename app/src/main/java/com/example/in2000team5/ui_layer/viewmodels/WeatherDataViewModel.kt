@@ -1,5 +1,6 @@
 package com.example.in2000team5.ui_layer.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +30,10 @@ class WeatherDataViewModel: ViewModel() {
     // TODO: ikke private ennå siden vi potensielt tar inn brukerens lokasjon
     fun fetchWeather(lat: String, lon: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            val start = System.nanoTime()
             weatherRepository.processWeatherData(lat, lon, this@WeatherDataViewModel)
+            val end = (System.nanoTime()) - start
+            Log.i("WeatherDataViewModel.fetchWeather", "Elapsed time: ${end} ns.")
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.in2000team5.ui_layer.viewmodels
 
 import android.app.Application
 import android.content.Context
+import android.telephony.PhoneNumberUtils.formatNumber
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
@@ -36,10 +37,13 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
     val isLoading: State<Boolean> = _isLoading
 
     init {
+        val start = System.nanoTime()
         countDown(_isLoading)
         makeApiRequest()
         bicycleRouteRepository.addRoutesFromDatabase(bicycleRoutes)
         readServiceStations(appObj.resources.openRawResource(R.raw.stasjoner))
+        val end = (System.nanoTime()) - start
+        Log.i("BicycleRouteViewModel.<init>", "Elapsed time: ${end} ns.")
     }
 
     // Uses thread to calculate AQI-index for bicycle route asynchronously
@@ -52,7 +56,10 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
 
     private fun makeApiRequest() {
         viewModelScope.launch(Dispatchers.IO) {
+            val start = System.nanoTime()
             bicycleRouteRepository.makeBigRoutes(this@BicycleRouteViewModel)
+            val end = (System.nanoTime()) - start
+            Log.i("BicycleRouteViewModel.makeApiRequest", "Elapsed time: ${end} ns.")
             _isLoading.value = false
         }
     }

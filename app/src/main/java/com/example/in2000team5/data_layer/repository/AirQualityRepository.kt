@@ -22,6 +22,7 @@ class AirQualityRepository(
      * The average is calculated on selected routes, which the method itself selects.
      */
     suspend fun fetchAvgAirQualityAtRoute(routeList: MutableList<List<LatLng>?>): Double {
+        val start = System.nanoTime()
         val numberOfFragments = routeList.size
 
         var globalTotalAirQualityIndex = 0.0
@@ -55,6 +56,8 @@ class AirQualityRepository(
                 }
             }
         }
+        val end = (System.nanoTime()) - start
+        Log.i("AirQualityRepository.fetchAvgAirQualityAtRoute", "Elapsed time: ${end} ns.")
         return globalTotalAirQualityIndex.div(globalSampledPoints).round(3)
     }
 

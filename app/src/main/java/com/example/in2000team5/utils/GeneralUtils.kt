@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import java.text.DecimalFormat
 
 class GeneralUtils {
 
@@ -21,6 +22,11 @@ class GeneralUtils {
         }
 
 
+    }
+
+    fun formatNumber(value: Long): String {
+        val df = DecimalFormat("###,###,###")
+        return df.format(value)
     }
 
 
