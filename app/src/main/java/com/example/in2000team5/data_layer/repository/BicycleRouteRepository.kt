@@ -6,6 +6,7 @@ import android.content.Context
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
@@ -146,7 +147,8 @@ class BicycleRouteRepository(application: Application) {
         return routes
     }
 
-    private fun getCoordinatesFromName(geocoder: Geocoder, name: String): LatLng? {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun getCoordinatesFromName(geocoder: Geocoder, name: String): LatLng? {
         if (name.isEmpty()) return null
         val response = geocoder.getFromLocationName(name, 1)
         if (response.size < 1) return null
