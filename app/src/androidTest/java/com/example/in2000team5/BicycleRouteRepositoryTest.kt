@@ -6,6 +6,8 @@ import android.location.Geocoder
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.in2000team5.data_layer.repository.BicycleRouteRepository
+import com.google.android.gms.maps.model.LatLng
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,6 +28,8 @@ class BicycleRouteRepositoryTest {
     fun getXXFromOslo() {
         val repo = BicycleRouteRepository(application = Application())
         val result = repo.getCoordinatesFromName(geocoder, "Oslo")
+
+        assertEquals(LatLng(59.91370670, 10.7526291), result)
     }
 
 }
