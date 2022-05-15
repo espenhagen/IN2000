@@ -55,13 +55,11 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
                 choices[0] -> {
                     items(ruter.sortedBy { it.value.id }) { rute ->
                         if(rute.value.id > 0) BicycleRouteCard(rute)
-
                     }
                 }
                 choices[1] -> {
                     items(ruter.sortedBy { it.value.AQI.value }) { rute ->
                         if(rute.value.id > 0) BicycleRouteCard(rute)
-
                     }
                 }
                 choices[2] -> {
@@ -83,7 +81,6 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
         }
     }
 }
-
 
 @Composable
 fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
@@ -121,7 +118,6 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                             .align(
                                 Alignment.CenterVertically
                             )
-
                     )
                 }
             }
