@@ -23,6 +23,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -101,7 +103,8 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
             ) { isExpanded = !isExpanded }
         ) {
             //Headline
-            Row(modifier = Modifier.fillMaxWidth()){
+            // heading()-modifier, because of accessibility for users
+            Row(modifier = Modifier.fillMaxWidth().semantics { heading() }){
                 Text(
                     text = "${rute.value.start} - ${rute.value.end}",
                     color = MaterialTheme.colors.secondaryVariant,

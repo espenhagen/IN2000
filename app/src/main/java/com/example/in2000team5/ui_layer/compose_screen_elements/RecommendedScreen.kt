@@ -146,7 +146,7 @@ fun WeatherDetailsBox() {
 
             Image(
                 painter = painterResource(R.drawable.temperature),
-                contentDescription = "Bilde kommer",
+                contentDescription = "Temperatur",
                 Modifier
                     .padding(horizontal = 20.dp, vertical = 10.dp)
                     .size(40.dp)
@@ -175,7 +175,7 @@ fun WeatherDetailsBox() {
             }
             Image(
                 painter = painterResource(R.drawable.raindrop),
-                contentDescription = "Bilde kommer",
+                contentDescription = "Nedbør",
                 Modifier
                     .padding(horizontal = 20.dp, vertical = 10.dp)
                     .size(40.dp)
