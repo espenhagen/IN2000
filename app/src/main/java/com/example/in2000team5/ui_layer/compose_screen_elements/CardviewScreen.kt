@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -258,7 +259,10 @@ fun customSpinner (choices: MutableList<String>):String{
                 },
                 Modifier
                     .padding(all =5.dp))
-            Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
+            Icon (
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = stringResource(R.string.sort_by)
+            )
         }
         DropdownMenu(
             expanded = expanded,
