@@ -10,9 +10,8 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -66,7 +65,7 @@ fun BottomNavigation(weatherDataViewModel: WeatherDataViewModel, bicycleRouteVie
             BottomNavigationBar(
                 items = listOf(
                     BottomNavItem(name = "Kart", route = "kart", icon = Icons.Default.Place),
-                    BottomNavItem(name = "Ruter", route = "ruter", icon = Icons.Default.ArrowForward),
+                    BottomNavItem(name = "Ruter", route = "ruter", icon = Icons.Default.Menu),
                     BottomNavItem(name = "Om", route = "om", icon = Icons.Default.Info)
                 ),
                 navController = navController,

@@ -14,11 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
@@ -124,13 +120,14 @@ fun WeatherDetailsBox() {
         )
         Row (
             verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.LightGray)
+                .padding(10.dp)
                 ){
             Text(
-                text = "Temperatur: ",
+                text = "Temp: ",
                 style = MaterialTheme.typography.h5,
                 modifier = Modifier
                     .align(alignment = Alignment.CenterVertically)
@@ -148,7 +145,7 @@ fun WeatherDetailsBox() {
 
 
             Image(
-                painter = painterResource(R.drawable.unknown),
+                painter = painterResource(R.drawable.temperature),
                 contentDescription = "Bilde kommer",
                 Modifier
                     .padding(horizontal = 20.dp, vertical = 10.dp)
@@ -157,9 +154,10 @@ fun WeatherDetailsBox() {
         }
         Row (
             verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(10.dp)
         ){
             Text(
                 text = "Nedbør: ",
@@ -176,7 +174,7 @@ fun WeatherDetailsBox() {
                 Text(text = "${timeSliderData.maxRain.value} mm/h max")
             }
             Image(
-                painter = painterResource(R.drawable.unknown),
+                painter = painterResource(R.drawable.raindrop),
                 contentDescription = "Bilde kommer",
                 Modifier
                     .padding(horizontal = 20.dp, vertical = 10.dp)
@@ -186,10 +184,11 @@ fun WeatherDetailsBox() {
 
         Row (
             verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.LightGray)
+                .padding(10.dp)
         ){
             Text(
                 text = "Vind: ",
@@ -201,6 +200,7 @@ fun WeatherDetailsBox() {
             )
             Column(modifier = Modifier
                 .align(alignment = Alignment.CenterVertically)
+
             ) {
                 Text(text = "${timeSliderData.maxWind.value} m/s max")
                 Text(text = "${timeSliderData.averageWind.value} m/s snitt")
@@ -215,14 +215,8 @@ fun WeatherDetailsBox() {
                         .size(40.dp)
                 )
                 Text(
-                    buildAnnotatedString {
-                        append("Retning:  ")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(getWindDirectionDescription(timeSliderData.windDirection.value))
-                        }
-                    },
-                    Modifier
-                        .align(Alignment.CenterHorizontally)
+                    text = getWindDirectionDescription(timeSliderData.windDirection.value),
+                    Modifier.align(alignment = Alignment.CenterHorizontally)
                 )
             }
 
