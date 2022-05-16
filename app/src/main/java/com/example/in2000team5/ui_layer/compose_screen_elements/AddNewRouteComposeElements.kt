@@ -16,9 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 
 @Composable
@@ -33,7 +35,7 @@ fun ShowNewRouteButton(bicycleRouteViewModel: BicycleRouteViewModel) {
                 onClick = {
                     showForm.value = true
                 }) {
-                Icon(imageVector = Icons.Default.Add, "")
+                Icon(imageVector = Icons.Default.Add, stringResource(R.string.add_new_route_button))
             }
         }
     )
@@ -70,7 +72,7 @@ fun CreateDialog(showForm: MutableState<Boolean>,
                  end: MutableState<String>,
                  bicycleRouteViewModel: BicycleRouteViewModel,
                  content: @Composable (() -> Unit)? = null
-                  )
+                 )
 {
     val context = LocalContext.current
 

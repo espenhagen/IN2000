@@ -22,12 +22,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.in2000team5.R
 import com.example.in2000team5.data_layer.repository.BicycleRoute
 import com.example.in2000team5.utils.GeneralUtils.Companion.round
 import com.example.in2000team5.utils.RouteUtils
@@ -54,13 +58,11 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
                 choices[0] -> {
                     items(ruter.sortedBy { it.value.id }) { rute ->
                         if(rute.value.id > 0) BicycleRouteCard(rute)
-
                     }
                 }
                 choices[1] -> {
                     items(ruter.sortedBy { it.value.AQI.value }) { rute ->
                         if(rute.value.id > 0) BicycleRouteCard(rute)
-
                     }
                 }
                 choices[2] -> {
@@ -83,7 +85,6 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
     }
 }
 
-
 @Composable
 fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
     Surface(
@@ -97,10 +98,13 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
         var isExpanded by remember { mutableStateOf(false) }
 
         Column(modifier = Modifier
-            .clickable { isExpanded = !isExpanded }
+            .clickable(
+                onClickLabel = (if (isExpanded) R.string.minimize_card else R.string.expand_card).toString()
+            ) { isExpanded = !isExpanded }
         ) {
             //Headline
-            Row(modifier = Modifier.fillMaxWidth()){
+            // heading()-modifier, because of accessibility for users
+            Row(modifier = Modifier.fillMaxWidth().semantics { heading() }){
                 Text(
                     text = "${rute.value.start} - ${rute.value.end}",
                     color = MaterialTheme.colors.secondaryVariant,
@@ -118,7 +122,6 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                             .align(
                                 Alignment.CenterVertically
                             )
-
                     )
                 }
             }
@@ -259,7 +262,10 @@ fun customSpinner (choices: MutableList<String>):String{
                 },
                 Modifier
                     .padding(all =5.dp))
-            Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
+            Icon (
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = stringResource(R.string.sort_by)
+            )
         }
         DropdownMenu(
             expanded = expanded,

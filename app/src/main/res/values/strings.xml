@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">IN2000 Team 5</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="expand_card">Expand card</string>
+    <string name="minimize_card">Minimize card</string>
+    <string name="add_new_route_button">Legg til ny rute-knapp</string>
+    <string name="sort_by">Sorter etter</string>
 </resources>
