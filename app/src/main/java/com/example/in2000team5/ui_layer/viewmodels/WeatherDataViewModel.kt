@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.in2000team5.data_layer.repository.TimeSliderData
 import com.example.in2000team5.data_layer.repository.WeatherTimeDetails
 import com.example.in2000team5.data_layer.repository.WeatherDataRepository
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,7 @@ class WeatherDataViewModel: ViewModel() {
 
     private val weatherRepository = WeatherDataRepository()
     val currentWeatherData = mutableStateOf(WeatherTimeDetails(null))
-    var weatherTimes = mutableListOf<WeatherTimeDetails>()
+    var weatherTimes = mutableStateOf(TimeSliderData(emptyList()))
 
     init {
         // Hardkodet til midt i oslo
@@ -35,8 +36,8 @@ class WeatherDataViewModel: ViewModel() {
 
 
     //Method called from weatherRepository to post list of WeatherTimeDetails used in Slider feature
-    fun postWeatherTimeDetailsList(list : List<WeatherTimeDetails>){
-        weatherTimes.addAll(list as Collection<WeatherTimeDetails>)
+    fun postWeatherTimeDetailsList(d : TimeSliderData){
+        weatherTimes = mutableStateOf(d)
         _isLoading.value = false
     }
 
