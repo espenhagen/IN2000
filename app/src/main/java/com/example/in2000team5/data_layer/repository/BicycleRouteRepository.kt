@@ -13,6 +13,7 @@ import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.test.core.app.ApplicationProvider
 import com.example.in2000team5.data_layer.datasource.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.datasource.Features
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
@@ -116,7 +117,8 @@ class BicycleRouteRepository(application: Application) {
     }
 
     // Creates the LatLng-list based on the utmList
-    private fun constructLatLngList(utmList: List<List<Number>>?): List<LatLng>? {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun constructLatLngList(utmList: List<List<Number>>?): List<LatLng>? {
         if (utmList == null) return null
 
         val routes = mutableListOf<LatLng>()
