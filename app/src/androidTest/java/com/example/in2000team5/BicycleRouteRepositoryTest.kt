@@ -60,15 +60,12 @@ class BicycleRouteRepositoryTest {
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getXXFromOslo() {
         val repo = BicycleRouteRepository(application = ApplicationProvider.getApplicationContext())
-        runTest {
-            val result = repo.getCoordinatesFromName(geocoder, "Oslo")
+        val result = repo.getCoordinatesFromName(geocoder, "Oslo")
 
-            assertEquals(LatLng(59.91370670, 10.7526291), result)
-        }
+        assertEquals(LatLng(59.91370670, 10.7526291), result)
     }
 
 }
