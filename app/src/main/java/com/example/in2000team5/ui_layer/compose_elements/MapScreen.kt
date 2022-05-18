@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
+//Shows the fulls screen map with the routes and service stations drawn.
 @Composable
 fun MapScreen(bicycleInformationViewModel: BicycleInformationViewModel) {
     var openDialog by remember { mutableStateOf(false) }
@@ -34,7 +35,7 @@ fun MapScreen(bicycleInformationViewModel: BicycleInformationViewModel) {
         position = CameraPosition.fromLatLngZoom(oslo, 12f)
     }
     Box {
-
+        //The fullscreen map
         GoogleMap(
             cameraPositionState = cameraPositionState,
             uiSettings = MapUiSettings(compassEnabled = true, myLocationButtonEnabled = true)
@@ -45,7 +46,7 @@ fun MapScreen(bicycleInformationViewModel: BicycleInformationViewModel) {
                 snippet = "Marker in Oslo"
             )
 
-
+            //Draws the routes
             for (storRute in bicycleInformationViewModel.getRoutes()) {
                 if (storRute.value.id in 1..8) {
                     for (liste in storRute.value.fragmentList) {
@@ -62,9 +63,9 @@ fun MapScreen(bicycleInformationViewModel: BicycleInformationViewModel) {
                         )
                     }
                 }
-
-//
             }
+
+            //shows the service stations if this is the users choice (by clicking the button, default = on)
             if (showStations) {
                 for (station in bicycleInformationViewModel.getServiceStations()) {
                     station.value.let {
@@ -91,8 +92,8 @@ fun MapScreen(bicycleInformationViewModel: BicycleInformationViewModel) {
                     }
                 }
             }
-
         }
+        //Dialog to show more information about a route or service station if the user clicks them
         if (openDialog) {
             AlertDialog(
                 onDismissRequest = {
@@ -121,14 +122,11 @@ fun MapScreen(bicycleInformationViewModel: BicycleInformationViewModel) {
                 }
             )
         }
-
-
+        //Button to hide/show service stations
         Button(
             modifier = Modifier
-
                 .align(Alignment.TopEnd)
                 .offset(x= (-10).dp, y=5.dp),
-
             onClick = {
                 showStations = !showStations
             },
@@ -150,10 +148,8 @@ fun MapScreen(bicycleInformationViewModel: BicycleInformationViewModel) {
                         .padding(start = 0.dp)
                         .align(alignment = Alignment.CenterHorizontally)
                 )
-
             }
         }
-
     }
 }
 
