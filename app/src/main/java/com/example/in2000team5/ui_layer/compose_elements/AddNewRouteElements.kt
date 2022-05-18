@@ -35,7 +35,6 @@ fun ShowNewRouteButton(bicycleRouteViewModel: BicycleRouteViewModel) {
         floatingActionButton = {
 
             FloatingActionButton(
-                modifier = Modifier.padding(24.dp, 64.dp),
                 onClick = {
                     showForm.value = true
                 }) {
