@@ -117,7 +117,7 @@ fun Navigation(navController: NavHostController,
             }
         }
         composable("om") {
-            SupportScreen(weatherDataViewModel)
+            InformationScreenBase(weatherDataViewModel)
         }
     }
 }

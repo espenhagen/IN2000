@@ -4,11 +4,14 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.example.in2000team5.data_layer.repository.WeatherTimesData
 
 
-class SupportInfo {
+class SupportInformation {
     companion object {
-        //Analyse weather data for period and returns a suggestion on clothing
+
+        //Analyse weather data for period and returns a list of clothing suggestion
         fun getRecommendedClothing(weatherTimesData: WeatherTimesData, cloatingList: SnapshotStateList<String>){
             cloatingList.clear()
+
+            val minTemperature = weatherTimesData.minTemperature.value
 
             if(weatherTimesData.isRaining.value){
 
@@ -20,30 +23,28 @@ class SupportInfo {
                     cloatingList.add("Vannavstøtende jakke")
                 }
 
-                if (weatherTimesData.minTemperature.value < 10){
+                if (minTemperature < 10){
                     cloatingList.add("Varmt undertøy")
                 }
             }
 
             else{
-                val avgTemp = weatherTimesData.minTemperature.value
                 when{
-                    avgTemp <= 0 -> cloatingList.add("Jakke") && cloatingList.add("Varm bukse")
-                    (avgTemp > 0 && avgTemp <= 10 ) -> cloatingList.add("Tynn jakke")&& cloatingList.add("Lang bukse")
-                    (avgTemp > 10 && avgTemp <= 20 ) -> cloatingList.add("Tynn jakke/Langarmet")&& cloatingList.add("Lang bukse")
-                    (avgTemp > 20) -> cloatingList.add("T-shorte")&&(avgTemp > 20) && cloatingList.add("Shorts")
+                    minTemperature <= 0 -> cloatingList.add("Jakke") && cloatingList.add("Varm bukse")
+                    (minTemperature > 0 && minTemperature <= 10 ) -> cloatingList.add("Tynn jakke")&& cloatingList.add("Lang bukse")
+                    (minTemperature > 10 && minTemperature <= 20 ) -> cloatingList.add("Tynn jakke/Langarmet")&& cloatingList.add("Lang bukse")
+                    (minTemperature > 20) -> cloatingList.add("T-shorte")&&(minTemperature > 20) && cloatingList.add("Shorts")
                 }
             }
 
-            val avgTemp = weatherTimesData.minTemperature.value
             when{
-                avgTemp <= 0 -> cloatingList.add("Buff") && cloatingList.add("Hansker") && cloatingList.add("Lange sokker")&& cloatingList.add("Ørevarmer")
-                (avgTemp > 0 && avgTemp <= 10 ) -> cloatingList.add("Buff") && cloatingList.add("Hansker")
-                (avgTemp > 10 && avgTemp <= 15 ) -> cloatingList.add("Hansker")
+                minTemperature <= 0 -> cloatingList.add("Buff") && cloatingList.add("Hansker") && cloatingList.add("Lange sokker")&& cloatingList.add("Ørevarmer")
+                (minTemperature > 0 && minTemperature <= 10 ) -> cloatingList.add("Buff") && cloatingList.add("Hansker")
+                (minTemperature > 10 && minTemperature <= 15 ) -> cloatingList.add("Hansker")
             }
         }
 
-        //Analyse weather data for period and returns a suggestion on bike equipment
+        //Analyse weather data for period and returns a list of bike equipment suggestion
         fun getRecommendedItems(weatherTimesData: WeatherTimesData, itemList: SnapshotStateList<String>){
             itemList.clear()
             itemList.add("Hjelm!")
@@ -58,20 +59,16 @@ class SupportInfo {
                 itemList.add("Solkrem")
                 itemList.add("Solbriller")
             }
-
             if(weatherTimesData.isRaining.value){
                 itemList.add("Briller")
             }
-
             if(weatherTimesData.minTemperature.value < 0){
                 itemList.add("Piggdekk")
             }
-
             if(weatherTimesData.isDark.value){
                 itemList.add("Refleks")
             }
         }
-
 
         //Returns a simple checklist for bike preparation
         fun getChecklist(): List<String> {
