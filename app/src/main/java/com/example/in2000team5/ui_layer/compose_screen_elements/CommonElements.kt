@@ -69,10 +69,10 @@ fun InfoRow(model: WeatherDataViewModel) {
         Row (Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceEvenly){
 
             val context = LocalContext.current
-            val id = if (model.currentWeatherData.value.currentWeatherSymbol.value == null){
+            val id = if (model.weatherTimes.value.currentWeatherSymbol.value == null){
                 R.drawable.unknown
             } else{
-                context.resources.getIdentifier(model.currentWeatherData.value.currentWeatherSymbol.value, "drawable",context.packageName )
+                context.resources.getIdentifier(model.weatherTimes.value.currentWeatherSymbol.value, "drawable",context.packageName )
             }
 
 
@@ -85,7 +85,7 @@ fun InfoRow(model: WeatherDataViewModel) {
             )
 
             Text(
-                text = "${model.currentWeatherData.value.currentTemperature.value}°C",
+                text = "${model.weatherTimes.value.currentTemperature.value}°C",
                 style = MaterialTheme.typography.h4,
                 modifier = Modifier
                     .align(alignment = Alignment.CenterVertically)
@@ -102,7 +102,7 @@ fun InfoRow(model: WeatherDataViewModel) {
                         .align(alignment = Alignment.CenterHorizontally)
                 )
                 Text(
-                    text = "${model.currentWeatherData.value.rainNextHour.value} mm",
+                    text = "${model.weatherTimes.value.currentRainNextHour.value} mm",
                     style = MaterialTheme.typography.h5,
                     modifier = Modifier
                         .align(alignment = Alignment.CenterHorizontally)
