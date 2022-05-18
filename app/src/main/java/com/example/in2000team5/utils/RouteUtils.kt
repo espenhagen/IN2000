@@ -21,14 +21,14 @@ class RouteUtils {
 
         fun routeColor(ruteid:Int): Color {
             val colorMap: HashMap<Int, Color> = hashMapOf(
-                0 to Color.Red,
                 1 to Color.Blue,
                 2 to Color.Magenta,
-                3 to Color.Yellow,
+                3 to Color.DarkGray,
                 4 to Color.Green,
                 5 to Color.Black,
                 6 to Color.Cyan,
-                7 to Color.LightGray
+                7 to Color.Red,
+                8 to Color.Gray
             )
             return colorMap[ruteid]?:Color.White
         }
