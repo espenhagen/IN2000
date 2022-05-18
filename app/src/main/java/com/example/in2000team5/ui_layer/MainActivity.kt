@@ -8,11 +8,11 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import com.example.in2000team5.ui_layer.compose_elements.*
 import com.example.in2000team5.ui_layer.theme.IN2000Team5Theme
-import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 
 class MainActivity : ComponentActivity() {
-    private lateinit var bicycleRouteViewModel: BicycleRouteViewModel
+    private lateinit var bicycleInformationViewModel: BicycleInformationViewModel
     private val weatherDataViewModel: WeatherDataViewModel by viewModels()
 
     //Kan brukes til å vise om man har internett eller ikke.
@@ -24,16 +24,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        bicycleRouteViewModel = ViewModelProvider(this)[BicycleRouteViewModel::class.java]
+        bicycleInformationViewModel = ViewModelProvider(this)[BicycleInformationViewModel::class.java]
 
         // Display splash until viewModel init is not loading anymore
         // Splash screen shows only when app is started from launcher or phone, not from AS
         installSplashScreen().setKeepOnScreenCondition {
-            bicycleRouteViewModel.isLoading.value
+            bicycleInformationViewModel.isLoading.value
         }
         setContent {
             IN2000Team5Theme {
-                BottomNavigation(weatherDataViewModel, bicycleRouteViewModel)
+                BottomNavigation(weatherDataViewModel, bicycleInformationViewModel)
             }
         }
     }

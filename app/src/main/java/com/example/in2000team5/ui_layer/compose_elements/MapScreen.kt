@@ -15,14 +15,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.theme.ServiceStationColor
-import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
 import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 @Composable
-fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
+fun MapScreen(bicycleInformationViewModel: BicycleInformationViewModel) {
     var openDialog by remember { mutableStateOf(false) }
     var info by remember { mutableStateOf("")}
     var title by remember { mutableStateOf("")}
@@ -46,7 +46,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
             )
 
 
-            for (storRute in bicycleRouteViewModel.getRoutes()) {
+            for (storRute in bicycleInformationViewModel.getRoutes()) {
                 if (storRute.value.id in 1..8) {
                     for (liste in storRute.value.fragmentList) {
                         Polyline(
@@ -66,7 +66,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
 //
             }
             if (showStations) {
-                for (station in bicycleRouteViewModel.getServiceStations()) {
+                for (station in bicycleInformationViewModel.getServiceStations()) {
                     station.value.let {
                         Log.d("latlng", it.toString())
                         val name = it.name

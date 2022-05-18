@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import com.example.in2000team5.data_layer.datasource.local.BicycleServiceLocalDataSource
 import com.example.in2000team5.data_layer.datasource.local.ServiceStation
-import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
 import com.google.android.gms.maps.model.LatLng
 import java.io.InputStream
 
@@ -16,7 +16,7 @@ class BicycleServiceRepository {
 
     private val bicycleServiceLocalDataSource = BicycleServiceLocalDataSource()
 
-    internal fun readServiceStations(inputStream: InputStream, context: BicycleRouteViewModel){
+    internal fun readServiceStations(inputStream: InputStream, context: BicycleInformationViewModel){
         val stations = bicycleServiceLocalDataSource.readTextFile(inputStream)
         val delimiters = "//"
         stations.forEach {

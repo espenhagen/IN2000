@@ -2,7 +2,6 @@ package com.example.in2000team5.ui_layer.viewmodels
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -24,7 +23,7 @@ import com.example.in2000team5.utils.Timer.Companion.countDown
 
 
 // Viewmodel for bicycle route data. Offers getters and methods to post values.
-class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
+class BicycleInformationViewModel(appObj: Application): AndroidViewModel(appObj) {
     private val airQualityRepository = AirQualityRepository(airQualityDataSource = AirQualityRemoteDataSource())
     private val bicycleRouteRepository = BicycleRouteRepository(appObj)
     private val bicycleServiceRepository = BicycleServiceRepository()
@@ -52,7 +51,7 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
 
     private fun makeApiRequest() {
         viewModelScope.launch(Dispatchers.IO) {
-            bicycleRouteRepository.makeBigRoutes(this@BicycleRouteViewModel)
+            bicycleRouteRepository.makeBigRoutes(this@BicycleInformationViewModel)
             _isLoading.value = false
         }
     }
@@ -68,7 +67,8 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
 
     fun addRouteFromUser(context: Context, start: String, slutt: String): Boolean {
         val result = bicycleRouteRepository.addRouteFromUser(
-            this@BicycleRouteViewModel, context, start, slutt)
+            this@BicycleInformationViewModel, context, start, slutt
+        )
 
         val text = if (result) "Rute lagt til" else "Oppgi gyldig start og slutt"
         val duration = Toast.LENGTH_SHORT
@@ -78,12 +78,10 @@ class BicycleRouteViewModel(appObj: Application): AndroidViewModel(appObj) {
         return result
     }
 
-    fun readServiceStations(inputStream: InputStream) {
+    private fun readServiceStations(inputStream: InputStream) {
         viewModelScope.launch(Dispatchers.IO) {
-            bicycleServiceRepository.readServiceStations(inputStream, this@BicycleRouteViewModel)
-            Log.d("bicycleServiceStation", serviceStations.toString())
+            bicycleServiceRepository.readServiceStations(inputStream, this@BicycleInformationViewModel)
         }
-
     }
 
     fun postServiceStations(station: SnapshotMutableState<ServiceStation>) {

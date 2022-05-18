@@ -20,17 +20,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.R
-import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
 
 // Displays the button that allows user to add new routes
 // TODO: Lag ny funksjon som faktisk viser kun knappen, og ikke hele skjermen
 @Composable
-fun ShowNewRouteButton(bicycleRouteViewModel: BicycleRouteViewModel) {
+fun ShowNewRouteButton(bicycleInformationViewModel: BicycleInformationViewModel) {
     val showForm = remember { mutableStateOf(false) }
     Scaffold(
         content = { padding ->
             Column(modifier = Modifier.padding(padding)) {
-                ShowAllRoutes(ruter = bicycleRouteViewModel.getRoutes())
+                ShowAllRoutes(ruter = bicycleInformationViewModel.getRoutes())
             }},
         floatingActionButton = {
 
@@ -42,16 +42,16 @@ fun ShowNewRouteButton(bicycleRouteViewModel: BicycleRouteViewModel) {
             }
         }
     )
-    if (showForm.value) ShowNewRouteForm(showForm, bicycleRouteViewModel)
+    if (showForm.value) ShowNewRouteForm(showForm, bicycleInformationViewModel)
 }
 
 @Composable
-fun ShowNewRouteForm(showForm: MutableState<Boolean>, bicycleRouteViewModel: BicycleRouteViewModel) {
+fun ShowNewRouteForm(showForm: MutableState<Boolean>, bicycleInformationViewModel: BicycleInformationViewModel) {
     if (showForm.value) {
         val start = remember { mutableStateOf("") }
         val end = remember { mutableStateOf("") }
 
-        CreateDialog(showForm, start, end, bicycleRouteViewModel) {
+        CreateDialog(showForm, start, end, bicycleInformationViewModel) {
             UserInputView(start, end)
         }
     }
@@ -74,7 +74,7 @@ fun UserInputView(start: MutableState<String>, end: MutableState<String>) {
 fun CreateDialog(showForm: MutableState<Boolean>,
                  start: MutableState<String>,
                  end: MutableState<String>,
-                 bicycleRouteViewModel: BicycleRouteViewModel,
+                 bicycleInformationViewModel: BicycleInformationViewModel,
                  content: @Composable (() -> Unit)? = null
                  )
 {
@@ -93,7 +93,7 @@ fun CreateDialog(showForm: MutableState<Boolean>,
         text = content,
         confirmButton = {
             TextButton(onClick = {
-                if (bicycleRouteViewModel.addRouteFromUser(context, start.value, end.value))
+                if (bicycleInformationViewModel.addRouteFromUser(context, start.value, end.value))
                     showForm.value = false
             })
             { Text(text = "Legg til rute") }

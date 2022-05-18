@@ -14,7 +14,7 @@ import com.example.in2000team5.data_layer.datasource.remote.BicycleRouteRemoteDa
 import com.example.in2000team5.data_layer.datasource.remote.Features
 import com.example.in2000team5.data_layer.datasource.local.AppDatabase
 import com.example.in2000team5.data_layer.datasource.local.BicycleRouteDao
-import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
 import com.example.in2000team5.utils.RouteUtils.Companion.routeNames
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
@@ -52,7 +52,7 @@ class BicycleRouteRepository(application: Application) {
     }
 
     // Maps the smaller routes to larger routes, with the route-number being the joining variable.
-    suspend fun makeBigRoutes(bicycleRouteViewModel: BicycleRouteViewModel) {
+    suspend fun makeBigRoutes(bicycleInformationViewModel: BicycleInformationViewModel) {
         bicycleRouteRemoteDataSource.fetchRoutes()?.forEach {
             addCords(it)
         }
@@ -70,8 +70,8 @@ class BicycleRouteRepository(application: Application) {
                 calculateRouteLength(it.value), mutableStateOf(null)
                 )
             )
-            bicycleRouteViewModel.getAirQualityAvgForRoute(bigBikeRoute)
-            bicycleRouteViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BicycleRoute>)
+            bicycleInformationViewModel.getAirQualityAvgForRoute(bigBikeRoute)
+            bicycleInformationViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BicycleRoute>)
         }
     }
 
@@ -174,7 +174,7 @@ class BicycleRouteRepository(application: Application) {
     /* Takes inn start and end, and creates a bicycleroutes based on these values, and posts it to
        the viewmodel.
      */
-    fun addRouteFromUser(bicycleRouteViewModel: BicycleRouteViewModel, context: Context, start: String, end: String): Boolean {
+    fun addRouteFromUser(bicycleInformationViewModel: BicycleInformationViewModel, context: Context, start: String, end: String): Boolean {
         val geocoder = Geocoder(context)
         val startLatLng = getCoordinatesFromName(geocoder, start)
         val endLatLng = getCoordinatesFromName(geocoder, end)
@@ -197,9 +197,9 @@ class BicycleRouteRepository(application: Application) {
                 mutableStateOf(null)
             ))
 
-            bicycleRouteViewModel.getAirQualityAvgForRoute(nyRute)
-            bicycleRouteViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
-            bicycleRouteViewModel.insertBicycleRoute(nyRute)
+            bicycleInformationViewModel.getAirQualityAvgForRoute(nyRute)
+            bicycleInformationViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
+            bicycleInformationViewModel.insertBicycleRoute(nyRute)
 
             isAdded = true
         }

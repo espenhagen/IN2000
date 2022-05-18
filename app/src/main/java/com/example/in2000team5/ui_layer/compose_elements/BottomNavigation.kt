@@ -14,17 +14,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 
 
 @Composable
-fun BottomNavigation(weatherDataViewModel: WeatherDataViewModel, bicycleRouteViewModel: BicycleRouteViewModel) {
+fun BottomNavigation(weatherDataViewModel: WeatherDataViewModel, bicycleInformationViewModel: BicycleInformationViewModel) {
     val navController = rememberNavController()
     Scaffold(
         content = { padding ->
             Column(modifier = Modifier.padding(padding)) {
-                Navigation(navController = navController, weatherDataViewModel, bicycleRouteViewModel)
+                Navigation(navController = navController, weatherDataViewModel, bicycleInformationViewModel)
             }
         },
         bottomBar = {
@@ -46,20 +46,20 @@ fun BottomNavigation(weatherDataViewModel: WeatherDataViewModel, bicycleRouteVie
 @Composable
 fun Navigation(navController: NavHostController,
                weatherDataViewModel: WeatherDataViewModel,
-               bicycleRouteViewModel: BicycleRouteViewModel
+               bicycleInformationViewModel: BicycleInformationViewModel
 ) {
     NavHost(navController = navController, startDestination = "om" ) {
         composable("kart") {
             Column {
                 InfoRow(weatherDataViewModel)
-                MapScreen(bicycleRouteViewModel)
+                MapScreen(bicycleInformationViewModel)
                 //MapProperties()
             }
         }
         composable("ruter") {
             Column {
                 InfoRow(weatherDataViewModel)
-                ShowNewRouteButton(bicycleRouteViewModel)
+                ShowNewRouteButton(bicycleInformationViewModel)
             }
         }
         composable("om") {
