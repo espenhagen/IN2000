@@ -23,12 +23,9 @@ import com.example.in2000team5.utils.MetUtils.Companion.getWindDirectionDescript
 import com.example.in2000team5.utils.SupportInfo
 
 
-//val weatherDetailsObject = WeatherDetails()
 val cloatingSupportList = mutableStateListOf<String>()
 val itemSupportList = mutableStateListOf<String>()
 val checkList = SupportInfo.getChecklist()
-
-//val timeSliderData = SupportInfo.TimeSliderData()
 
 @Composable
 fun SupportScreen(model: WeatherDataViewModel) {
@@ -73,7 +70,7 @@ fun updateSupportData(
     val start = sliderPosition.start.toInt()
     val end = sliderPosition.endInclusive.toInt() +2
 
-    model.weatherTimes.value.update(start,end)
+    model.weatherTimes.value.updateSliderData(start,end)
     SupportInfo.getRecommendedClothing(model.weatherTimes.value, cloatingSupportList)
     SupportInfo.getRecommendedItems(model.weatherTimes.value, itemSupportList)
 }
