@@ -1,11 +1,10 @@
 package com.example.in2000team5.data_layer.repository
 
-import android.util.Log
 import com.example.in2000team5.data_layer.datasource.AirQualData
 import com.example.in2000team5.data_layer.datasource.AirQualityRemoteDataSource
+import com.example.in2000team5.utils.GeneralUtils.Companion.round
 import com.example.in2000team5.utils.MetUtils
 import com.google.android.gms.maps.model.LatLng
-import com.example.in2000team5.utils.GeneralUtils.Companion.round
 
 const val MIN_NUM_OF_SAMPLE_POINTS = 10
 
@@ -13,7 +12,7 @@ const val MIN_NUM_OF_SAMPLE_POINTS = 10
  * Fetches current air quality index from remote datasource, and prepares data for the view model.
  */
 class AirQualityRepository(
-    private val airQualityDataSource: AirQualityRemoteDataSource
+    private val airQualityDataSource: AirQualityRemoteDataSource,
 ) {
 
     /**

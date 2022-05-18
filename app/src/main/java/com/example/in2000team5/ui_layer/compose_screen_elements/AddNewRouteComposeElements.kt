@@ -27,7 +27,10 @@ import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 fun ShowNewRouteButton(bicycleRouteViewModel: BicycleRouteViewModel) {
     val showForm = remember { mutableStateOf(false) }
     Scaffold(
-        content = { ShowAllRoutes(ruter = bicycleRouteViewModel.getRoutes())},
+        content = { padding -> 
+            Column(modifier = Modifier.padding(padding)) {
+                ShowAllRoutes(ruter = bicycleRouteViewModel.getRoutes())
+            }},
         floatingActionButton = {
 
             FloatingActionButton(
