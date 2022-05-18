@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import com.example.in2000team5.data_layer.repository.AirQualityRepository
 import com.example.in2000team5.data_layer.repository.BicycleServiceRepository
 import java.io.InputStream
-import com.example.in2000team5.utils.Timer.Companion.countDown
+import com.example.in2000team5.utils.GeneralUtils.Companion.countDown
 
 
 // Viewmodel for bicycle route data. Offers getters and methods to post values.
