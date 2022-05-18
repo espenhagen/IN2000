@@ -14,6 +14,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.in2000team5.data_layer.datasource.BicycleRouteRemoteDataSource
 import com.example.in2000team5.data_layer.datasource.Features
+import com.example.in2000team5.data_layer.datasource.local.AppDatabase
+import com.example.in2000team5.data_layer.datasource.local.BicycleRouteDao
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 import com.example.in2000team5.utils.RouteUtils.Companion.routeNames
 import com.google.android.gms.maps.model.LatLng

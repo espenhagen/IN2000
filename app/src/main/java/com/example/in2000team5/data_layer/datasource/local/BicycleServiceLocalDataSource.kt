@@ -1,4 +1,4 @@
-package com.example.in2000team5.data_layer.datasource
+package com.example.in2000team5.data_layer.datasource.local
 
 import com.google.android.gms.maps.model.LatLng
 import java.io.BufferedReader
