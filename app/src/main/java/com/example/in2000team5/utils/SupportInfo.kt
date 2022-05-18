@@ -6,7 +6,7 @@ import com.example.in2000team5.data_layer.repository.WeatherTimesData
 
 class SupportInfo {
     companion object {
-        //Analyse weather data for period and returns a suggestion on clothing
+        //Analyses weather data for period and returns a suggestion on clothing
         fun getRecommendedClothing(weatherTimesData: WeatherTimesData, cloatingList: SnapshotStateList<String>){
             cloatingList.clear()
 
@@ -43,7 +43,7 @@ class SupportInfo {
             }
         }
 
-        //Analyse weather data for period and returns a suggestion on bike equipment
+        //Analyses weather data for period and returns a suggestion on bike equipment
         fun getRecommendedItems(weatherTimesData: WeatherTimesData, itemList: SnapshotStateList<String>){
             itemList.clear()
             itemList.add("Hjelm!")

@@ -3,8 +3,8 @@ package com.example.in2000team5.utils
 import androidx.compose.ui.graphics.Color
 
 class RouteUtils {
-
     companion object {
+        /**Function that returns a hashmap of route IDs mapped to the belonging routes start- and end locations. */
         fun routeNames(): HashMap<Int, List<String>> {
             return hashMapOf(
                 0 to listOf("ingen", "rutenr"),
@@ -19,7 +19,8 @@ class RouteUtils {
             )
         }
 
-        fun routeColor(ruteid:Int): Color {
+        /**Takes a routes ID and returns which color this route should be drawn in in the map- and card screens. */
+        fun routeColor(routeID:Int): Color {
             val colorMap: HashMap<Int, Color> = hashMapOf(
                 1 to Color.Blue,
                 2 to Color.Magenta,
@@ -30,7 +31,7 @@ class RouteUtils {
                 7 to Color.Red,
                 8 to Color.Gray
             )
-            return colorMap[ruteid]?:Color.White
+            return colorMap[routeID]?:Color.White
         }
     }
 }

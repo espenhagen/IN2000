@@ -1,23 +1,19 @@
 package com.example.in2000team5.utils
 
-import com.example.in2000team5.R
 import java.util.*
 
 class MetUtils {
 
     companion object {
+        /**Method that gets the current time and returns it represented as a string.*/
         fun getCurrentTimeAsString() : String{
 
-            //paddStart sørger for at verdier får 0 foran seg selvom verdien er under 10
-            //Calender.XXXX gir en index hvor verdien finnes i listen
-
             val year = Calendar.getInstance()[Calendar.YEAR]
-            //Verdien fra måender starter på 0 (Januar er 0)
+
             val month = Calendar.getInstance()[Calendar.MONTH].plus(1).toString().padStart(2, '0')
             val date = Calendar.getInstance()[Calendar.DAY_OF_MONTH].toString().padStart(2, '0')
             val hour = Calendar.getInstance()[Calendar.HOUR_OF_DAY].toString().padStart(2, '0')
 
-            //Standard reftime for luftkvalitets-API
             return  "${year}-${month}-${date}T${hour}:00:00Z"
         }
 
@@ -30,107 +26,33 @@ class MetUtils {
         }
 
         fun getDateAndHour(time: String?) : String{
-            if (time.isNullOrEmpty())return "ukjent";
+            if (time.isNullOrEmpty())return "ukjent"
             if(isNowTime(time)){
                 return "Nå"
             }
-
-            val date = time.substring(8, 10)
             val hour = time.substring(11, 13)
-
-            //return "kl: " + hour + " den " + date
             return "kl: $hour"
         }
-/*
-        fun getWeatherIcon(description: String?): Int {
-            return when (description) {
-                "clearsky", "clearsky_day"-> R.drawable.clearsky_day
-                "cloudy" -> R.drawable.cloudy
-                "fair", "fair_day" -> R.drawable.fair_day
-                "fog" -> R.drawable.fog
-                "heavyrain" -> R.drawable.heavyrain
-                "heavyrainandthunder" -> R.drawable.heavyrainandthunder
-                "heavyrainshowers", "heavyrainshowers_day" -> R.drawable.heavyrainshowers_day
-                "heavyrainshowersandthunder","heavyrainshowersandthunder_day" -> R.drawable.heavyrainshowersandthunder_day
-                "heavysleet" -> R.drawable.heavysleet
-                "heavysleetandthunder" -> R.drawable.heavysleetandthunder
-                "heavysleetshowers", "heavysleetshowers_day" -> R.drawable.heavysleetshowers_day
-                "heavysleetshowersandthunder","heavysleetshowersandthunder_day" -> R.drawable.heavysleetshowersandthunder_day
-                "heavysnow" -> R.drawable.heavysnow
-                "heavysnowandthunder" -> R.drawable.heavysnowandthunder
-                "heavysnowshowers","heavysnowshowers_day" -> R.drawable.heavysnowshowers_day
-                "heavysnowshowersandthunder","heavysnowshowersandthunder_day" -> R.drawable.heavysnowshowersandthunder_day
-                "lightrain" -> R.drawable.lightrain
-                "lightrainandthunder" -> R.drawable.lightrainandthunder
-                "lightrainshowers","lightrainshowers_day" -> R.drawable.lightrainshowers_day
-                "lightrainshowersandthunder","lightrainshowersandthunder_day" -> R.drawable.lightrainshowersandthunder_day
-                "lightsleet" -> R.drawable.lightsleet
-                "lightsleetandthunder" -> R.drawable.lightsleetandthunder
-                "lightsleetshowers","lightsleetshowers_day" -> R.drawable.lightsleetshowers_day
-                "lightsnow" -> R.drawable.lightsnow
-                "lightsnowandthunder" -> R.drawable.lightsnowandthunder
-                "lightsnowshowers","lightsnowshowers_day" -> R.drawable.lightsnowshowers_day
-                "lightssleetshowersandthunder","lightssleetshowersandthunder_day" -> R.drawable.lightssleetshowersandthunder_day
-                "lightssnowshowersandthunder","lightssnowshowersandthunder_day" -> R.drawable.lightssnowshowersandthunder_day
-                "partlycloudy" ,"partlycloudy_day"-> R.drawable.partlycloudy_day
-                "rain" -> R.drawable.rain
-                "rainandthunder" -> R.drawable.rainandthunder
-                "rainshowers","rainshowers_day" -> R.drawable.rainshowers_day
-                "rainshowersandthunder","rainshowersandthunder_day" -> R.drawable.rainshowersandthunder_day
-                "sleet" -> R.drawable.sleet
-                "sleetandthunder" -> R.drawable.sleetandthunder
-                "sleetshowers", "sleetshowers_day" -> R.drawable.sleetshowers_day
-                "sleetshowersandthunder","sleetshowersandthunder_day" -> R.drawable.sleetshowersandthunder_day
-                "snow" -> R.drawable.snow
-                "snowandthunder" -> R.drawable.snowandthunder
-                "snowshowers","snowshowers_day" -> R.drawable.snowshowers_day
-                "snowshowersandthunder","snowshowersandthunder_day" -> R.drawable.snowshowersandthunder_day
-                "heavyrainshowers_night" -> R.drawable.heavyrainshowers_night
-                "heavyrainshowersandthunder_night" -> R.drawable.heavyrainshowersandthunder_night
-                "heavysleetshowers_night" -> R.drawable.heavysleetshowers_night
-                "heavysleetshowersandthunder_night" -> R.drawable.heavysleetshowersandthunder_night
-                "heavysnowshowers_night" -> R.drawable.heavysnowshowers_night
-                "heavysnowshowersandthunder_night" -> R.drawable.heavysnowshowersandthunder_night
-                "lightrainshowers_night" -> R.drawable.lightrainshowers_night
-                "lightrainshowersandthunder_night" -> R.drawable.lightrainshowersandthunder_night
-                "lightsleetshowers_night" -> R.drawable.lightsleetshowers_night
-                "lightsnowshowers_night" -> R.drawable.lightsnowshowers_night
-                "lightssleetshowersandthunder_night" -> R.drawable.lightssleetshowersandthunder_night
-                "lightssnowshowersandthunder_night" -> R.drawable.lightssnowshowersandthunder_night
-                "partlycloudy_night" -> R.drawable.partlycloudy_night
-                "rainshowers_night" -> R.drawable.rainshowers_night
-                "rainshowersandthunder_night" -> R.drawable.rainshowersandthunder_night
-                "sleetshowers_night" -> R.drawable.sleetshowers_night
-                "sleetshowersandthunder_night" -> R.drawable.sleetshowersandthunder_night
-                "snowshowers_night" -> R.drawable.snowshowers_night
-                "snowshowersandthunder_night" -> R.drawable.snowshowersandthunder_night
-                "clearsky_night" -> R.drawable.clearsky_night
-                "fair_night" -> R.drawable.fair_night
-                else -> {
-                    R.drawable.unknown
-                }
-            }
-        }
 
- */
-        fun getWindDirectionDescription(deg:Float) : String {
-            val deg = deg.toLong()
+        /**Function that takes in the wind direction as a number of degrees and returns a 1-3 letter description based on the number of degrees (22.5 degree increments)  */
+        fun getWindDirectionDescription(degrees:Float) : String {
+            val deg = degrees.toLong()
             return when {
-                LongRange(12,33).contains(deg) -> "NNE"
-                LongRange(34,56).contains(deg) -> "NE"
-                LongRange(57,78).contains(deg) -> "ENE"
-                LongRange(79,101).contains(deg) -> "E"
-                LongRange(102,123).contains(deg) -> "ESE"
-                LongRange(124,146).contains(deg) -> "SE"
-                LongRange(147,168).contains(deg) -> "SSE"
+                LongRange(12,33).contains(deg) -> "NNØ"
+                LongRange(34,56).contains(deg) -> "NØ"
+                LongRange(57,78).contains(deg) -> "ØNØ"
+                LongRange(79,101).contains(deg) -> "Ø"
+                LongRange(102,123).contains(deg) -> "ØSØ"
+                LongRange(124,146).contains(deg) -> "SØ"
+                LongRange(147,168).contains(deg) -> "SSØ"
                 LongRange(169,191).contains(deg) -> "S"
-                LongRange(192,213).contains(deg) -> "SSW"
-                LongRange(214,236).contains(deg) -> "SW"
-                LongRange(237,258).contains(deg) -> "WSW"
-                LongRange(259,281).contains(deg) -> "W"
-                LongRange(282,303).contains(deg) -> "WNW"
-                LongRange(304,326).contains(deg) -> "NW"
-                LongRange(327,348).contains(deg) -> "NNW"
+                LongRange(192,213).contains(deg) -> "SSV"
+                LongRange(214,236).contains(deg) -> "SV"
+                LongRange(237,258).contains(deg) -> "VSV"
+                LongRange(259,281).contains(deg) -> "V"
+                LongRange(282,303).contains(deg) -> "VNV"
+                LongRange(304,326).contains(deg) -> "NV"
+                LongRange(327,348).contains(deg) -> "NNV"
                 else -> {
                     "N"
                 }
