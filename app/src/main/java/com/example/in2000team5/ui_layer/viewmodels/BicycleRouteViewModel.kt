@@ -11,8 +11,8 @@ import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.*
 import com.example.in2000team5.R
-import com.example.in2000team5.data_layer.datasource.AirQualityRemoteDataSource
-import com.example.in2000team5.data_layer.datasource.ServiceStation
+import com.example.in2000team5.data_layer.datasource.remote.AirQualityRemoteDataSource
+import com.example.in2000team5.data_layer.datasource.local.ServiceStation
 import com.example.in2000team5.data_layer.repository.BicycleRouteRepository
 import com.example.in2000team5.data_layer.repository.BicycleRoute
 import kotlinx.coroutines.Dispatchers

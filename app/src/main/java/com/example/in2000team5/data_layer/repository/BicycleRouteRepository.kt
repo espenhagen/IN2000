@@ -1,19 +1,17 @@
 package com.example.in2000team5.data_layer.repository
 
-
 import android.app.Application
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.in2000team5.data_layer.datasource.BicycleRouteRemoteDataSource
-import com.example.in2000team5.data_layer.datasource.Features
+import com.example.in2000team5.data_layer.datasource.remote.BicycleRouteRemoteDataSource
+import com.example.in2000team5.data_layer.datasource.remote.Features
 import com.example.in2000team5.data_layer.datasource.local.AppDatabase
 import com.example.in2000team5.data_layer.datasource.local.BicycleRouteDao
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
@@ -51,8 +49,6 @@ class BicycleRouteRepository(application: Application) {
 
     suspend fun insertBicycleRoute(bicycleRoute: BicycleRoute) {
         bicycleRouteDao.insertBicycleRoute(bicycleRoute)
-        //bicycleRouteDao.nukeTable()
-        Log.d("DATABASE:", "Henter alle rutene ${bicycleRouteDao.getAll()}")
     }
 
     // Maps the smaller routes to larger routes, with the route-number being the joining variable.
@@ -61,7 +57,7 @@ class BicycleRouteRepository(application: Application) {
             addCords(it)
         }
 
-        // Naa har jeg et hashmap med en liste med alle smaaturene
+        // Now I have a HashMap with a list of all the smaller routes
         val routeNames = routeNames()
         bigRouteMap.forEach {
 

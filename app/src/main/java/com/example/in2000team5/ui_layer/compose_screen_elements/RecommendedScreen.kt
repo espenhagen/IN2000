@@ -221,7 +221,7 @@ fun WeatherDetailsBox(model: WeatherDataViewModel) {
 
 
             Column {
-                if (model.weatherTimes.value.isDark.value || model.weatherTimes.value.isSuncremRecomended.value || model.weatherTimes.value.isSlippery.value) {
+                if (model.weatherTimes.value.isDark.value || model.weatherTimes.value.isSuncreamRecommended.value || model.weatherTimes.value.isSlippery.value) {
                     if (model.weatherTimes.value.isDark.value) {
                         Text(
                             text = "Det kan være mørkt i løpet av turen!",
@@ -231,7 +231,7 @@ fun WeatherDetailsBox(model: WeatherDataViewModel) {
                                 .padding(4.dp)
                         )
                     }
-                    if (model.weatherTimes.value.isSuncremRecomended.value) {
+                    if (model.weatherTimes.value.isSuncreamRecommended.value) {
                         Text(
                             text = "Anbefaler solkrem!",
                             modifier = Modifier

@@ -7,6 +7,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+/*
+  Room does not allow complex data to be stored in the database. Therefore, we have to convert
+  between lists and other complex types when reading to and from the database.
+ */
 class Converters {
 
     private val gson = Gson()
