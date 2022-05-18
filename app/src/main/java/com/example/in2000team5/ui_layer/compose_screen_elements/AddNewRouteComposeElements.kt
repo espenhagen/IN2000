@@ -1,6 +1,5 @@
 package com.example.in2000team5.ui_layer.compose_screen_elements
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,11 +22,16 @@ import androidx.compose.ui.unit.dp
 import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
 
+// Displays the button that allows user to add new routes
+// TODO: Lag ny funksjon som faktisk viser kun knappen, og ikke hele skjermen
 @Composable
 fun ShowNewRouteButton(bicycleRouteViewModel: BicycleRouteViewModel) {
     val showForm = remember { mutableStateOf(false) }
     Scaffold(
-        content = { ShowAllRoutes(ruter = bicycleRouteViewModel.getRoutes())},
+        content = { padding ->
+            Column(modifier = Modifier.padding(padding)) {
+                ShowAllRoutes(ruter = bicycleRouteViewModel.getRoutes())
+            }},
         floatingActionButton = {
 
             FloatingActionButton(
@@ -54,6 +58,7 @@ fun ShowNewRouteForm(showForm: MutableState<Boolean>, bicycleRouteViewModel: Bic
     }
 }
 
+// Shows the input areas to the user
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun UserInputView(start: MutableState<String>, end: MutableState<String>) {
@@ -77,7 +82,7 @@ fun CreateDialog(showForm: MutableState<Boolean>,
     val context = LocalContext.current
 
     AlertDialog(
-        onDismissRequest = { showForm.value = false }, // sjekk ut om dette er riktig
+        onDismissRequest = { showForm.value = false },
         title = {
             Column(
                 Modifier.fillMaxWidth(),
@@ -102,6 +107,7 @@ fun CreateDialog(showForm: MutableState<Boolean>,
     )
 }
 
+// Constructs the input areas, and shows descriptions with exampled of start and end routes.
 @ExperimentalComposeUiApi
 @Composable
 fun StartAndEndInput(
