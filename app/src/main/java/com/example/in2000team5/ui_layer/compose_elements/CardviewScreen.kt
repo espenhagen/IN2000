@@ -1,8 +1,7 @@
-package com.example.in2000team5.ui_layer.compose_screen_elements
+package com.example.in2000team5.ui_layer.compose_elements
 
 
 import android.widget.Toast
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,8 +18,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
@@ -50,9 +47,7 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
     Column {
         valg = customSpinner(choices) //collected from spinner composable object
 
-        LazyColumn(
-            modifier = Modifier.padding(bottom = 55.dp)
-        ) {
+        LazyColumn {
             when (valg) {
 
                 choices[0] -> {
@@ -113,7 +108,7 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                         .padding(10.dp)
                 )
 
-                if(!(rute.value.id in 1..8)){
+                if(rute.value.id !in 1..8){
                     Text(
                         text = "Egen rute",
                         modifier = Modifier
@@ -207,7 +202,7 @@ fun AirQualInfo(aqi:Double?){
         color = Color(red = 0f, green = 0f, blue = 0f, alpha = 0f)
 
     }
-    Row(){
+    Row {
         Text(
             text = "Luftkvalitet:",
             modifier = Modifier
@@ -222,7 +217,7 @@ fun AirQualInfo(aqi:Double?){
                 .align(Alignment.CenterVertically),
             style = MaterialTheme.typography.body1
         )
-        Row() {
+        Row {
             Text(
                 text = "($aqi)",
                 modifier = Modifier

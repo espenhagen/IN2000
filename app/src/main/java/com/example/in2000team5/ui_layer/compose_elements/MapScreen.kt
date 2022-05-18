@@ -1,12 +1,10 @@
-package com.example.in2000team5.ui_layer.compose_screen_elements
+package com.example.in2000team5.ui_layer.compose_elements
 
-import android.graphics.Paint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -14,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.theme.ServiceStationColor
@@ -39,7 +36,6 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
     Box {
 
         GoogleMap(
-            modifier = Modifier.padding(bottom = 50.dp),
             cameraPositionState = cameraPositionState,
             uiSettings = MapUiSettings(compassEnabled = true, myLocationButtonEnabled = true)
         ) {
@@ -131,14 +127,14 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
             modifier = Modifier
 
                 .align(Alignment.TopEnd)
-                .offset(x=-10.dp, y=5.dp),
+                .offset(x= (-10).dp, y=5.dp),
 
             onClick = {
                 showStations = !showStations
             },
             colors = buttonColors(ServiceStationColor, Color.Black)
         ) {
-            Column() {
+            Column {
                 Image(
                     painterResource(id = R.drawable.servicestations),
                     contentDescription = "Service Station Button Icon",

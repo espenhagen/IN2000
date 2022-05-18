@@ -1,4 +1,4 @@
-package com.example.in2000team5.ui_layer.compose_screen_elements
+package com.example.in2000team5.ui_layer.compose_elements
 
 
 import androidx.compose.foundation.Image
@@ -22,8 +22,7 @@ import com.example.in2000team5.utils.MetUtils
 import com.example.in2000team5.utils.MetUtils.Companion.getWindDirectionDescription
 import com.example.in2000team5.utils.SupportInfo
 
-
-val cloatingSupportList = mutableStateListOf<String>()
+val clothingSupportList = mutableStateListOf<String>()
 val itemSupportList = mutableStateListOf<String>()
 val checkList = SupportInfo.getChecklist()
 
@@ -34,8 +33,7 @@ fun SupportScreen(model: WeatherDataViewModel) {
         elevation = 4.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(bottom = 55.dp),
+            .wrapContentHeight(),
 
         color = MaterialTheme.colors.background
     ) {
@@ -49,7 +47,7 @@ fun SupportScreen(model: WeatherDataViewModel) {
                     WeatherDetailsBox(model)
                 }
                 item{
-                    CloatingSupportBox()
+                    ClothingSupportBox()
                 }
                 item{
                     ChecklistBox()
@@ -71,7 +69,7 @@ fun updateSupportData(
     val end = sliderPosition.endInclusive.toInt() +2
 
     model.weatherTimes.value.updateSliderData(start,end)
-    SupportInfo.getRecommendedClothing(model.weatherTimes.value, cloatingSupportList)
+    SupportInfo.getRecommendedClothing(model.weatherTimes.value, clothingSupportList)
     SupportInfo.getRecommendedItems(model.weatherTimes.value, itemSupportList)
 }
 
@@ -202,7 +200,7 @@ fun WeatherDetailsBox(model: WeatherDataViewModel) {
                 Text(text = "${model.weatherTimes.value.maxWind.value} m/s max")
                 Text(text = "${model.weatherTimes.value.averageWind.value} m/s snitt")
             }
-            Column(){
+            Column {
                 Image(
                     painter = painterResource(R.drawable.wind_arrow),
                     contentDescription = "Vindretning",
@@ -264,7 +262,7 @@ fun WeatherDetailsBox(model: WeatherDataViewModel) {
 }
 
 @Composable
-fun CloatingSupportBox() {
+fun ClothingSupportBox() {
     Column(
         Modifier
             .padding(6.dp)
@@ -295,7 +293,7 @@ fun CloatingSupportBox() {
                 .padding(20.dp)
             ){
                 Text(text = "Klær:", textDecoration = TextDecoration.Underline)
-                cloatingSupportList.forEach {
+                clothingSupportList.forEach {
                     Text(text = it)
                 }
 

@@ -1,4 +1,4 @@
-package com.example.in2000team5.ui_layer.compose_screen_elements
+package com.example.in2000team5.ui_layer.compose_elements
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.in2000team5.R
-import com.example.in2000team5.ui_layer.BottomNavItem
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 
 @Composable
