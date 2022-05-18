@@ -1,20 +1,20 @@
 package com.example.in2000team5.data_layer.repository
 
-
 import android.app.Application
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.in2000team5.data_layer.datasource.BicycleRouteRemoteDataSource
-import com.example.in2000team5.data_layer.datasource.Features
-import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
+import com.example.in2000team5.data_layer.datasource.remote.BicycleRouteRemoteDataSource
+import com.example.in2000team5.data_layer.datasource.remote.Features
+import com.example.in2000team5.data_layer.datasource.local.AppDatabase
+import com.example.in2000team5.data_layer.datasource.local.BicycleRouteDao
+import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
 import com.example.in2000team5.utils.RouteUtils.Companion.routeNames
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
@@ -49,17 +49,15 @@ class BicycleRouteRepository(application: Application) {
 
     suspend fun insertBicycleRoute(bicycleRoute: BicycleRoute) {
         bicycleRouteDao.insertBicycleRoute(bicycleRoute)
-        //bicycleRouteDao.nukeTable()
-        Log.d("DATABASE:", "Henter alle rutene ${bicycleRouteDao.getAll()}")
     }
 
     // Maps the smaller routes to larger routes, with the route-number being the joining variable.
-    suspend fun makeBigRoutes(bicycleRouteViewModel: BicycleRouteViewModel) {
+    suspend fun makeBigRoutes(bicycleInformationViewModel: BicycleInformationViewModel) {
         bicycleRouteRemoteDataSource.fetchRoutes()?.forEach {
             addCords(it)
         }
 
-        // Naa har jeg et hashmap med en liste med alle smaaturene
+        // Now I have a HashMap with a list of all the smaller routes
         val routeNames = routeNames()
         bigRouteMap.forEach {
 
@@ -72,8 +70,8 @@ class BicycleRouteRepository(application: Application) {
                 calculateRouteLength(it.value), mutableStateOf(null)
                 )
             )
-            bicycleRouteViewModel.getAirQualityAvgForRoute(bigBikeRoute)
-            bicycleRouteViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BicycleRoute>)
+            bicycleInformationViewModel.getAirQualityAvgForRoute(bigBikeRoute)
+            bicycleInformationViewModel.postRoutes(bigBikeRoute as SnapshotMutableState<BicycleRoute>)
         }
     }
 
@@ -176,17 +174,17 @@ class BicycleRouteRepository(application: Application) {
     /* Takes inn start and end, and creates a bicycleroutes based on these values, and posts it to
        the viewmodel.
      */
-    fun addRouteFromUser(bicycleRouteViewModel: BicycleRouteViewModel, context: Context, start: String, end: String): Boolean {
+    fun addRouteFromUser(bicycleInformationViewModel: BicycleInformationViewModel, context: Context, start: String, end: String): Boolean {
         val geocoder = Geocoder(context)
         val startLatLng = getCoordinatesFromName(geocoder, start)
         val endLatLng = getCoordinatesFromName(geocoder, end)
 
         val latLngList: MutableList<List<LatLng>?>
         var isAdded = false
-        val startUpper = start[0].uppercase() + start.subSequence(1, start.length)
-        val endUpper = end[0].uppercase() + end.subSequence(1, end.length)
 
         if (startLatLng != null && endLatLng != null) {
+            val startUpper = start[0].uppercase() + start.subSequence(1, start.length)
+            val endUpper = end[0].uppercase() + end.subSequence(1, end.length)
             latLngList = mutableListOf(listOf(startLatLng, endLatLng))
             val length = userInputRouteLength(latLngList[0]!!)
             val totalRoutes = ++numOfRoutesInDatabase + existingRoutes
@@ -199,9 +197,9 @@ class BicycleRouteRepository(application: Application) {
                 mutableStateOf(null)
             ))
 
-            bicycleRouteViewModel.getAirQualityAvgForRoute(nyRute)
-            bicycleRouteViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
-            bicycleRouteViewModel.insertBicycleRoute(nyRute)
+            bicycleInformationViewModel.getAirQualityAvgForRoute(nyRute)
+            bicycleInformationViewModel.postRoutes(nyRute as SnapshotMutableState<BicycleRoute>)
+            bicycleInformationViewModel.insertBicycleRoute(nyRute)
 
             isAdded = true
         }

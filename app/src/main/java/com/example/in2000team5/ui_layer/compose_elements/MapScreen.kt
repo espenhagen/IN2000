@@ -1,12 +1,10 @@
-package com.example.in2000team5.ui_layer.compose_screen_elements
+package com.example.in2000team5.ui_layer.compose_elements
 
-import android.graphics.Paint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -14,18 +12,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.theme.ServiceStationColor
-import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
 import com.example.in2000team5.utils.RouteUtils
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 @Composable
-fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
+fun MapScreen(bicycleInformationViewModel: BicycleInformationViewModel) {
     var openDialog by remember { mutableStateOf(false) }
     var info by remember { mutableStateOf("")}
     var title by remember { mutableStateOf("")}
@@ -39,7 +36,6 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
     Box {
 
         GoogleMap(
-            modifier = Modifier.padding(bottom = 50.dp),
             cameraPositionState = cameraPositionState,
             uiSettings = MapUiSettings(compassEnabled = true, myLocationButtonEnabled = true)
         ) {
@@ -50,7 +46,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
             )
 
 
-            for (storRute in bicycleRouteViewModel.getRoutes()) {
+            for (storRute in bicycleInformationViewModel.getRoutes()) {
                 if (storRute.value.id in 1..8) {
                     for (liste in storRute.value.fragmentList) {
                         Polyline(
@@ -70,7 +66,7 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
 //
             }
             if (showStations) {
-                for (station in bicycleRouteViewModel.getServiceStations()) {
+                for (station in bicycleInformationViewModel.getServiceStations()) {
                     station.value.let {
                         Log.d("latlng", it.toString())
                         val name = it.name
@@ -131,14 +127,14 @@ fun MapScreen(bicycleRouteViewModel: BicycleRouteViewModel) {
             modifier = Modifier
 
                 .align(Alignment.TopEnd)
-                .offset(x=-10.dp, y=5.dp),
+                .offset(x= (-10).dp, y=5.dp),
 
             onClick = {
                 showStations = !showStations
             },
             colors = buttonColors(ServiceStationColor, Color.Black)
         ) {
-            Column() {
+            Column {
                 Image(
                     painterResource(id = R.drawable.servicestations),
                     contentDescription = "Service Station Button Icon",

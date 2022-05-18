@@ -1,6 +1,5 @@
-package com.example.in2000team5.ui_layer.compose_screen_elements
+package com.example.in2000team5.ui_layer.compose_elements
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,17 +20,21 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.R
-import com.example.in2000team5.ui_layer.viewmodels.BicycleRouteViewModel
+import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
 
+// Displays the button that allows user to add new routes
+// TODO: Lag ny funksjon som faktisk viser kun knappen, og ikke hele skjermen
 @Composable
-fun ShowNewRouteButton(bicycleRouteViewModel: BicycleRouteViewModel) {
+fun ShowNewRouteButton(bicycleInformationViewModel: BicycleInformationViewModel) {
     val showForm = remember { mutableStateOf(false) }
     Scaffold(
-        content = { ShowAllRoutes(ruter = bicycleRouteViewModel.getRoutes())},
+        content = { padding ->
+            Column(modifier = Modifier.padding(padding)) {
+                ShowAllRoutes(ruter = bicycleInformationViewModel.getRoutes())
+            }},
         floatingActionButton = {
 
             FloatingActionButton(
-                modifier = Modifier.padding(24.dp, 64.dp),
                 onClick = {
                     showForm.value = true
                 }) {
@@ -39,21 +42,22 @@ fun ShowNewRouteButton(bicycleRouteViewModel: BicycleRouteViewModel) {
             }
         }
     )
-    if (showForm.value) ShowNewRouteForm(showForm, bicycleRouteViewModel)
+    if (showForm.value) ShowNewRouteForm(showForm, bicycleInformationViewModel)
 }
 
 @Composable
-fun ShowNewRouteForm(showForm: MutableState<Boolean>, bicycleRouteViewModel: BicycleRouteViewModel) {
+fun ShowNewRouteForm(showForm: MutableState<Boolean>, bicycleInformationViewModel: BicycleInformationViewModel) {
     if (showForm.value) {
         val start = remember { mutableStateOf("") }
         val end = remember { mutableStateOf("") }
 
-        CreateDialog(showForm, start, end, bicycleRouteViewModel) {
+        CreateDialog(showForm, start, end, bicycleInformationViewModel) {
             UserInputView(start, end)
         }
     }
 }
 
+// Shows the input areas to the user
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun UserInputView(start: MutableState<String>, end: MutableState<String>) {
@@ -70,14 +74,14 @@ fun UserInputView(start: MutableState<String>, end: MutableState<String>) {
 fun CreateDialog(showForm: MutableState<Boolean>,
                  start: MutableState<String>,
                  end: MutableState<String>,
-                 bicycleRouteViewModel: BicycleRouteViewModel,
+                 bicycleInformationViewModel: BicycleInformationViewModel,
                  content: @Composable (() -> Unit)? = null
                  )
 {
     val context = LocalContext.current
 
     AlertDialog(
-        onDismissRequest = { showForm.value = false }, // sjekk ut om dette er riktig
+        onDismissRequest = { showForm.value = false },
         title = {
             Column(
                 Modifier.fillMaxWidth(),
@@ -89,7 +93,7 @@ fun CreateDialog(showForm: MutableState<Boolean>,
         text = content,
         confirmButton = {
             TextButton(onClick = {
-                if (bicycleRouteViewModel.addRouteFromUser(context, start.value, end.value))
+                if (bicycleInformationViewModel.addRouteFromUser(context, start.value, end.value))
                     showForm.value = false
             })
             { Text(text = "Legg til rute") }
@@ -102,6 +106,7 @@ fun CreateDialog(showForm: MutableState<Boolean>,
     )
 }
 
+// Constructs the input areas, and shows descriptions with exampled of start and end routes.
 @ExperimentalComposeUiApi
 @Composable
 fun StartAndEndInput(

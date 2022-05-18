@@ -1,4 +1,4 @@
-package com.example.in2000team5.data_layer.datasource
+package com.example.in2000team5.data_layer.datasource.remote
 
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel

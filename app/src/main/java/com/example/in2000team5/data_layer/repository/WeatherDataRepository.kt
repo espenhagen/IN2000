@@ -2,9 +2,9 @@ package com.example.in2000team5.data_layer.repository
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.example.in2000team5.data_layer.datasource.WeatherForecastRemoteDataSource
-import com.example.in2000team5.data_layer.datasource.LocationForecast
-import com.example.in2000team5.data_layer.datasource.Timeseries
+import com.example.in2000team5.data_layer.datasource.remote.WeatherForecastRemoteDataSource
+import com.example.in2000team5.data_layer.datasource.remote.LocationForecast
+import com.example.in2000team5.data_layer.datasource.remote.Timeseries
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.utils.GeneralUtils.Companion.round
 import com.example.in2000team5.utils.MetUtils
@@ -12,7 +12,6 @@ import com.example.in2000team5.utils.MetUtils
 /* Fetches weather data from the datasource. Processes the data and makes it ready for the
    viewmodel.
  */
-// TODO: endre til å lage objekter av klassene
 class WeatherDataRepository {
 
     private val weatherForecastRemoteDataSource = WeatherForecastRemoteDataSource()
@@ -91,19 +90,17 @@ class WeatherHourDetails(timeData: Timeseries?){
 //Class that contains all nesesary data for weatherinformation in the application
 class WeatherTimesData(list: List<WeatherHourDetails>){
 
-    var weatherhourList = list
+    private var weatherHourList = list
 
-    //Values based on the current time
-    var current = weatherhourList.firstOrNull()
+    // Values based on the current time
+    private var current = weatherHourList.firstOrNull()
     val currentTemperature = mutableStateOf(current?.temperature)
     val currentRainNextHour = mutableStateOf(current?.rainNextHour)
-    val currentPrecipitationAmount = mutableStateOf(current?.precipitationAmount)
+    private val currentPrecipitationAmount = mutableStateOf(current?.precipitationAmount)
     val currentWeatherSymbol = mutableStateOf(current?.weatherSymbol)
-    val currentTimeAsString = mutableStateOf(current?.timeAsString)
+    private val currentTimeAsString = mutableStateOf(current?.timeAsString)
 
-
-
-    //Values used for support in slider feature
+    // Values used for support in slider feature
     val maxTemperature: MutableState<Double?> = mutableStateOf(null)
     val minTemperature: MutableState<Double> = mutableStateOf(0.0)
     val averageTemperature: MutableState<Double?> = mutableStateOf(null)
@@ -112,7 +109,7 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
     val maxWind: MutableState<Double?> = mutableStateOf(null)
     val averageWind: MutableState<Double?> = mutableStateOf(null)
     val windDirection: MutableState<Float> = mutableStateOf(0f)
-    val isSuncremRecomended: MutableState<Boolean> = mutableStateOf(false)
+    val isSuncreamRecommended: MutableState<Boolean> = mutableStateOf(false)
     val isDark: MutableState<Boolean> = mutableStateOf(false)
     val isSlippery: MutableState<Boolean> = mutableStateOf(false)
     val isRaining: MutableState<Boolean> = mutableStateOf(false)
@@ -120,10 +117,10 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
 
     //Makes an update for the values depending on the slider
     fun updateSliderData(start : Int, end : Int){
-        if(weatherhourList.isEmpty())return
-        if(weatherhourList.size < end)return
+        if(weatherHourList.isEmpty())return
+        if(weatherHourList.size < end)return
 
-        val subList = weatherhourList.subList(start, end)
+        val subList = weatherHourList.subList(start, end)
         maxTemperature.value        = getMaxTemperature(subList)
         minTemperature.value        = getMinTemperature(subList)
         averageTemperature.value    = getAverageTemperature(subList)
@@ -132,7 +129,7 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
         maxWind.value               = getMaxWind(subList)
         averageWind.value           = getAverageWind(subList)
         windDirection.value         = getWindDirection(subList).toFloat()
-        isSuncremRecomended.value   = findOutIfSuncreamIsRecomended(subList)
+        isSuncreamRecommended.value   = findOutIfSuncreamIsRecomended(subList)
         isDark.value                = findOutIfItCouldBeDark(subList)
         isSlippery.value            = findOutIfSlippery(subList)
         isRaining.value             = findOutIfRaining(subList)
@@ -140,10 +137,10 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
     }
 
     fun updateList(list: List<WeatherHourDetails>){
-        weatherhourList = list
+        weatherHourList = list
 
         //Data for current time
-        current = weatherhourList.firstOrNull()
+        current = weatherHourList.firstOrNull()
         currentTemperature .value =  current?.temperature
         currentRainNextHour.value =  current?.rainNextHour
         currentPrecipitationAmount.value = current?.precipitationAmount
@@ -214,9 +211,9 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
     }
 
     private fun findOutIfSlippery(subList: List<WeatherHourDetails>): Boolean {
-        val tempraturAtLowest = getMaxTemperature(subList)
-        if(tempraturAtLowest!= null){
-            if(tempraturAtLowest <= 4){
+        val temperatureAtLowest = getMaxTemperature(subList)
+        if(temperatureAtLowest!= null){
+            if(temperatureAtLowest <= 4){
                 return true
             }
         }
@@ -224,15 +221,15 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
     }
 
     fun getSizeOfList(): Int{
-        return if(weatherhourList.isEmpty()){
+        return if(weatherHourList.isEmpty()){
             0
         } else{
-            weatherhourList.size - 2
+            weatherHourList.size - 2
         }
     }
 
     fun getTimeOfIndex(index: Int): String?{
-        if(weatherhourList.isEmpty()) return null
-        return weatherhourList[index].timeAsString
+        if(weatherHourList.isEmpty()) return null
+        return weatherHourList[index].timeAsString
     }
 }
