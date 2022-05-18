@@ -181,10 +181,10 @@ class BicycleRouteRepository(application: Application) {
 
         val latLngList: MutableList<List<LatLng>?>
         var isAdded = false
-        val startUpper = start[0].uppercase() + start.subSequence(1, start.length)
-        val endUpper = end[0].uppercase() + end.subSequence(1, end.length)
 
         if (startLatLng != null && endLatLng != null) {
+            val startUpper = start[0].uppercase() + start.subSequence(1, start.length)
+            val endUpper = end[0].uppercase() + end.subSequence(1, end.length)
             latLngList = mutableListOf(listOf(startLatLng, endLatLng))
             val length = userInputRouteLength(latLngList[0]!!)
             val totalRoutes = ++numOfRoutesInDatabase + existingRoutes
