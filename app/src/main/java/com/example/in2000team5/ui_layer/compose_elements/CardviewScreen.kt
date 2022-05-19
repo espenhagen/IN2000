@@ -38,7 +38,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 
-
+//Takes a list of Cards and renders them as a scrollable column
 @Composable
 fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) {
     val choices = mutableListOf("ID (lav - høy)", "Luftkvalitet (bra - dårlig)", "Lengde (kortest - lengst)", "Alfabetisk (A - Å)")
@@ -80,6 +80,7 @@ fun ShowAllRoutes(ruter: SnapshotStateList<SnapshotMutableState<BicycleRoute>>) 
     }
 }
 
+//A Route Card showing information about one single BicycleRoute.
 @Composable
 fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
     Surface(
@@ -89,9 +90,7 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
             .fillMaxWidth()
             .padding(all = 3.dp)
     ) {
-
         var isExpanded by remember { mutableStateOf(false) }
-
         Column(modifier = Modifier
             .clickable(
                 onClickLabel = (if (isExpanded) R.string.minimize_card else R.string.expand_card).toString()
@@ -120,8 +119,6 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
                     )
                 }
             }
-
-
             Spacer(modifier = Modifier.height(10.dp))
                     val lengthDescription = if(rute.value.length < 1000){
                         "Lengde: ${(rute.value.length.toInt())} meter\nRuteID: ${rute.value.id}"
@@ -152,12 +149,10 @@ fun BicycleRouteCard(rute: SnapshotMutableState<BicycleRoute>) {
     }
 }
 
-
+//A lite-version of the GoogleMap-Composable. Is lighter to render as one can not interact with the map
 @Composable
 fun LiteMap(rute: SnapshotMutableState<BicycleRoute>){
-    
     val plass = rute.value.fragmentList[0]?.get(0)
-
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(plass!!, 12f)
     }
@@ -169,17 +164,18 @@ fun LiteMap(rute: SnapshotMutableState<BicycleRoute>){
         modifier = Modifier.height(200.dp),
         cameraPositionState = cameraPositionState
     ) {
-//
         for (fragment in rute.value.fragmentList) {
             Polyline(fragment!!, color = RouteUtils.routeColor(rute.value.id))
         }
     }
 }
 
+//Based on an aqi-value, this function returns a presentation of the air quality containing a description in Norwegian, a color based on the air quality and the aqi as a float .
 @Composable
 fun AirQualInfo(aqi:Double?){
     val color : Color
     val description : String
+
     if (aqi != null) {
         if (aqi > 2.5){ //red
             color = Color(red = 1f, green = 0f, blue = 0f, alpha = 0.4f)
@@ -192,15 +188,10 @@ fun AirQualInfo(aqi:Double?){
         else { //yellow
             color = Color(red = 1f, green = 1f, blue = 0f, alpha = 0.4f)
             description = "middels"
-            //To fade between colors one could implement a function based on aqi-value e.g.:
-            //color = Color(red = 1f*aqi.toFloat(), green = 1f*((2-aqi.toFloat())*2), blue = 0f, alpha = 1f)
-
-
         }
     } else {
         description = "n/a"
         color = Color(red = 0f, green = 0f, blue = 0f, alpha = 0f)
-
     }
     Row {
         Text(
@@ -227,11 +218,9 @@ fun AirQualInfo(aqi:Double?){
             )
         }
     }
-
 }
 
-
-
+//A spinner that lets the user choose which value the cards should be sorted by.
 @Composable
 fun customSpinner (choices: MutableList<String>):String{
     var valg: String by remember { mutableStateOf(choices[0]) }
