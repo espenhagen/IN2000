@@ -23,30 +23,21 @@ import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
 
 // Displays the button that allows user to add new routes
-// TODO: Lag ny funksjon som faktisk viser kun knappen, og ikke hele skjermen
 @Composable
-fun ShowNewRouteButton(bicycleInformationViewModel: BicycleInformationViewModel) {
+fun NewRouteButton(bicycleInformationViewModel: BicycleInformationViewModel) {
     val showForm = remember { mutableStateOf(false) }
-    Scaffold(
-        content = { padding ->
-            Column(modifier = Modifier.padding(padding)) {
-                ShowAllRoutes(ruter = bicycleInformationViewModel.getRoutes())
-            }},
-        floatingActionButton = {
+    FloatingActionButton(
+        onClick = {
+            showForm.value = true
+        }) {
+        Icon(imageVector = Icons.Default.Add, stringResource(R.string.add_new_route_button))
+    }
 
-            FloatingActionButton(
-                onClick = {
-                    showForm.value = true
-                }) {
-                Icon(imageVector = Icons.Default.Add, stringResource(R.string.add_new_route_button))
-            }
-        }
-    )
-    if (showForm.value) ShowNewRouteForm(showForm, bicycleInformationViewModel)
+    if (showForm.value) NewRouteForm(showForm, bicycleInformationViewModel)
 }
 
 @Composable
-fun ShowNewRouteForm(showForm: MutableState<Boolean>, bicycleInformationViewModel: BicycleInformationViewModel) {
+fun NewRouteForm(showForm: MutableState<Boolean>, bicycleInformationViewModel: BicycleInformationViewModel) {
     if (showForm.value) {
         val start = remember { mutableStateOf("") }
         val end = remember { mutableStateOf("") }

@@ -19,44 +19,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 
+//The app's top-bar, showing a weather-icon based on the API-response, the current temperature and expected rain the current hour.
 @Composable
-fun BottomNavigationBar(
-    items: List<BottomNavItem>,
-    navController: NavController,
-    modifier: Modifier = Modifier,
-    onItemClick: (BottomNavItem) -> Unit
-) {
-    val backStackEntry = navController.currentBackStackEntryAsState()
-    BottomNavigation(
-        modifier = modifier,
-        backgroundColor = Color.DarkGray,
-        elevation = 5.dp
-    ) {
-        items.forEach { item ->
-            val selected = item.route == backStackEntry.value?.destination?.route
-            BottomNavigationItem(
-                selected = false, // update this to selected when we want to have actionable buttons
-                onClick = { onItemClick(item) },
-                selectedContentColor = Color.Green,
-                unselectedContentColor = Color.Gray,
-                icon = {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.name
-                        )
-                        if (selected) {
-                            Text(text = item.name, textAlign = TextAlign.Center, fontSize = 10.sp)
-                        }
-                    }
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun InfoRow(model: WeatherDataViewModel) {
+fun WeatherInformationTopBar(model: WeatherDataViewModel) {
     TopAppBar(
         elevation = 4.dp,
         modifier = Modifier
@@ -73,8 +38,6 @@ fun InfoRow(model: WeatherDataViewModel) {
             } else{
                 context.resources.getIdentifier(model.weatherTimes.value.currentWeatherSymbol.value, "drawable",context.packageName )
             }
-
-
             Image(
                 painter = painterResource(id = id),
                 contentDescription = "en sol",
@@ -82,7 +45,6 @@ fun InfoRow(model: WeatherDataViewModel) {
                     .size(70.dp)
                     .padding(3.dp)
             )
-
             Text(
                 text = "${model.weatherTimes.value.currentTemperature.value}°C",
                 style = MaterialTheme.typography.h4,
@@ -90,7 +52,6 @@ fun InfoRow(model: WeatherDataViewModel) {
                     .align(alignment = Alignment.CenterVertically)
                     .padding(horizontal = 6.dp)
             )
-
             Column(
                 modifier = Modifier.align(alignment = Alignment.CenterVertically)
             ) {

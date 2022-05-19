@@ -20,31 +20,32 @@ import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 import com.example.in2000team5.utils.MetUtils
 import com.example.in2000team5.utils.MetUtils.Companion.getWindDirectionDescription
-import com.example.in2000team5.utils.SupportInfo
+import com.example.in2000team5.utils.SupportInformation
 
+
+//Dynamic lists depending on the slider position
 val clothingSupportList = mutableStateListOf<String>()
 val itemSupportList = mutableStateListOf<String>()
-val checkList = SupportInfo.getChecklist()
 
+
+//Is the base function for the information screen
 @Composable
-fun SupportScreen(model: WeatherDataViewModel) {
+fun InformationScreenBase(weatherDataViewModel: WeatherDataViewModel) {
 
     Surface(
         elevation = 4.dp,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-
         color = MaterialTheme.colors.background
     ) {
         Column {
 
-            TimeSlide(model)
+            TimeSlide(weatherDataViewModel)
 
             LazyColumn{
-
                 item{
-                    WeatherDetailsBox(model)
+                    WeatherDetailsBox(weatherDataViewModel)
                 }
                 item{
                     ClothingSupportBox()
@@ -53,26 +54,24 @@ fun SupportScreen(model: WeatherDataViewModel) {
                     ChecklistBox()
                 }
                 item{
-                    CreditBox()
+                    InformationBox()
                 }
             }
         }
     }
 }
 
-fun updateSupportData(
-    model: WeatherDataViewModel,
-    sliderPosition: ClosedFloatingPointRange<Float>
-) {
-    //model.weatherTimes.value.updateList(model.weatherTimes)
+//Updates the weather details and suggestion box depending on the slider position
+fun updateSupportData(weatherDataViewModel: WeatherDataViewModel, sliderPosition: ClosedFloatingPointRange<Float>) {
     val start = sliderPosition.start.toInt()
-    val end = sliderPosition.endInclusive.toInt() +2
+    val end = sliderPosition.endInclusive.toInt() + 2
 
-    model.weatherTimes.value.updateSliderData(start,end)
-    SupportInfo.getRecommendedClothing(model.weatherTimes.value, clothingSupportList)
-    SupportInfo.getRecommendedItems(model.weatherTimes.value, itemSupportList)
+    weatherDataViewModel.weatherTimes.value.updateSliderData(start,end)
+    SupportInformation.getRecommendedClothing(weatherDataViewModel.weatherTimes.value, clothingSupportList)
+    SupportInformation.getRecommendedItems(weatherDataViewModel.weatherTimes.value, itemSupportList)
 }
 
+//Slider to make a time interval for weather details and suggestion box
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TimeSlide(model: WeatherDataViewModel) {
@@ -95,6 +94,7 @@ fun TimeSlide(model: WeatherDataViewModel) {
     }
 }
 
+//Shows the box for weather details
 @Composable
 fun WeatherDetailsBox(model: WeatherDataViewModel) {
     Column(
@@ -261,6 +261,7 @@ fun WeatherDetailsBox(model: WeatherDataViewModel) {
     }
 }
 
+//Shows the box for cloathing support
 @Composable
 fun ClothingSupportBox() {
     Column(
@@ -314,6 +315,7 @@ fun ClothingSupportBox() {
     }
 }
 
+//Shows a checklist for simple bike preparation
 @Composable
 fun ChecklistBox() {
     Column(
@@ -338,7 +340,7 @@ fun ChecklistBox() {
         Column(modifier = Modifier
             .fillMaxWidth()
             .background(Color.LightGray)){
-            checkList.forEach {
+            SupportInformation.getChecklist().forEach {
                 Text(text = it, modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
             }
         }
@@ -346,7 +348,7 @@ fun ChecklistBox() {
 }
 
 @Composable
-fun CreditBox() {
+fun InformationBox() {
     Column(
         Modifier
             .padding(6.dp)
@@ -357,7 +359,7 @@ fun CreditBox() {
 
     ){
         Text(
-            text = "Kreditering",
+            text = "Informasjon",
             color = MaterialTheme.colors.secondaryVariant,
             style = MaterialTheme.typography.h5,
             modifier = Modifier
@@ -369,9 +371,11 @@ fun CreditBox() {
         Column(modifier = Modifier
             .fillMaxWidth()
             .background(Color.LightGray)){
-            for(i in 0..5){
-                Text(text = "_______________", modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
-            }
+            Text(text = "Vår app henter værdata fra metrologisk insitutt og sykkelruter fra Oslo kommune. ",
+                modifier = Modifier
+                    .padding(15.dp)
+                    .align(alignment = Alignment.CenterHorizontally)
+            )
         }
     }
 }
