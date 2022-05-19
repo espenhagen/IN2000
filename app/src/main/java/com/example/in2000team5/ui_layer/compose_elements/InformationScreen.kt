@@ -14,7 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.in2000team5.R
 import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
@@ -369,12 +373,34 @@ fun CreditBox() {
         Column(modifier = Modifier
             .fillMaxWidth()
             .background(Color.LightGray)){
-            for(i in 0..5){
-                Text(text = "_______________", modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
-            }
+            Text(buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Denne appen henter data fra:\n")
+                }
+                append("- Oslo kommunes API \"Skiltede byruter for sykkel\n")
+                append("- Meterologisk institutt (MET) sine API for luftkvalitet og værvarsel\n\n")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Ikoner på anbefalingssiden er gjengitt under Flaticon License:\n")
+                }
+                append("- VIDNPIL: av: Freepik, URL: https://www.flaticon.com/free-icons/navigation\n")
+                append("- GRADESTOKK: av: Those Icons, URL: https://www.flaticon.com/free-icons/temperature\n")
+                append("- REGNDRÅPER: av: Freepik, URL: https://www.flaticon.com/free-icons/water-drop\n\n")
+
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Øvrige ikoner:\n")
+                }
+                append("- Værikoner i top-baren er fra yr.no, URL: https://github.com/nrkno/yr-weather-symbols\n\n")
+
+            }, modifier = Modifier.padding(8.dp))
+
         }
     }
 }
+
+
+
+
+
 
 
 
