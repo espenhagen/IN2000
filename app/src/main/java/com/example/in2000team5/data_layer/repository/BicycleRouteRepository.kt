@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotMutableState
@@ -113,7 +114,8 @@ class BicycleRouteRepository(application: Application) {
     }
 
     // Creates the LatLng-list based on the utmList
-    private fun constructLatLngList(utmList: List<List<Number>>?): List<LatLng>? {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun constructLatLngList(utmList: List<List<Number>>?): List<LatLng>? {
         if (utmList == null) return null
 
         val routes = mutableListOf<LatLng>()
@@ -144,7 +146,7 @@ class BicycleRouteRepository(application: Application) {
         return routes
     }
 
-    private fun getCoordinatesFromName(geocoder: Geocoder, name: String): LatLng? {
+    fun getCoordinatesFromName(geocoder: Geocoder, name: String): LatLng? {
         if (name.isEmpty()) return null
         val response = geocoder.getFromLocationName(name, 1)
         if (response.size < 1) return null
