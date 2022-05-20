@@ -94,18 +94,18 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
 
     // Values based on the current time
     private var current = weatherHourList.firstOrNull()
-    val currentTemperature = mutableStateOf(current?.temperature)
-    val currentRainNextHour = mutableStateOf(current?.rainNextHour)
+    val currentTemperature = mutableStateOf(current?.temperature ?: 0.0)
+    val currentRainNextHour = mutableStateOf(current?.rainNextHour ?: 0.0)
     val currentWeatherSymbol = mutableStateOf(current?.weatherSymbol)
 
     // Values used for support in slider feature
-    val maxTemperature: MutableState<Double?> = mutableStateOf(null)
+    val maxTemperature: MutableState<Double?> = mutableStateOf(0.0)
     val minTemperature: MutableState<Double> = mutableStateOf(0.0)
-    val averageTemperature: MutableState<Double?> = mutableStateOf(null)
+    val averageTemperature: MutableState<Double?> = mutableStateOf(0.0)
     val maxRain: MutableState<Double> = mutableStateOf(0.0)
     val totalRain: MutableState<Double> = mutableStateOf(0.0)
-    val maxWind: MutableState<Double?> = mutableStateOf(null)
-    val averageWind: MutableState<Double?> = mutableStateOf(null)
+    val maxWind: MutableState<Double?> = mutableStateOf(0.0)
+    val averageWind: MutableState<Double?> = mutableStateOf(0.0)
     val windDirection: MutableState<Float> = mutableStateOf(0f)
     val isSuncreenRecommended: MutableState<Boolean> = mutableStateOf(false)
     val isDark: MutableState<Boolean> = mutableStateOf(false)
@@ -139,8 +139,8 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
 
         //Data for current time
         current = weatherHourList.firstOrNull()
-        currentTemperature .value =  current?.temperature
-        currentRainNextHour.value =  current?.rainNextHour
+        currentTemperature .value =  current?.temperature ?: 0.0
+        currentRainNextHour.value =  current?.rainNextHour ?: 0.0
         currentWeatherSymbol.value = current?.weatherSymbol
 
         updateSliderData(0, 1)

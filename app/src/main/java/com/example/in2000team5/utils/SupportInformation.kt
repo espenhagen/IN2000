@@ -75,7 +75,7 @@ class SupportInformation {
             return listOf(
                 "Luft i dekkene",
                 "Styreskruen er godt strammet",
-                "Hjulskrune sitter godt",
+                "Hjulskruene sitter godt",
                 "Kjedet er oljet",
                 "Dekkene har ingen sprekker",
                 )
