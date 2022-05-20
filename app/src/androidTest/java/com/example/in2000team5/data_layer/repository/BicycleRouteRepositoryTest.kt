@@ -42,23 +42,4 @@ class BicycleRouteRepositoryTest {
             assertEquals(10.785738, y, 0.000001)
         }
     }
-
-    @Test
-    fun fetchRoutesTest() {
-        //Integration test of the fetchRoutes()- method and 'Oslo kommune sykkelruter API'.
-        runBlocking {
-
-            //Given
-            val bicycleRouteRemoteDataSource = BicycleRouteRemoteDataSource()
-
-            //When
-            val ruter: List<Features> = bicycleRouteRemoteDataSource.fetchRoutes()!!
-            val rute: Features = ruter.get(0)
-            val ruteId: Number? = rute.properties?.rute?.toInt()
-
-            //Then
-            assertEquals("Rutenummer skal være 4",4,ruteId)
-            assertNotEquals("Sjekker at rutenr ikke er 5",5,ruteId)
-        }
-    }
 }
