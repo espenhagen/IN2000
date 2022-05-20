@@ -23,9 +23,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //To check whether the app has internet connection
         val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         val internetConnection =  cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnected
-
 
         bicycleInformationViewModel = ViewModelProvider(this)[BicycleInformationViewModel::class.java]
 
