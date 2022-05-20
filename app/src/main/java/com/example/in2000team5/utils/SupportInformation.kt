@@ -55,7 +55,7 @@ class SupportInformation {
             if(weatherTimesData.numberOfHours.value > 3){
                 itemList.add("Næring")
             }
-            if(weatherTimesData.isSuncreamRecommended.value){
+            if(weatherTimesData.isSuncreenRecommended.value){
                 itemList.add("Solkrem")
                 itemList.add("Solbriller")
             }
