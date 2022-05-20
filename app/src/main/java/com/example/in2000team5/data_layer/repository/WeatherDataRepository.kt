@@ -96,9 +96,7 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
     private var current = weatherHourList.firstOrNull()
     val currentTemperature = mutableStateOf(current?.temperature)
     val currentRainNextHour = mutableStateOf(current?.rainNextHour)
-    private val currentPrecipitationAmount = mutableStateOf(current?.precipitationAmount)
     val currentWeatherSymbol = mutableStateOf(current?.weatherSymbol)
-    private val currentTimeAsString = mutableStateOf(current?.timeAsString)
 
     // Values used for support in slider feature
     val maxTemperature: MutableState<Double?> = mutableStateOf(null)
@@ -109,7 +107,7 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
     val maxWind: MutableState<Double?> = mutableStateOf(null)
     val averageWind: MutableState<Double?> = mutableStateOf(null)
     val windDirection: MutableState<Float> = mutableStateOf(0f)
-    val isSuncreamRecommended: MutableState<Boolean> = mutableStateOf(false)
+    val isSuncreenRecommended: MutableState<Boolean> = mutableStateOf(false)
     val isDark: MutableState<Boolean> = mutableStateOf(false)
     val isSlippery: MutableState<Boolean> = mutableStateOf(false)
     val isRaining: MutableState<Boolean> = mutableStateOf(false)
@@ -129,7 +127,7 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
         maxWind.value               = getMaxWind(subList)
         averageWind.value           = getAverageWind(subList)
         windDirection.value         = getWindDirection(subList).toFloat()
-        isSuncreamRecommended.value   = findOutIfSuncreamIsRecomended(subList)
+        isSuncreenRecommended.value   = findOutIfSuncreamIsRecomended(subList)
         isDark.value                = findOutIfItCouldBeDark(subList)
         isSlippery.value            = findOutIfSlippery(subList)
         isRaining.value             = findOutIfRaining(subList)
@@ -143,9 +141,7 @@ class WeatherTimesData(list: List<WeatherHourDetails>){
         current = weatherHourList.firstOrNull()
         currentTemperature .value =  current?.temperature
         currentRainNextHour.value =  current?.rainNextHour
-        currentPrecipitationAmount.value = current?.precipitationAmount
         currentWeatherSymbol.value = current?.weatherSymbol
-        currentTimeAsString.value =  current?.timeAsString
 
         updateSliderData(0, 1)
     }
