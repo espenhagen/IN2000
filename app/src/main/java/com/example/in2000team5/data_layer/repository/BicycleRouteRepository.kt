@@ -16,6 +16,7 @@ import com.example.in2000team5.data_layer.datasource.remote.Features
 import com.example.in2000team5.data_layer.datasource.local.AppDatabase
 import com.example.in2000team5.data_layer.datasource.local.BicycleRouteDao
 import com.example.in2000team5.ui_layer.viewmodels.BicycleInformationViewModel
+import com.example.in2000team5.utils.GeneralUtils.Companion.isInternetAvailable
 import com.example.in2000team5.utils.RouteUtils.Companion.routeNames
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
@@ -146,7 +147,7 @@ class BicycleRouteRepository(application: Application) {
         return routes
     }
 
-    fun getCoordinatesFromName(geocoder: Geocoder, name: String): LatLng? {
+    private fun getCoordinatesFromName(geocoder: Geocoder, name: String): LatLng? {
         if (name.isEmpty()) return null
         val response = geocoder.getFromLocationName(name, 1)
         if (response.size < 1) return null
@@ -177,6 +178,8 @@ class BicycleRouteRepository(application: Application) {
        the viewmodel.
      */
     fun addRouteFromUser(bicycleInformationViewModel: BicycleInformationViewModel, context: Context, start: String, end: String): Boolean {
+        if (! isInternetAvailable(context)) return false
+
         val geocoder = Geocoder(context)
         val startLatLng = getCoordinatesFromName(geocoder, start)
         val endLatLng = getCoordinatesFromName(geocoder, end)
