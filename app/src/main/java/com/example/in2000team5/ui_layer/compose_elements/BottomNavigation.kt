@@ -1,5 +1,7 @@
 package com.example.in2000team5.ui_layer.compose_elements
 
+import android.net.ConnectivityManager
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigationItem
@@ -18,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,12 +32,12 @@ import com.example.in2000team5.ui_layer.viewmodels.WeatherDataViewModel
 
 //Shows the apps navigation bar
 @Composable
-fun BottomNavigation(weatherDataViewModel: WeatherDataViewModel, bicycleInformationViewModel: BicycleInformationViewModel) {
+fun BottomNavigation(internetConnection: Boolean, weatherDataViewModel: WeatherDataViewModel, bicycleInformationViewModel: BicycleInformationViewModel) {
     val navController = rememberNavController()
     Scaffold(
         content = { padding ->
             Column(modifier = Modifier.padding(padding)) {
-                Navigation(navController = navController, weatherDataViewModel, bicycleInformationViewModel)
+                Navigation(internetConnection, navController = navController, weatherDataViewModel, bicycleInformationViewModel)
             }
         },
         bottomBar = {
@@ -92,10 +95,13 @@ fun BottomNavigationBar(
 
 //Calls the composable-elements for the different screens that one can click in the nav-bar
 @Composable
-fun Navigation(navController: NavHostController,
+fun Navigation(internetConnection: Boolean, navController: NavHostController,
                weatherDataViewModel: WeatherDataViewModel,
                bicycleInformationViewModel: BicycleInformationViewModel
 ) {
+
+
+
     NavHost(navController = navController, startDestination = "om" ) {
         composable("kart") {
             Column {
@@ -104,16 +110,29 @@ fun Navigation(navController: NavHostController,
                 //MapProperties()
             }
         }
-        composable("ruter") {
-            Column {
-                WeatherInformationTopBar(weatherDataViewModel)
-                Scaffold(
-                    content = { padding ->
-                        Column(modifier = Modifier.padding(padding)) {
-                            ShowAllRoutes(ruter = bicycleInformationViewModel.getRoutes())
-                            } },
-                    floatingActionButton = { NewRouteButton(bicycleInformationViewModel = bicycleInformationViewModel) }
-                )
+        if (internetConnection) {
+            composable("ruter") {
+                Column {
+
+
+                    WeatherInformationTopBar(weatherDataViewModel)
+                    Scaffold(
+                        content = { padding ->
+                            Column(modifier = Modifier.padding(padding)) {
+                                ShowAllRoutes(ruter = bicycleInformationViewModel.getRoutes())
+                            }
+                        },
+                        floatingActionButton = { NewRouteButton(bicycleInformationViewModel = bicycleInformationViewModel) }
+                    )
+                }
+            }
+        } else {
+            composable("ruter") {
+                Column {
+
+                    WeatherInformationTopBar(weatherDataViewModel)
+                    ShowAllRoutes(ruter = bicycleInformationViewModel.getRoutes())
+                }
             }
         }
         composable("om") {
