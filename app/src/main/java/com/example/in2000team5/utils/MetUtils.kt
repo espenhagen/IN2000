@@ -3,7 +3,8 @@ package com.example.in2000team5.utils
 import com.example.in2000team5.R
 import java.util.*
 
-class metUtils {
+class MetUtils {
+
     companion object {
         fun getCurrentTimeAsString() : String{
 
@@ -19,6 +20,28 @@ class metUtils {
             //Standard reftime for luftkvalitets-API
             return  "${year}-${month}-${date}T${hour}:00:00Z"
         }
+
+        fun isNowTime(time: String) : Boolean {
+
+            if (time == getCurrentTimeAsString()){
+                return true
+            }
+            return false
+        }
+
+        fun getDateAndHour(time: String) : String{
+
+            if(isNowTime(time)){
+                return "Nå"
+            }
+
+            val date = time.substring(8, 10)
+            val hour = time.substring(11, 13)
+
+            //return "kl: " + hour + " den " + date
+            return "kl: $hour"
+        }
+
         fun getWeatherIcon(description: String?): Int {
             return when (description) {
                 "clearsky", "clearsky_day"-> R.drawable.clearsky_day
@@ -89,7 +112,6 @@ class metUtils {
             }
         }
     }
-
 }
 
 

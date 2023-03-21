@@ -1,28 +1,28 @@
-package com.example.in2000team5.data_layer
+package com.example.in2000team5.data_layer.datasource
 
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitString
 import com.google.gson.Gson
 
-class AirQualDataSource {
-    suspend fun fetchAirQualAtPointDS(lat: String, lon: String): AirQualData?{
+// The class AirQualityRemoteDataSource fetches data from the MET-api and returns the response.
+class AirQualityRemoteDataSource {
+    suspend fun fetchAirQualityAtPointDataSource(lat: String, lon: String): AirQualData?{
         val gson = Gson()
+        // The request is filtered on the AQI index
         val path = "https://in2000-apiproxy.ifi.uio.no/weatherapi/airqualityforecast/0.1/?lat=${lat}&lon=${lon}&filter_vars=AQI"
 
-        try {
-            return gson.fromJson(Fuel.get(path).awaitString(), AirQualData::class.java)
+        return try {
+            gson.fromJson(Fuel.get(path).awaitString(), AirQualData::class.java)
 
         } catch (exception: Exception) {
-            Log.d("Response", "A network request exception was thrown: ${exception.message}")
-            return null
+            Log.d("Response", "A network request exception was thrown in AirQualityDataSource: ${exception.message}")
+            null
         }
     }
 }
 
-//Fra luftkvalitetet api filtrert på AQI index
-
-//result generated from /json
+// data classes used to deserialize the response, based on the json-response
 data class AirQualData(val meta: Meta?, val data: AirDataBody?)
 
 data class AQI(val value: Number?, val units: String?)
